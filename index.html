@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outlaw Air Service — Dispatch Terminal v0.6.6 Save Feature</title>
+<style>
+:root{
+  --navy:#071526; --navy2:#0d2238; --gold:#d8a928; --paper:#f7f2e8;
+  --ink:#1d1d1d; --muted:#5b6470; --green:#2d7d46; --red:#9c2f2f;
+  --blue:#225d9c; --card:#ffffff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--navy),#101820 430px,var(--paper) 430px);color:var(--ink)}
+header{color:white;padding:24px 16px 18px;text-align:center;border-bottom:5px solid var(--gold)}
+header h1{margin:0;font-size:2.1rem;letter-spacing:.5px}
+header p{margin:8px auto 0;max-width:1000px;color:#e8edf4;line-height:1.45}
+.wrap{max-width:1280px;margin:18px auto 40px;padding:0 14px}
+.grid{display:grid;grid-template-columns:1.22fr .78fr;gap:16px}
+.card{background:var(--card);border:1px solid #d7d2c5;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.13);overflow:hidden;margin-bottom:16px}
+.card h2{margin:0;background:var(--navy2);color:white;padding:12px 14px;font-size:1.15rem;border-bottom:3px solid var(--gold)}
+.body{padding:14px}.row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.row2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+label{display:block;font-weight:bold;margin-bottom:5px;font-size:.88rem}
+select,input,textarea,button{width:100%;font-size:1rem;border-radius:8px;border:1px solid #bbb;padding:10px}
+button{cursor:pointer;background:var(--gold);border:0;font-weight:bold;color:#151515} button:hover{filter:brightness(.96)}
+button.secondary{background:#e9e2d4} button.danger{background:#cf6c60;color:white} button.good{background:#5dae73;color:white} button.blue{background:#5d8fc8;color:white}
+.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.btnrow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+.mission-title{font-size:1.6rem;color:var(--navy);margin:0 0 8px}.badges{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.badge{display:inline-block;background:#eee7d8;border:1px solid #d4c7aa;padding:6px 9px;border-radius:999px;font-weight:bold;font-size:.84rem}
+.badge.gold{background:#fff1bd;border-color:#d8a928}.badge.green{background:#e3f3e8;border-color:#8fc79e}.badge.red{background:#f7dfdf;border-color:#d49090}.badge.blue{background:#e2edf8;border-color:#94b8dc}
+.mission-box{background:#fbf8f1;border-left:6px solid var(--gold);padding:12px;border-radius:8px;margin:10px 0}
+.timerbox{background:#eaf3ff;border:1px solid #9ebfe3;border-left:6px solid var(--blue);padding:12px;border-radius:8px;margin:10px 0}
+.timerbig{font-size:1.8rem;color:var(--blue);font-weight:bold}
+table{width:100%;border-collapse:collapse;margin-top:8px} th,td{border-bottom:1px solid #e0d8c7;text-align:left;padding:8px;vertical-align:top} th{background:#f1eadb;color:#17283b}
+.small{font-size:.88rem;color:var(--muted);line-height:1.35}.money{font-size:1.5rem;color:var(--green);font-weight:bold}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.kpi div{background:#f5efe3;padding:12px;border-radius:10px;border:1px solid #ddd1bd}.kpi strong{display:block;font-size:1.18rem;color:var(--navy)}
+.checklist label{display:flex;align-items:flex-start;gap:8px;font-weight:normal;border-bottom:1px dashed #ddd;padding:8px 0}.checklist input{width:auto;margin-top:2px}
+.notice{background:#fff8d9;border:1px solid #ead17c;padding:10px;border-radius:10px;margin-top:10px}.locked{opacity:.55}.footer{text-align:center;color:#695f50;font-size:.85rem;margin-top:20px}
+
+body.night{
+  --navy:#02060a;
+  --navy2:#0a111a;
+  --gold:#ffb000;
+  --paper:#02060a;
+  --ink:#f2b824;
+  --muted:#a0a8b3;
+  --card:#0d1520;
+  --green:#64d47a;
+  --red:#ff7777;
+  --blue:#5da9ff;
+  background:#02060a;
+  color:var(--ink);
+}
+body.night .card{border-color:#1e293b;box-shadow:0 4px 20px rgba(0,0,0,.55)}
+body.night .card h2{background:#162235;border-bottom:2px solid var(--gold)}
+body.night select, body.night input, body.night textarea, body.night button{
+  background:#1a2638;color:white;border:1px solid #334155;
+}
+body.night button{background:var(--gold);color:#050505}
+body.night button.secondary{background:#263244;color:#fff}
+body.night button.danger{background:#7f2f2f;color:#fff}
+body.night button.good{background:#2d7d46;color:#fff}
+body.night .mission-box{background:#111b27;border-left-color:var(--gold)}
+body.night .timerbox,.dispatch-card{background:#071526;border:1px solid var(--blue);border-left:6px solid var(--blue);box-shadow:0 0 15px rgba(34,93,156,.30)}
+body.night .timerbig{color:#5da9ff;text-shadow:0 0 8px rgba(93,169,255,.5)}
+body.night .notice{background:#1e1b0a;border-color:#423b1c;color:#f2e191}
+body.night .badge{background:#1e293b;border-color:#334155;color:#cbd5e1}
+body.night .kpi div{background:#111b27;border-color:#1e293b}
+body.night .kpi strong{color:var(--gold)}
+body.night th{background:#111b27;color:var(--gold)}
+body.night td, body.night th{border-bottom-color:#1e293b}
+
+.dispatch-card{
+  padding:14px;border-radius:12px;margin:10px 0;
+}
+.dispatch-title{font-size:.9rem;letter-spacing:.08em;font-weight:bold;color:var(--muted)}
+.dispatch-timer{font-size:2.7rem;line-height:1;color:var(--blue);font-weight:900;margin:8px 0}
+.dispatch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.dispatch-grid div{background:rgba(255,255,255,.55);border:1px solid #d7d2c5;border-radius:8px;padding:8px}
+body.night .dispatch-grid div{background:#111b27;border-color:#1e293b}
+.progressbar{height:12px;background:#d9d0bd;border-radius:999px;overflow:hidden;margin-top:5px}
+.progressbar span{display:block;height:100%;background:var(--gold);width:0%}
+body.night .progressbar{background:#1e293b}
+.top-toggle{position:absolute;right:14px;top:14px;max-width:180px}
+
+/* v0.5 EFB Cockpit UI */
+.cockpit-shell{
+  max-width:1180px;
+  margin:18px auto 40px;
+  padding:0 14px;
+}
+.cockpit-flow{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:14px 0 16px;
+}
+.cockpit-flow a{
+  display:block;
+  text-align:center;
+  text-decoration:none;
+  background:var(--navy2);
+  color:#fff;
+  border:1px solid var(--gold);
+  border-radius:10px;
+  padding:12px 8px;
+  font-weight:bold;
+}
+body.night .cockpit-flow a{background:#111b27;color:var(--gold);}
+.hero-dispatch{
+  border:2px solid var(--gold);
+}
+.hero-dispatch h2{
+  font-size:1.25rem;
+}
+.dispatch-card{
+  padding:16px;
+}
+.dispatch-timer{
+  font-size:3.4rem;
+}
+.dispatch-net{
+  margin-top:10px;
+  padding:12px;
+  border-radius:10px;
+  background:#f5efe3;
+  border:1px solid #ddd1bd;
+}
+body.night .dispatch-net{
+  background:#111b27;
+  border-color:#1e293b;
+}
+.net-negative{color:var(--red);font-weight:bold;}
+.next-action{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.selected-job-row,
+.aircraft-row-selected{
+  outline:3px solid var(--gold);
+  background:rgba(216,169,40,.22);
+  box-shadow:inset 0 0 0 9999px rgba(216,169,40,.08);
+}
+.selected-job-row td,
+.aircraft-row-selected td{
+  font-weight:bold;
+}
+body.night .selected-job-row,
+body.night .aircraft-row-selected{
+  background:rgba(255,176,0,.20);
+  box-shadow:inset 0 0 0 9999px rgba(255,176,0,.08);
+}
+.compact-help{
+  font-size:.86rem;
+  color:var(--muted);
+  margin:6px 0 10px;
+}
+.flight-economics{
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
+  background:#fbf8f1;
+  border-left:6px solid var(--gold);
+}
+body.night .flight-economics{
+  background:#111b27;
+}
+.office-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+details.card summary{
+  cursor:pointer;
+  list-style:none;
+}
+details.card summary::-webkit-details-marker{display:none;}
+details.card summary h2::after{
+  content:"  ▾";
+  float:right;
+  color:var(--gold);
+}
+@media(max-width:900px){
+  .cockpit-flow{grid-template-columns:repeat(2,1fr);}
+  .hero-dispatch{position:sticky;top:0;z-index:10;}
+  .dispatch-timer{font-size:2.45rem;}
+  .next-action,.office-grid{grid-template-columns:1fr;}
+}
+
+@media(max-width:700px){.dispatch-timer{font-size:2.2rem}.dispatch-grid{grid-template-columns:1fr}.top-toggle{position:static;margin:12px auto 0;}}
+
+@media(max-width:900px){.grid{grid-template-columns:1fr}.row,.row2,.kpi{grid-template-columns:1fr}header h1{font-size:1.65rem}}
+
+/* v0.6.1 Clean Cockpit state control */
+.is-hidden{display:none !important;}
+.clean-active-note{
+  font-size:.86rem;
+  color:var(--muted);
+  margin-top:8px;
+}
+#dispatchPanel.clean-active{
+  border:3px solid var(--gold);
+  box-shadow:0 6px 24px rgba(0,0,0,.18);
+}
+body.night #dispatchPanel.clean-active{
+  box-shadow:0 0 24px rgba(255,176,0,.20);
+}
+#scorePanel.clean-secondary h2::after{
+  content:"  landing / log";
+  float:right;
+  font-size:.75rem;
+  color:var(--gold);
+  font-weight:normal;
+}
+
+
+/* v0.6.6 Text Polish */
+.version{
+  font-size:.82rem;
+  opacity:.72;
+  margin-left:8px;
+  font-weight:normal;
+}
+.has-active-flight #dispatchPanel{
+  transform:scale(1.01);
+  box-shadow:0 0 0 2px var(--gold),0 12px 28px rgba(0,0,0,.28);
+}
+body.night.has-active-flight #dispatchPanel{
+  box-shadow:0 0 0 2px var(--gold),0 0 30px rgba(255,176,0,.22);
+}
+@media(max-width:700px){
+  .has-active-flight #dispatchPanel{transform:none;}
+}
+
+
+/* v0.6.6 Text Polish (Mobile Sticky Dispatch) */
+@media(max-width:700px){
+  body.has-active-flight #dispatchPanel{
+    position:sticky;
+    top:0;
+    z-index:50;
+    margin-bottom:10px;
+  }
+
+  body.has-active-flight .dispatch-card{
+    padding:10px;
+  }
+
+  body.has-active-flight .dispatch-timer{
+    font-size:1.8rem;
+  }
+
+  body.has-active-flight .dispatch-grid{
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+  }
+
+  body.has-active-flight .dispatch-grid div{
+    padding:6px;
+    font-size:.86rem;
+  }
+
+  body.has-active-flight .dispatch-net{
+    padding:8px;
+    font-size:.95rem;
+  }
+
+  body.has-active-flight .flight-economics{
+    display:none;
+  }
+}
+
+
+/* v0.6.6 Text Polish */
+header{
+  padding:18px 16px 14px;
+}
+header h1{
+  font-size:1.9rem;
+}
+header h3{
+  margin-top:4px !important;
+}
+header p.small{
+  margin-top:6px;
+  opacity:.92;
+}
+.start-card{
+  background:linear-gradient(180deg,#fffdf7,#f7f0df);
+  border:2px solid var(--gold);
+}
+.start-card .start-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.start-card .start-note{
+  margin-top:10px;
+}
+body.night .start-card{
+  background:#0d1520;
+}
+body.night .start-card .mission-box{
+  background:#111b27;
+}
+@media(max-width:700px){
+  header{
+    padding:14px 12px 12px;
+  }
+  header h1{
+    font-size:1.45rem;
+  }
+  header h3{
+    font-size:.95rem;
+  }
+  .start-card .start-actions{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* v0.6.6 Text Polish */
+.custom-flight-card{
+  border:2px solid var(--gold);
+}
+.custom-flight-card .row{
+  margin-bottom:10px;
+}
+.custom-flight-card .hint{
+  margin-top:8px;
+}
+body.night .custom-flight-card{
+  border-color:var(--gold);
+}
+
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.header-left{
+  display:flex;
+  flex-direction:column;
+}
+#themeToggle{
+  white-space:nowrap;
+}
+
+
+/* v0.6.6 Header + Airport Note Placement */
+header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px 16px;
+  position:relative;
+}
+header .header-left{
+  min-width:0;
+  max-width:calc(100% - 220px);
+}
+header .header-left h1{
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+#nightToggle{
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+@media(max-width:700px){
+  header{
+    flex-direction:column;
+    align-items:center;
+  }
+  header .header-left{
+    max-width:100%;
+    text-align:center;
+  }
+  #nightToggle{
+    position:static;
+    max-width:220px;
+    margin-top:8px;
+  }
+}
+
+
+/* v0.6.6 FINAL Header Fix */
+header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px 16px;
+  position:relative;
+  padding:18px 16px 14px;
+}
+header .header-left{
+  min-width:0;
+  max-width:calc(100% - 220px);
+  text-align:center;
+}
+header .header-left h1{
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+#nightToggle{
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+@media(max-width:700px){
+  header{
+    flex-direction:column;
+    align-items:center;
+  }
+  header .header-left{
+    max-width:100%;
+  }
+  #nightToggle{
+    position:static;
+    max-width:220px;
+    margin-top:8px;
+  }
+}
+
+
+.has-active-flight #dispatchPanel {
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 20px rgba(216, 169, 40, 0.4);
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <h1 id="companyTitle">OUTLAW AIR SERVICE</h1>
+    <h3 style="margin:6px 0 0;color:#f0c75e;letter-spacing:.04em;">Dispatch Terminal <span class="version">v0.6.6</span></h3>
+    <p class="small">MSFS 2024 / 2020 · X-Plane 12 · Free Flight · No mods required</p>
+  </div>
+  <button id="nightToggle" class="top-toggle" type="button">🌙 Night Ops</button>
+</header>
+
+
+<div class="cockpit-shell">
+  <div class="cockpit-flow">
+    <a href="#jobsPanel">1 Jobs</a>
+    <a href="#dispatchPanel">2 Dispatch</a>
+    <a href="#aircraftPanel">3 Aircraft</a>
+    <a href="#scorePanel">4 Score</a>
+  </div>
+
+  <section class="card hero-dispatch is-hidden" id="dispatchPanel"><h2>🧾 EFB Dispatch Card</h2><div class="body" id="dispatchDisplay"><p class="small"><strong>No active dispatch.</strong><br>Quick Contract, Browse Jobs, or use Pilot’s Choice below to create your own flight.</p></div></section>
+
+  <section class="card" id="jobsPanel"><h2>🎯 Contract Board</h2><div class="body">
+  <div class="row">
+    <div><label for="missionType">Contract Type</label><select id="missionType">
+      <option value="random">Random Available</option>
+      <option>Bush Cargo</option><option>Medical Run</option><option>No Questions Asked</option><option>Remote Supply</option><option>Heli Utility</option><option>Vintage Haul</option><option>Rescue / Extraction</option><option>Cartel Courier</option><option>Jungle Strip Run</option><option>Border Dash</option><option>Regional Charter</option><option>Express Cargo</option><option>Airline Feeder</option><option>Heavy Cargo</option><option>International Charter</option><option>Special Transport</option><option>Passenger Shuttle</option><option>Medical Passenger Transfer</option><option>VIP Charter</option>
+    </select></div>
+    <div><label for="region">Operating Region</label><select id="region">
+      <option>Southern Oregon</option>
+      <option>Pacific Northwest</option>
+      <option>Alaska Bush</option>
+      <option>Mountain West</option>
+      <option>Southwest Desert</option>
+      <option>Midwest Plains</option>
+      <option>East Coast Corridor</option>
+      <option>Island / Coastal</option>
+      <option>South America / Andes</option>
+      <option>South America / Cartel Corridor</option>
+      <option>Regional Airline Network</option>
+      <option>International Long Haul</option>
+    </select></div>
+    <div><label for="difficulty">Difficulty</label><select id="difficulty"><option>Chill</option><option selected>Balanced</option><option>Hardcore</option></select></div>
+  </div>
+  <div class="btnrow"><button id="generateBtn">Quick Contract</button><button id="jobBoardBtn" class="secondary">Browse Jobs</button></div>
+  <p id="statusLine" class="small" style="margin-top:10px;">Ready.</p>
+  <p class="small">Tip: Quick Contract and Browse Jobs use compatible aircraft filtering. Pilot’s Choice below lets you create your own route before locking into a dispatch.</p>
+</div></section>
+
+  <section class="card" id="jobBoardPanel"><h2>🗂️ 5-Job Board</h2><div class="body"><p class="compact-help">Tip: Some small airports use local codes like S03 or 3S8. Search by code in the sim map or zoom in.</p></div><div class="body" id="jobBoardDisplay"><p class="small">Generate a 5-job board when you want multiple choices.</p></div></section>
+
+  <details class="card custom-flight-card" id="customFlightPanel">
+    <summary><h2>🧭 Pilot's Choice / Custom Flight</h2></summary>
+    <div class="body">
+      <p class="small"><strong>Fly your own route.</strong> Create a simple dispatch for familiar skies, scenic routes, ferry hops, training runs, or light custom work.</p>
+      <div class="row">
+        <div><label for="customFrom">From ICAO</label><input id="customFrom" placeholder="KLMT" maxlength="4" style="text-transform:uppercase;"></div>
+        <div><label for="customTo">To ICAO</label><input id="customTo" placeholder="2S7" maxlength="4" style="text-transform:uppercase;"></div>
+        <div><label for="customDistance">Distance (NM)</label><input id="customDistance" type="number" min="1" max="6000" value="30"><button id="estimateCustomDistanceBtn" class="secondary" type="button" style="margin-top:6px">Estimate (if known)</button></div>
+      </div>
+      <p class="small hint">Tip: Some small airports use local codes like S03 or 3S8. Use the sim map or search by code to locate them.</p>
+      <div class="row">
+        <div><label for="customAircraft">Aircraft</label><select id="customAircraft"></select></div>
+        <div><label for="customFlightType">Flight Type</label><select id="customFlightType">
+          <option value="Scenic Flight">Scenic Flight</option>
+          <option value="Ferry Flight">Ferry Flight</option>
+          <option value="Training Flight">Training Flight</option>
+          <option value="Light Cargo">Light Cargo</option>
+          <option value="Passenger Hop">Passenger Hop</option>
+        </select></div>
+        <div><label for="customRisk">Risk</label><select id="customRisk">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>Medium-High</option>
+        </select></div>
+      </div>
+      <button id="createCustomFlightBtn" type="button">Create Flight</button>
+      <p class="small hint" id="customFlightHint">Enter distance manually. “Estimate” works for known airports only — otherwise use your sim map or EFB.</p>
+    </div>
+  </details>
+
+  <section class="card" id="aircraftPanel"><h2>✈️ Available Aircraft</h2><div class="body" id="aircraftDisplay"><p class="small">Owned aircraft or closest class-equivalent options appear after contract generation.</p></div></section>
+
+  <div id="missionDisplay" class="is-hidden"></div>
+
+  <div class="office-grid">
+    <div>
+      <section class="card is-hidden" id="scorePanel"><h2>⚠️ Mission Penalties</h2><div class="body checklist">
+  <label><input type="checkbox" id="penaltyLate"> Late arrival / missed EFB timer target <strong style="margin-left:auto;">-10%</strong></label>
+  <label><input type="checkbox" id="penaltyHardLanding"> Hard landing / rough touchdown <strong style="margin-left:auto;">-15%</strong></label>
+  <label><input type="checkbox" id="penaltyDamage"> Aircraft damage or serious mistake <strong style="margin-left:auto;">-25%</strong></label>
+  <label><input type="checkbox" id="penaltyWrongAirport"> Wrong runway, wrong ramp, or bad delivery location <strong style="margin-left:auto;">-20%</strong></label>
+  <label><input type="checkbox" id="penaltyFuel"> Fuel planning mistake / emergency fuel situation <strong style="margin-left:auto;">-10%</strong></label>
+  <div class="notice">Set the shown target in the MSFS EFB timer at takeoff. Apply penalties honestly. Late penalty starts after a 5-minute grace period. Abort/Fail is for true failures.</div>
+</div></section>
+      <details class="card"  ><summary><h2>🏆 Bonus Rules</h2></summary><div class="body">
+  <label><input type="checkbox" id="bonusNight"> Night operation bonus <strong style="float:right;">+10%</strong></label>
+  <label><input type="checkbox" id="bonusWeather"> Weather / wind bonus <strong style="float:right;">+15%</strong></label>
+  <label><input type="checkbox" id="bonusShort"> Short / rough strip bonus <strong style="float:right;">+12%</strong></label>
+  <label><input type="checkbox" id="bonusNoGPS"> No GPS / pilotage bonus <strong style="float:right;">+15%</strong></label>
+  <label><input type="checkbox" id="bonusClean"> Clean landing / no damage bonus <strong style="float:right;">+8%</strong></label>
+</div></details>
+      <details class="card"><summary><h2>📉 Cost / Penalty</h2></summary><div class="body"><div class="mission-box">
+  Operating/fuel/insurance cost: <span class="money" id="opCost" style="color:var(--red);">$0</span><br>Insurance preview: <span class="money" id="insurancePreview" style="color:var(--blue);">$0</span><br>Deadhead/relocation cost: <span class="money" id="deadheadCost" style="color:var(--red);">$0</span><br><span class="small">Deadhead = cost to move your aircraft from its last location to the departure airport.</span><br>
+  Bonus: <span class="money" id="bonusTotalDisplay">0%</span><br>
+  Penalty: <span class="money" id="penaltyTotal" style="color:var(--red);">0%</span><br>
+  Estimated payout: <span class="money" id="netPayout">$0</span>
+</div></div></details>
+    </div>
+    <div>
+      <section class="card" id="officePanel"><h2>🏢 Company Ledger</h2><div class="body">
+  <div class="kpi"><div><span class="small">Cash</span><strong id="cash">$0</strong></div><div><span class="small">Debt</span><strong id="debt">$0</strong></div><div><span class="small">Rep</span><strong id="rep">0</strong></div></div>
+  <div class="kpi" style="margin-top:10px;"><div><span class="small">Flights</span><strong id="flights">0</strong></div><div><span class="small">Rank</span><strong id="rank">Rookie Courier</strong></div><div><span class="small">Tier</span><strong id="tierUnlocked">1</strong></div></div><div class="mission-box">Current fleet location: <strong id="lastLocation">KSEA</strong><br>Total NM: <strong id="totalNM">0</strong><br>Total Hours: <strong id="totalHours">0.0</strong><br>Est. Gallons Burned: <strong id="totalGallons">0</strong></div>
+  <div class="btnrow"><button id="completeBtn" class="good">Complete Contract</button><button id="failBtn" class="danger">Abort / Fail</button></div>
+  <div class="row2">
+    <div>
+      <label for="loanAmountSelect">Take Loan</label>
+      <select id="loanAmountSelect">
+        <option value="50000">$50,000</option>
+        <option value="100000">$100,000</option>
+        <option value="250000" selected>$250,000</option>
+        <option value="500000">$500,000</option>
+        <option value="1000000">$1,000,000</option>
+      </select>
+      <button id="loanBtn" class="blue" style="margin-top:5px">Take Loan</button>
+    </div>
+    <div>
+      <label for="payAmountSelect">Make Payment</label>
+      <select id="payAmountSelect">
+        <option value="25000">$25,000</option>
+        <option value="50000">$50,000</option>
+        <option value="100000" selected>$100,000</option>
+        <option value="250000">$250,000</option>
+        <option value="all">Pay Off Balance</option>
+      </select>
+      <button id="payLoanBtn" class="secondary" style="margin-top:5px">Pay Debt</button>
+    </div>
+  </div>
+  <div class="notice">
+    💾 <strong>Backup your career:</strong> Tap <strong>Backup Save</strong>, then copy and paste the code somewhere safe — Notes, email, or a text file.<br><br>
+    📂 <strong>Restore later:</strong> Paste your saved code back into the box, then tap <strong>Restore Save</strong>.
+  </div>
+  <div class="btnrow3"><button id="exportBtn" class="secondary">💾 Backup Save</button><button id="copySaveBtn" class="secondary">📋 Copy Save</button><button id="importBtn" class="secondary">📂 Restore Save</button></div>
+  <textarea id="saveBox" rows="4" placeholder="Tap Backup Save to generate your career backup code. Paste a saved code here to restore." style="margin-top:10px;"></textarea>
+  <button id="resetBtn" class="secondary" style="margin-top:10px">Reset Career</button>
+  <p class="small">Career data saves locally on your device. Clearing browser data/cache can erase it, so use Backup Save before resetting Safari, switching devices, or updating browsers. Save Restore Fix is active. Loans charge interest after completed flights.</p>
+</div></section>
+      <details class="card"  ><summary><h2>🏠 Company Setup</h2></summary><div class="body">
+  <div class="row">
+    <div><label for="companyName">Company Name</label><input id="companyName" placeholder="Outlaw Air Service"></div>
+    <div><label for="homeBase">Home Base</label><select id="homeBase">
+      <option value="KSEA">KSEA — Seattle, USA</option>
+      <option value="KLAX">KLAX — Los Angeles, USA</option>
+      <option value="PANC">PANC — Anchorage, Alaska</option>
+      <option value="CYVR">CYVR — Vancouver, Canada</option>
+      <option value="EGLL">EGLL — London Heathrow, UK</option>
+      <option value="EHAM">EHAM — Amsterdam, Netherlands</option>
+      <option value="EDDF">EDDF — Frankfurt, Germany</option>
+      <option value="LFPG">LFPG — Paris CDG, France</option>
+      <option value="RJTT">RJTT — Tokyo Haneda, Japan</option>
+      <option value="YSSY">YSSY — Sydney, Australia</option>
+      <option value="NZAA">NZAA — Auckland, New Zealand</option>
+      <option value="OMDB">OMDB — Dubai, UAE</option>
+      <option value="FAOR">FAOR — Johannesburg, South Africa</option>
+      <option value="SBGR">SBGR — São Paulo, Brazil</option>
+      <option value="SKBO">SKBO — Bogotá, Colombia</option>
+      <option value="SPJC">SPJC — Lima, Peru</option>
+      <option value="Custom">Custom ICAO</option>
+    </select>
+    <input id="customHomeBase" placeholder="Custom ICAO, e.g. KSAC" maxlength="4" style="display:none;margin-top:8px;text-transform:uppercase;"><p class="small" id="customHomeBaseNote" style="display:none;margin-top:6px;">For custom bases, manually choose the closest operating region.</p>
+    </div>
+    <div><label for="insurancePlan">Insurance</label><select id="insurancePlan"><option value="none">None — $0 / flight</option><option value="basic">Basic — ~18% of aircraft op cost / flight</option><option value="premium">Premium — ~35% of aircraft op cost / flight</option></select><p class="small" id="insuranceInfo">Reduces “Maintenance Hit” probability. Estimated payout includes insurance cost when selected.</p></div>
+  </div>
+  <div class="btnrow"><button id="crewBtn" class="secondary">Run Crew Passive Income</button><button id="clearDispatchBtn" class="secondary">Clear Dispatch</button></div>
+  <button id="setFleetHomeBtn" class="secondary" style="margin-top:10px" type="button">Set Fleet Location to Home Base</button>
+  <p class="small">Company setup auto-saves when changed. Home-base returns get a small bonus. Insurance costs money per flight but reduces “Maintenance Hit” probability. Crew income can be run once per real day.<br><strong>Current Home Base:</strong> <span id="currentHomeBaseLabel">KSEA</span></p>
+</div></details>
+    </div>
+  </div>
+
+  <details class="card"  ><summary><h2>🛩️ Fleet</h2></summary><div class="body" id="fleetDisplay"><p class="small">Fleet loading...</p></div></details>
+  <details class="card"  ><summary><h2>🛒 Aircraft Market</h2></summary><div class="body" id="marketDisplay"><p class="small">Market loading...</p></div></details>
+  <details class="card"  ><summary><h2>🧾 Flight Log</h2></summary><div class="body" id="logDisplay"><p class="small">No flights logged yet.</p></div></details>
+  <details class="card"  open><summary><h2>☕ Support / Notes</h2></summary><div class="body">
+  <p class="small">This tool is free. If you find it useful and want to support future updates, you can do that on Ko-fi.</p>
+  <p><a href="https://ko-fi.com/wacky_outlaw" target="_blank" rel="noopener" style="display:inline-block;padding:10px 14px;border-radius:8px;background:var(--gold);color:#111;text-decoration:none;font-weight:bold;">Support on Ko-fi ☕</a></p>
+</div></details>
+  <details class="card"  ><summary><h2>🧪 Release Notes / Future Improvements</h2></summary><div class="body">
+  <p><strong>v0.6.6 — Clarity & UX Patch</strong></p>
+
+  <p class="small">
+  This update focuses on first-time usability and removes common confusion points without changing the core gameplay loop.
+  </p>
+
+  <p class="small">
+  <strong>What changed:</strong><br>
+  • Added clearer “No Active Dispatch” guidance for new users<br>
+  • Added stronger Target Time / EFB Timer wording<br>
+  • Improved insurance transparency in payout and company setup text<br>
+  • Added aircraft/custom-flight reminder before dispatch<br>
+  • Added Deadhead explanation for relocation costs<br>
+  • Preserved the Clean Cockpit flow, Mini HUD, Pilot’s Choice, and honor-system design
+  </p>
+
+  <p class="small">
+  <strong>Future Improvements (v0.7+):</strong><br>
+  • SimBrief launch support after outside-source testing<br>
+  • Improved mobile input handling for ICAO and numeric fields<br>
+  • Optional auto-distance estimation refinement<br>
+  • Minor tablet/landscape layout tightening<br>
+  • Expanded airport reference support<br>
+  • More contract variety without adding heavy complexity
+  </p>
+
+  <div class="notice">Built for console pilots and Free Flight users. Landscape is preferred on tablets/iPad, but portrait is fully supported. Future updates will continue to follow the KISS philosophy: lightweight, fast, and console-friendly.</div>
+</div></details>
+</div>
+
+
+<script>
+const airports={
+"Southern Oregon":["KRBG","KMFR","KLMT","KOTH","KONP","S03","3S8","KBDN","KSLE","KAST"],
+"Pacific Northwest":["KSEA","KPDX","KPAE","KBLI","KORS","KTIW","KEUG","KGEG","KHLN","KGPI","CYVR","CYAZ"],
+"Alaska Bush":["PANC","PALH","PATK","PABE","PAHO","PAJN","PASI","PAKT","PAGY","PAUN"],
+"Mountain West":["KBOI","KSUN","KJAC","KMSO","KBZN","KCOD","KIDA","KASE","KTEX","KGJT","KSLC","KDEN"],
+"Southwest Desert":["KPHX","KSDL","KTUS","KABQ","KLAS","KSGU","KFLG","KSAF","KELP","KPSP"],
+"Midwest Plains":["KOMA","KICT","KOKC","KMCI","KSTL","KDSM","KFSD","KMSP","KDLH","KORD"],
+"East Coast Corridor":["KBOS","KJFK","KLGA","KEWR","KPHL","KBWI","KDCA","KIAD","KRIC","KORF"],
+"Island / Coastal":["PHNL","PHOG","PHKO","PHLI","PHTO","CYVR","CYAZ","KAVX","KSBP","KMRY"],
+"South America / Andes":["SKBO","SKMD","SKCL","SEQM","SECU","SPJC","SLLP","SCEL","SCTB","SAEZ"],
+"South America / Cartel Corridor":["SKBO","SKMD","SKRG","SKCL","SEQM","SPJC","SPZO","SLVR","SLLP","MPTO"],
+"Regional Airline Network":["KLAX","KSFO","KSEA","KDEN","KPHX","KDFW","KLAS","KPDX","KSLC","KMSP","CYVR","EGLL","EHAM","EDDF","LFPG","RJTT","YSSY","SBGR","SKBO","SPJC"],
+"International Long Haul":["KLAX","KJFK","KSEA","KSFO","CYVR","EGLL","EHAM","LFPG","EDDF","RJTT","YSSY","NZAA","OMDB","FAOR","SBGR","SKBO","SPJC"]
+};
+
+const airportCoords={
+ "KLMT":[42.1561,-121.7330],
+ "KRBG":[43.2388,-123.3560],
+ "KMFR":[42.3742,-122.8735],
+ "KOTH":[43.4171,-124.2460],
+ "KONP":[44.5804,-124.0579],
+ "S03":[42.1037,-123.6819],
+ "3S8":[44.5249,-123.0917],
+ "KBDN":[44.0948,-121.2000],
+ "KSLE":[44.9095,-123.0030],
+ "KAST":[46.1580,-123.8787],
+ "2S7":[42.5832,-121.8761],
+ "KSEA":[47.4502,-122.3088],
+ "KPDX":[45.5898,-122.5951],
+ "KLAX":[33.9416,-118.4085],
+ "PANC":[61.1744,-149.9964],
+ "CYVR":[49.1967,-123.1815],
+ "KSAC":[38.5125,-121.4935]
+};
+function estimateDistanceNM(from,to){
+ const a=airportCoords[from], b=airportCoords[to];
+ if(!a || !b) return null;
+ const R=3440.065;
+ const lat1=a[0]*Math.PI/180, lat2=b[0]*Math.PI/180;
+ const dLat=(b[0]-a[0])*Math.PI/180;
+ const dLon=(b[1]-a[1])*Math.PI/180;
+ const h=Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
+ return Math.max(1, Math.round(2*R*Math.asin(Math.sqrt(h))));
+}
+function updateCustomDistanceEstimate(){
+ const from=(el("customFrom")?.value||"").trim().toUpperCase();
+ const to=(el("customTo")?.value||"").trim().toUpperCase();
+ const hint=el("customFlightHint");
+ const dist=estimateDistanceNM(from,to);
+ if(dist){
+   if(el("customDistance")) el("customDistance").value=dist;
+   if(hint) hint.textContent="Estimated distance: "+dist+" NM. You can override manually if the sim route differs.";
+ }else{
+   if(hint) hint.textContent="Airport not in estimator. Enter NM manually from the sim map or EFB distance.";
+ }
+}
+
+const ranks=[
+{name:"Rookie Courier",tier:1,rep:0},{name:"Bush Operator",tier:2,rep:18},{name:"Cargo Contractor",tier:3,rep:45},{name:"Regional Captain",tier:4,rep:90},{name:"Heavy Ops Director",tier:5,rep:160}
+];
+const missionTypes=["Bush Cargo","Medical Run","No Questions Asked","Remote Supply","Heli Utility","Vintage Haul","Rescue / Extraction","Cartel Courier","Jungle Strip Run","Border Dash","Regional Charter","Express Cargo","Airline Feeder","Heavy Cargo","International Charter","Special Transport","Passenger Shuttle","Medical Passenger Transfer","VIP Charter"];
+
+const aircraft={
+"C152":{tier:1,cost:0,op:160,cruise:105,maint:5000,cls:"Tiny GA",mod:1.22,tags:["ga","small"],note:"Starter trainer courier."},
+"C172":{tier:1,cost:0,op:220,cruise:120,maint:6500,cls:"Light GA",mod:1.10,tags:["ga","small"],note:"Default starter workhorse."},
+"XCub":{tier:1,cost:45000,op:200,cruise:115,maint:7000,cls:"Bush / STOL",mod:1.30,tags:["bush","stol","small"],note:"Small, challenging bush aircraft."},
+"Aviat Husky":{tier:1,cost:52000,op:220,cruise:110,maint:7500,cls:"Bush / STOL",mod:1.28,tags:["bush","stol","small"],note:"Light bush courier."},
+"Cabri G2":{tier:1,cost:80000,op:420,cruise:90,maint:12000,cls:"Light Heli",mod:1.35,tags:["heli","small"],note:"Tiny helicopter challenge."},
+
+"Cessna 207T":{tier:2,cost:170000,op:520,cruise:135,maint:16000,cls:"Utility GA",mod:1.10,tags:["ga","utility","bush"],note:"Small cargo hauler."},
+"DHC-2 Beaver":{tier:2,cost:240000,op:760,cruise:115,maint:22000,cls:"Bush / STOL",mod:1.20,tags:["bush","stol","float"],note:"Ideal bush aircraft."},
+"PC-6 Porter":{tier:2,cost:320000,op:900,cruise:125,maint:28000,cls:"Bush / STOL",mod:1.25,tags:["bush","stol"],note:"Excellent rough strip aircraft."},
+"Maule M7":{tier:2,cost:155000,op:480,cruise:120,maint:14000,cls:"Bush / STOL",mod:1.22,tags:["bush","stol"],note:"Rough field choice."},
+"Bell 47J Ranger":{tier:2,cost:210000,op:850,cruise:85,maint:26000,cls:"Light Heli",mod:1.32,tags:["heli","rescue","small"],note:"Precision heli work."},
+"Bell 407":{tier:2,cost:430000,op:1500,cruise:125,maint:42000,cls:"Helicopter",mod:1.18,tags:["heli","rescue","utility"],note:"Utility and rescue."},
+"H125":{tier:2,cost:500000,op:1700,cruise:130,maint:50000,cls:"Helicopter",mod:1.22,tags:["heli","rescue"],note:"Mountain utility."},
+
+"C208 Caravan":{tier:3,cost:850000,op:2400,cruise:165,maint:65000,cls:"Utility Cargo",mod:.92,tags:["cargo","utility","bush"],note:"Very capable cargo machine."},
+"Antonov An-2":{tier:3,cost:520000,op:1600,cruise:95,maint:52000,cls:"Bush Utility",mod:1.18,tags:["bush","vintage","cargo","stol"],note:"Slow, tough, rough-strip hauler."},
+"DHC-4 Caribou":{tier:3,cost:1200000,op:3400,cruise:170,maint:95000,cls:"Tactical STOL Cargo",mod:1.08,tags:["bush","cargo","stol"],note:"Big rough-field cargo."},
+"Short SC.7 Skyvan":{tier:3,cost:950000,op:2800,cruise:150,maint:75000,cls:"Utility Cargo",mod:1.08,tags:["cargo","stol","utility"],note:"Boxy cargo hauler."},
+"DC-3 / C-47":{tier:3,cost:1500000,op:4200,cruise:180,maint:120000,cls:"Vintage Cargo",mod:1.05,tags:["cargo","vintage","twin"],note:"Bigger vintage cargo."},
+"C-47D Skytrain":{tier:3,cost:1600000,op:4400,cruise:180,maint:125000,cls:"Vintage Cargo",mod:1.06,tags:["cargo","vintage","twin"],note:"Military cargo classic."},
+"Beech 18":{tier:3,cost:725000,op:2100,cruise:190,maint:62000,cls:"Vintage Cargo",mod:1.12,tags:["cargo","vintage","twin"],note:"Classic twin cargo."},
+"Curtiss C-46 Commando":{tier:3,cost:1850000,op:5200,cruise:205,maint:150000,cls:"Heavy Vintage Cargo",mod:1.08,tags:["cargo","vintage","heavy"],note:"Mountain and jungle hauler."},
+
+"King Air 350":{tier:4,cost:3100000,op:8500,cruise:300,maint:220000,cls:"Regional Twin",mod:.95,tags:["regional","fast","charter","passenger"],note:"Fast regional charter."},
+"TBM 930":{tier:4,cost:4100000,op:9500,cruise:320,maint:250000,cls:"Fast Turboprop",mod:.92,tags:["regional","fast","charter","passenger"],note:"Fast VIP/courier aircraft."},
+"PC-12":{tier:4,cost:4800000,op:10500,cruise:260,maint:280000,cls:"Utility Turboprop",mod:.98,tags:["regional","cargo","charter","passenger"],note:"High-end utility hauler."},
+"ATR 72":{tier:4,cost:12000000,op:26000,cruise:275,maint:650000,cls:"Regional Airliner",mod:.88,tags:["regional","airline","cargo"],note:"Feeder airline work."},
+"Citation CJ4":{tier:4,cost:8500000,op:19000,cruise:410,maint:520000,cls:"Light Jet",mod:.85,tags:["regional","fast","charter","passenger"],note:"Fast executive charter."},
+
+"A320neo":{tier:5,cost:55000000,op:90000,cruise:450,maint:2800000,cls:"Airliner",mod:.78,tags:["heavy","airline","longhaul","passenger"],note:"Airline-scale operations."},
+"737 MAX":{tier:5,cost:65000000,op:105000,cruise:455,maint:3300000,cls:"Airliner",mod:.78,tags:["heavy","airline","longhaul","passenger"],note:"Large passenger contracts."},
+"A310":{tier:5,cost:85000000,op:145000,cruise:470,maint:4200000,cls:"Heavy Jet",mod:.80,tags:["heavy","cargo","longhaul"],note:"Heavy cargo and long-haul charter."},
+"C-17 Globemaster":{tier:5,cost:125000000,op:210000,cruise:450,maint:6200000,cls:"Strategic Airlifter",mod:.86,tags:["heavy","cargo","military"],note:"Massive cargo endgame."},
+"747-8F":{tier:5,cost:190000000,op:310000,cruise:500,maint:9000000,cls:"Heavy Freighter",mod:.75,tags:["heavy","cargo","longhaul"],note:"Top-tier global cargo."}
+};
+
+const missionData={
+"Bush Cargo":{tierMin:1,tierMax:3,base:3800,cargo:"parts, mail, groceries, or equipment",risk:"Medium",tags:["bush","stol","ga","cargo"],regions:["Southern Oregon","Pacific Northwest","Alaska Bush","Mountain West","Southwest Desert","Midwest Plains"]},
+"Medical Run":{tierMin:1,tierMax:4,base:5200,cargo:"medical supplies or urgent transport",risk:"Medium-High",tags:["ga","bush","heli","utility","regional"],regions:["Southern Oregon","Alaska Bush","Mountain West","Southwest Desert","Midwest Plains","South America / Andes"]},
+"No Questions Asked":{tierMin:1,tierMax:3,base:6900,cargo:"sealed cargo with no paperwork",risk:"High",tags:["ga","bush","cargo","heli","fast"],regions:["Southern Oregon","Southwest Desert","South America / Cartel Corridor","Island / Coastal"]},
+"Remote Supply":{tierMin:1,tierMax:3,base:4800,cargo:"fuel drums, tools, food, or camp supplies",risk:"Medium",tags:["bush","stol","cargo","utility"],regions:["Alaska Bush","Mountain West","Southwest Desert","South America / Andes"]},
+"Heli Utility":{tierMin:1,tierMax:2,base:6000,cargo:"crew transfer, ridge-top delivery, or utility support",risk:"High",tags:["heli"],regions:["Southern Oregon","Alaska Bush","Mountain West","Southwest Desert","South America / Andes","Island / Coastal"]},
+"Vintage Haul":{tierMin:3,tierMax:3,base:11500,cargo:"bulk cargo, mail sacks, or vintage charter freight",risk:"Medium",tags:["vintage","cargo"],regions:["Pacific Northwest","Southern Oregon","Alaska Bush","Mountain West","Midwest Plains","South America / Andes"]},
+"Rescue / Extraction":{tierMin:1,tierMax:3,base:7600,cargo:"injured hiker, stranded crew, or emergency pickup",risk:"High",tags:["heli","bush","stol"],regions:["Alaska Bush","Mountain West","Southwest Desert","South America / Andes"]},
+"Cartel Courier":{tierMin:1,tierMax:3,base:9800,cargo:"sealed high-risk cargo between remote strips",risk:"Very High",tags:["ga","bush","stol","heli","cargo"],regions:["South America / Cartel Corridor"]},
+"Jungle Strip Run":{tierMin:2,tierMax:3,base:9200,cargo:"small cargo into a rough jungle or mountain strip",risk:"High",tags:["bush","stol","cargo"],regions:["South America / Andes","South America / Cartel Corridor"]},
+"Border Dash":{tierMin:2,tierMax:4,base:12000,cargo:"urgent low-profile cargo across difficult terrain",risk:"Very High",tags:["ga","fast","cargo","heli","regional"],regions:["South America / Cartel Corridor","Mountain West","Southwest Desert"]},
+"Regional Charter":{tierMin:4,tierMax:4,base:52000,cargo:"VIPs, company staff, or regional passengers",risk:"Medium",tags:["regional","charter","fast"],regions:["Regional Airline Network","Pacific Northwest","Mountain West","Southwest Desert","Midwest Plains","East Coast Corridor"]},
+"Express Cargo":{tierMin:3,tierMax:4,base:32000,cargo:"time-sensitive cargo or priority freight",risk:"Medium-High",tags:["cargo","regional","fast"],regions:["Regional Airline Network","Pacific Northwest","Southern Oregon","Mountain West","Southwest Desert","Midwest Plains","East Coast Corridor","South America / Andes"]},
+"Airline Feeder":{tierMin:4,tierMax:5,base:125000,cargo:"scheduled passenger feeder route",risk:"Medium",tags:["airline","regional","passenger"],regions:["Regional Airline Network"]},
+"Heavy Cargo":{tierMin:5,tierMax:5,base:410000,cargo:"large freight contract or strategic cargo",risk:"High",tags:["heavy","cargo","longhaul"],regions:["International Long Haul","Regional Airline Network"]},
+"International Charter":{tierMin:5,tierMax:5,base:480000,cargo:"long-haul passengers or executive charter",risk:"Medium-High",tags:["heavy","airline","longhaul","passenger"],regions:["International Long Haul"]},
+"Special Transport":{tierMin:5,tierMax:5,base:650000,cargo:"oversized cargo, aircraft sections, satellites, or high-value industrial equipment",risk:"Very High",tags:["heavy","cargo","longhaul"],regions:["International Long Haul","Regional Airline Network"]},
+"Passenger Shuttle":{tierMin:1,tierMax:4,base:5600,cargo:"passengers on a short scheduled shuttle",risk:"Medium",tags:["ga","regional","charter","passenger"],regions:["Southern Oregon","Pacific Northwest","Mountain West","Southwest Desert","Midwest Plains","East Coast Corridor","Regional Airline Network"]},
+"Medical Passenger Transfer":{tierMin:2,tierMax:4,base:13500,cargo:"medical passenger or non-emergency patient transfer",risk:"Medium-High",tags:["ga","regional","charter","passenger","utility"],regions:["Southern Oregon","Pacific Northwest","Alaska Bush","Mountain West","Southwest Desert","Midwest Plains","Regional Airline Network"]},
+"VIP Charter":{tierMin:4,tierMax:5,base:90000,cargo:"VIP passengers or executive charter clients",risk:"Medium",tags:["regional","fast","charter","passenger","longhaul"],regions:["Regional Airline Network","International Long Haul","East Coast Corridor","Southwest Desert"]}
+};
+
+const SAVE_VERSION="v061";
+const defaultCareer={cash:0,debt:0,rep:0,flights:0,owned:["C152","C172"],log:[],companyName:"Outlaw Air Service",homeBase:"KSEA",insurance:"none",lastCrewRun:"",lastLocation:"KSEA",totalNM:0,totalHours:0,totalGallons:0,fleetStats:{},nightOps:false};
+function loadCareerData(){
+ const raw=localStorage.getItem("careerBuilderBeta01");
+ if(!raw) return {...defaultCareer};
+ try{
+   const payload=raw.includes("|") ? raw.slice(raw.indexOf("|")+1) : raw;
+   const parsed=JSON.parse(payload);
+   return {...defaultCareer, ...parsed, owned:Array.isArray(parsed.owned)&&parsed.owned.length?parsed.owned:defaultCareer.owned};
+ }catch(e){
+   console.warn("Career save failed to load; using default career.", e);
+   return {...defaultCareer};
+ }
+}
+let career=loadCareerData();
+let currentMission=null, selectedAircraft=null;
+function el(id){ return document.getElementById(id); }
+
+function toggleSection(id, show){
+ const node=el(id);
+ if(!node) return;
+ node.classList.toggle("is-hidden", !show);
+}
+function hasActiveContract(){ return !!currentMission; }
+function updateUIState(){
+ const active=hasActiveContract();
+ const hasBoard=window.currentJobBoard && window.currentJobBoard.length;
+
+ document.body.classList.toggle("has-active-flight", active);
+ document.body.classList.toggle("is-planning", !active);
+
+ toggleSection("dispatchPanel", active || (!active && !hasBoard));
+ toggleSection("aircraftPanel", active);
+ toggleSection("scorePanel", active && !!selectedAircraft);
+ toggleSection("jobsPanel", false);
+ toggleSection("jobBoardPanel", !active && !!hasBoard);
+ toggleSection("customFlightPanel", !active && !hasBoard);
+
+ const dispatch=el("dispatchPanel");
+ if(dispatch){
+   dispatch.classList.toggle("clean-active", active);
+   dispatch.classList.toggle("start-card", !active && !hasBoard);
+ }
+
+ const score=el("scorePanel");
+ if(score) score.classList.toggle("clean-secondary", active && !!selectedAircraft);
+
+ if(!active && !hasBoard){
+   const d=el("dispatchDisplay");
+   if(d){
+     d.innerHTML=`<div class="dispatch-card">
+       <div class="dispatch-title">READY</div>
+       <div class="dispatch-timer">Start New Contract</div>
+       <div class="mission-box">
+         <strong>👉 Start here → Generate your contract</strong><br><br>
+         <strong>Choose how you want to dispatch:</strong><br>
+         Quick Contract, Browse Jobs, or use Pilot’s Choice below to create your own flight.
+       </div>
+       <div class="next-action">
+         <button id="startQuickBtn" type="button">Quick Contract</button>
+         <button id="startBrowseBtn" class="secondary" type="button">Browse Jobs</button>
+       </div>
+       <p class="small" style="margin-top:10px;">After selection, your Dispatch flow will appear automatically.</p>
+     </div>`;
+
+     const q=el("startQuickBtn");
+     const b=el("startBrowseBtn");
+     if(q) q.onclick=()=>generateMission();
+     if(b) b.onclick=()=>generateJobBoard();
+   }
+ }
+}
+function scrollToDispatch(){
+ const panel=el("dispatchPanel");
+ if(panel) panel.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function money(n){return "$"+Math.round(n).toLocaleString();}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function setStatus(m){let e=el("statusLine"); if(e)e.textContent=m;}
+function updateCompanyTitle(){
+ const title=el("companyTitle");
+ const input=el("companyName");
+ if(!title) return;
+ const name=input ? input.value.trim() : (career.companyName||"Outlaw Air Service");
+ title.textContent=(name || "Outlaw Air Service").toUpperCase();
+}
+function getRank(){let r=ranks[0]; ranks.forEach(x=>{if(career.rep>=x.rep)r=x}); return r;}
+function availableMissionTypes(){let t=getRank().tier; return missionTypes.filter(m=>missionData[m] && missionData[m].tierMin<=t);}
+function missionFlyableByOwned(type){
+ const data=missionData[type];
+ if(!data) return false;
+ return career.owned.some(n=>{
+   const a=aircraft[n];
+   if(!a) return false;
+   const tags=a.tags||[];
+   return a.tier>=data.tierMin && a.tier<=data.tierMax && (data.tags||[]).some(t=>tags.includes(t));
+ });
+}
+function flyableMissionTypes(){
+ return availableMissionTypes().filter(type=>missionFlyableByOwned(type));
+}
+function populateCustomAircraft(){
+ const s=el("customAircraft");
+ if(!s) return;
+ if(!Array.isArray(career.owned) || !career.owned.length){
+   career.owned=[...defaultCareer.owned];
+ }
+ const owned=(career.owned||[]).filter(n=>aircraft[n]);
+ s.innerHTML=owned.map(n=>`<option value="${n}">${n} — ${aircraft[n]?.cls||"Aircraft"}</option>`).join("");
+ if(!owned.length){
+   s.innerHTML='<option value="">No owned aircraft found</option>';
+ }else if(!s.value){
+   s.value=owned[0];
+ }
+}
+function customFlightBase(type, dist, acName){
+ const a=aircraft[acName] || aircraft["C172"];
+ const tier=a.tier || 1;
+ const multipliers={
+   "Scenic Flight":18,
+   "Ferry Flight":14,
+   "Training Flight":12,
+   "Light Cargo":28,
+   "Passenger Hop":24
+ };
+ const fixed={
+   "Scenic Flight":1200,
+   "Ferry Flight":900,
+   "Training Flight":700,
+   "Light Cargo":1800,
+   "Passenger Hop":1600
+ };
+ let base=(fixed[type]||1000)+(dist*(multipliers[type]||18))+(tier*250);
+ return Math.max(500, Math.round(base));
+}
+function customFlightTags(type, acName){
+ const a=aircraft[acName] || aircraft["C172"];
+ const tags=["custom"];
+ if(type==="Light Cargo") tags.push("cargo");
+ if(type==="Passenger Hop" || type==="Scenic Flight") tags.push("passenger");
+ if(type==="Ferry Flight") tags.push("ferry");
+ if(type==="Training Flight") tags.push("training");
+ return [...new Set([...(a.tags||[]), ...tags])];
+}
+function createCustomFlight(){
+ if(currentMission){
+   alert("You have an active dispatch. Complete or abort it before creating a custom flight.");
+   return;
+ }
+ const from=(el("customFrom")?.value||"").trim().toUpperCase();
+ const to=(el("customTo")?.value||"").trim().toUpperCase();
+ const ac=el("customAircraft")?.value;
+ const type=el("customFlightType")?.value || "Scenic Flight";
+ const risk=el("customRisk")?.value || "Low";
+ let typedDist=parseInt(el("customDistance")?.value||"",10);
+ const estimated=estimateDistanceNM(from,to);
+ const dist=Math.max(1, Math.min(6000, typedDist || estimated || 30));
+ if(el("customDistance")) el("customDistance").value=dist;
+
+ if(!/^[A-Z0-9]{3,4}$/.test(from) || !/^[A-Z0-9]{3,4}$/.test(to)){
+   alert("Enter valid 3- or 4-character airport identifiers.");
+   return;
+ }
+ if(from===to && type!=="Scenic Flight" && type!=="Training Flight"){
+   alert("From and To cannot be the same unless this is a Scenic Flight or Training Flight.");
+   return;
+ }
+ if(!ac || !career.owned.includes(ac)){
+   alert("Choose an owned aircraft.");
+   return;
+ }
+
+ currentMission={
+   type:type,
+   region:"Pilot's Choice",
+   dep:from,
+   dest:to,
+   dist:dist,
+   base:customFlightBase(type, dist, ac),
+   cargo:type==="Scenic Flight"?"scenic passengers / sightseeing":
+         type==="Ferry Flight"?"aircraft repositioning":
+         type==="Training Flight"?"training sortie":
+         type==="Light Cargo"?"light custom cargo":
+         "local passengers",
+   risk:risk,
+   tags:customFlightTags(type, ac),
+   tierMin:1,
+   tierMax:aircraft[ac]?.tier || 5,
+   custom:true
+ };
+ selectedAircraft=ac;
+ window.currentJobBoard=null;
+ resetChecks();
+ displayMission();
+ displayAircraft();
+ updatePayout();
+ updateUIState();
+ setStatus("Custom flight created.");
+ scrollToDispatch();
+
+ const radio=document.querySelector(`input[name="aircraftPick"][data-aircraft="${ac}"]`);
+ if(radio){
+   radio.checked=true;
+   const row=document.querySelector(`[data-aircraft-row="${ac}"]`);
+   if(row) row.classList.add("aircraft-row-selected");
+ }
+ updatePayout();
+ updateUIState();
+}
+function difficultyMod(){let d=el("difficulty").value; return d==="Chill"?.92:d==="Hardcore"?1.18:1;}
+function fuelRegionMultiplier(region){
+ let mult = 1.0;
+ if(region.includes("Alaska")) mult = 1.18;
+ if(region.includes("South America")) mult = 1.22;
+ if(region.includes("Island")) mult = 1.15;
+ if(region.includes("International")) mult = 1.30;
+ if(currentMission && ["Jungle Strip Run","Bush Cargo","Remote Supply","Cartel Courier"].includes(currentMission.type)) mult *= 1.40;
+ if(currentMission && currentMission.type==="Special Transport") mult *= 2.0;
+ return mult;
+}
+function insuranceCost(){
+ if(career.insurance==="basic")return selectedAircraft?Math.round(aircraft[selectedAircraft].op*.18):0;
+ if(career.insurance==="premium")return selectedAircraft?Math.round(aircraft[selectedAircraft].op*.35):0;
+ return 0;
+}
+function insuranceEstimateText(){
+ if(!selectedAircraft){
+   if(career.insurance==="basic") return "Basic: ~18% of selected aircraft operating cost; reduces “Maintenance Hit” probability by 5%.";
+   if(career.insurance==="premium") return "Premium: ~35% of selected aircraft operating cost; reduces “Maintenance Hit” probability by 12%.";
+   return "No insurance: no added cost, no “Maintenance Hit” reduction.";
+ }
+ const cost=insuranceCost();
+ if(career.insurance==="basic") return "Basic insurance: "+money(cost)+" this flight; Maintenance Hit probability -5%.";
+ if(career.insurance==="premium") return "Premium insurance: "+money(cost)+" this flight; Maintenance Hit probability -12%.";
+ return "No insurance: $0 this flight; no Maintenance Hit reduction.";
+}
+function maintenanceRiskReduction(){
+ if(career.insurance==="basic")return .05;
+ if(career.insurance==="premium")return .12;
+ return 0;
+}
+
+function generateMission(typeOverride){
+if(currentMission){
+  alert("You have an active dispatch. Complete or abort it before starting a new contract.");
+  return;
+}
+ const available=availableMissionTypes();
+ const flyable=flyableMissionTypes();
+ let type=typeOverride||el("missionType").value;
+
+ if(type==="random") {
+   if(!flyable.length){
+     alert("No flyable contracts match your current owned aircraft. Buy a matching aircraft or reset starter fleet.");
+     return;
+   }
+   type=pick(flyable);
+ }
+
+ if(!available.includes(type)){alert("That contract is locked by company tier. Build reputation first.");return;}
+ if(!missionFlyableByOwned(type)){
+   alert("Your current fleet does not qualify for this contract type. Pick Random Available or buy a matching aircraft.");
+   return;
+ }
+
+ const data=missionData[type]; if(!data){alert("Mission data missing for: "+type); return;} let region=el("region").value; if(!data.regions.includes(region))region=pick(data.regions);
+ let dep=pick(airports[region]),dest=pick(airports[region]); while(dest===dep)dest=pick(airports[region]);
+ let distBase=data.tierMin>=5?500:data.tierMin>=4?220:data.tierMin>=3?120:35;
+ let distRange=data.tierMin>=5?5200:data.tierMin>=4?850:data.tierMin>=3?260:180;
+ let dist=Math.floor(distBase+Math.random()*distRange);
+ if(data.tierMin>=5 && dist<500) dist=500+Math.floor(Math.random()*3500);
+ currentMission={type,region,dep,dest,dist,base:Math.round((data.base+dist*(data.tierMin>=5?58:data.tierMin>=4?85:34))*difficultyMod()),cargo:data.cargo,risk:data.risk,tags:data.tags,tierMin:data.tierMin,tierMax:data.tierMax};
+ selectedAircraft=null; resetChecks(); displayMission(); displayAircraft(); updatePayout(); updateUIState(); setStatus("Contract generated."); scrollToDispatch();
+}
+function generateRandomMissionData(){
+ const available = flyableMissionTypes();
+ if(!available.length) return null;
+
+ const type = pick(available);
+ const data = missionData[type];
+ if(!data) return null;
+
+ let region = el("region").value;
+ if(!data.regions.includes(region)) region = pick(data.regions);
+
+ let dep = pick(airports[region]);
+ let dest = pick(airports[region]);
+ while(dest === dep) dest = pick(airports[region]);
+
+ let distBase = data.tierMin>=5?500:data.tierMin>=4?220:data.tierMin>=3?120:35;
+ let distRange = data.tierMin>=5?5200:data.tierMin>=4?850:data.tierMin>=3?260:180;
+ let dist = Math.floor(distBase + Math.random()*distRange);
+ if(data.tierMin>=5 && dist<500) dist=500+Math.floor(Math.random()*3500);
+
+ return {
+   type,
+   region,
+   dep,
+   dest,
+   dist,
+   base: Math.round((data.base + dist*(data.tierMin>=5?58:data.tierMin>=4?85:34)) * difficultyMod()),
+   cargo: data.cargo,
+   risk: data.risk,
+   tags: data.tags,
+   tierMin: data.tierMin,
+   tierMax: data.tierMax
+ };
+}
+
+function generateJobBoard(){
+ if(currentMission){
+   alert("You have an active dispatch. Complete or abort it before starting a new contract.");
+   return;
+ }
+
+ const available = flyableMissionTypes();
+ if(!available.length){
+   alert("No flyable contracts match your current owned aircraft. Buy a matching aircraft or reset starter fleet.");
+   return;
+ }
+
+ const selectedTypes = [...available].sort(()=>Math.random()-0.5).slice(0,5);
+ let jobs = [];
+
+ selectedTypes.forEach(type=>{
+   const data = missionData[type];
+   if(!data) return;
+
+   let region = el("region").value;
+   if(!data.regions.includes(region)) region = pick(data.regions);
+
+   let dep = pick(airports[region]);
+   let dest = pick(airports[region]);
+   while(dest === dep) dest = pick(airports[region]);
+
+   let distBase = data.tierMin>=5?500:data.tierMin>=4?220:data.tierMin>=3?120:35;
+   let distRange = data.tierMin>=5?5200:data.tierMin>=4?850:data.tierMin>=3?260:180;
+   let dist = Math.floor(distBase + Math.random()*distRange);
+   if(data.tierMin>=5 && dist<500) dist=500+Math.floor(Math.random()*3500);
+
+   jobs.push({
+     type,
+     region,
+     dep,
+     dest,
+     dist,
+     base: Math.round((data.base + dist*(data.tierMin>=5?58:data.tierMin>=4?85:34)) * difficultyMod()),
+     cargo: data.cargo,
+     risk: data.risk,
+     tags: data.tags,
+     tierMin: data.tierMin,
+     tierMax: data.tierMax
+   });
+ });
+
+ currentMission=null;
+ selectedAircraft=null;
+ el("missionDisplay").innerHTML='<p class="small">Pick a job from the board, then choose an aircraft. The Dispatch Card will update.</p>';
+ el("aircraftDisplay").innerHTML='<p class="small">Owned aircraft or closest class-equivalent options appear after contract generation.</p>';
+ el("jobBoardDisplay").innerHTML=`<table><thead><tr><th>Contract</th><th>Route</th><th>Base</th><th></th></tr></thead><tbody>${jobs.map((j,i)=>`<tr data-job-row="${i}"><td><strong>${j.type}</strong><br><span class="small">${j.risk} · Tier ${j.tierMin}-${j.tierMax}</span></td><td>${j.dep} → ${j.dest}<br><span class="small">${j.region} · ${j.dist} NM</span></td><td><strong>${money(j.base)}</strong></td><td><button onclick="selectJobFromBoard(${i});highlightJobRow(this);">Pick</button></td></tr>`).join("")}</tbody></table>`;
+ window.currentJobBoard=jobs;
+ updateUIState();
+ toggleSection("jobBoardPanel", true);
+ setStatus("5 unique jobs generated.");
+ const board=el("jobBoardPanel");
+ if(board) board.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function selectJobFromBoard(i){currentMission=window.currentJobBoard[i]; selectedAircraft=null; resetChecks(); displayMission(); displayAircraft(); updatePayout(); updateUIState(); scrollToDispatch();}
+function highlightJobRow(btn){
+ document.querySelectorAll("[data-job-row]").forEach(r=>r.classList.remove("selected-job-row"));
+ const row=btn.closest("tr");
+ if(row) row.classList.add("selected-job-row");
+}
+
+function displayMission(){
+ let m=currentMission;
+ el("missionDisplay").innerHTML=`<h3 class="mission-title">${m.type}</h3><div class="badges"><span class="badge gold">${m.region}</span><span class="badge">${m.dep} → ${m.dest}</span><span class="badge red">Operational Risk: ${m.risk}</span><span class="badge green">${m.dist} NM</span><span class="badge blue">Tier ${m.tierMin}-${m.tierMax}</span>${(m.dep===career.homeBase||m.dest===career.homeBase)?'<span class="badge green">Home Base Bonus</span>':''}</div><div class="mission-box"><strong>Job:</strong> ${m.custom ? "Fly " + m.cargo : "Move " + m.cargo} from <strong>${m.dep}</strong> to <strong>${m.dest}</strong>.<br><strong>Free Flight setup:</strong> Set route in MSFS Free Flight, pick an owned aircraft, fly it, apply bonuses/penalties, then log it.</div><p class="small">Contract value before aircraft choice, costs, and bonuses: <strong>${money(m.base)}</strong>. Remote/bush jobs may carry higher fuel cost. If your fleet is not already at the departure airport, a deadhead relocation cost applies.</p><div class="timerbox"><strong>Target Time / EFB Timer:</strong><br><span class="timerbig" id="efbTimerTarget">Pick an aircraft</span><br><span class="small" id="efbTimerNote">Target Time is based on route distance and selected aircraft cruise speed.</span></div>`;
+}
+function ownedAircraftForMission(){
+ if(currentMission && currentMission.custom){
+   return career.owned.filter(n=>aircraft[n]);
+ }
+ return career.owned.filter(n=>{let a=aircraft[n], tags=a.tags||[]; return a.tier>=currentMission.tierMin&&a.tier<=currentMission.tierMax&&(currentMission.tags||[]).some(t=>tags.includes(t));});
+}
+function displayAircraft(){
+ let choices=ownedAircraftForMission();
+ if(!choices.length){el("aircraftDisplay").innerHTML='<div class="notice"><strong>No compatible aircraft.</strong><br>Try Quick Contract, Browse Jobs, or buy a compatible aircraft.</div>';return;}
+ choices.sort((a,b)=>aircraft[a].tier-aircraft[b].tier||aircraft[a].op-aircraft[b].op);
+ el("aircraftDisplay").innerHTML=`<table><thead><tr><th>Pick</th><th>Aircraft</th><th>Notes</th><th>Cost</th></tr></thead><tbody>${choices.map(a=>`<tr data-aircraft-row="${a}"><td><input type="radio" name="aircraftPick" data-aircraft="${a}"></td><td><strong>${a}</strong><br><span class="small">Tier ${aircraft[a].tier} · ${aircraft[a].cls}</span></td><td>${aircraft[a].note}<br><span class="small">Cruise: ${aircraft[a].cruise} kt</span></td><td><strong>${Math.round(aircraft[a].mod*100)}%</strong><br><span class="small">Op ${money(aircraft[a].op)}<br>EFB ${formatMinutes(calcTimerMinutesForAircraft(a))}</span></td></tr>`).join("")}</tbody></table><div class="mission-box">Estimated gross: <span class="money" id="payout">${money(currentMission.base)}</span></div>`;
+ document.querySelectorAll('input[name="aircraftPick"]').forEach(e=>e.addEventListener("change",function(){
+   selectedAircraft=this.dataset.aircraft;
+   document.querySelectorAll("[data-aircraft-row]").forEach(row=>row.classList.remove("aircraft-row-selected"));
+   const row=document.querySelector(`[data-aircraft-row="${selectedAircraft}"]`);
+   if(row) row.classList.add("aircraft-row-selected");
+   updatePayout();
+   updateUIState();
+ }));
+}
+function calcTimerMinutesForAircraft(n){if(!currentMission||!n)return 0;let a=aircraft[n];let fm=currentMission.dist/a.cruise*60;let b=currentMission.risk.includes("Very")?10:15;if(currentMission.tierMin>=4)b=25;if(currentMission.tierMin>=5)b=45;return Math.ceil((fm+b)/5)*5;}
+function formatMinutes(mins){if(!mins)return"Pick aircraft";let h=Math.floor(mins/60),m=mins%60;return h?`${h}:${String(m).padStart(2,"0")}`:`${m} min`;}
+function updateTimerTarget(){let t=el("efbTimerTarget"),n=el("efbTimerNote");if(!t||!n)return;if(!selectedAircraft){t.textContent="Pick an aircraft";n.textContent="Target Time is based on route distance and selected aircraft cruise speed.";return;}let mins=calcTimerMinutesForAircraft(selectedAircraft);t.textContent=formatMinutes(mins);n.textContent="Set this in the MSFS EFB timer at takeoff. 5-minute grace period. 6-15 min late = Late penalty. 16-25 min late = add Fuel/other penalty. 25+ min = Fail or heavy penalty.";}
+function bonusTotal(){
+ let b=0;
+ if(el("bonusNight").checked)b+=.10;
+ if(el("bonusWeather").checked)b+=.15;
+ if(el("bonusShort").checked)b+=.12;
+ if(el("bonusNoGPS").checked)b+=.15;
+ if(el("bonusClean").checked)b+=.08;
+ return b;
+}
+function penaltyTotal(){
+ let p=0;
+ if(el("penaltyLate").checked)p+=.10;
+ if(el("penaltyHardLanding").checked)p+=.15;
+ if(el("penaltyDamage").checked)p+=.25;
+ if(el("penaltyWrongAirport").checked)p+=.20;
+ if(el("penaltyFuel").checked)p+=.10;
+ return Math.min(p,.75);
+}
+function grossPayout(){if(!currentMission)return 0;let mod=selectedAircraft?aircraft[selectedAircraft].mod:1;let homeBonus=(currentMission.dep===career.homeBase||currentMission.dest===career.homeBase)?.06:0;
+ let passengerBonus=currentMission.tags&&currentMission.tags.includes("passenger")?.05:0;
+ let specialBonus=currentMission.type==="Special Transport"?.50:0;
+ let customLimiter=currentMission.custom?.70:1;
+ return currentMission.base*mod*customLimiter*(1+bonusTotal()+homeBonus+passengerBonus+specialBonus)*(1-penaltyTotal());}
+function opCost(){
+ if(!selectedAircraft)return 0;
+ let base=aircraft[selectedAircraft].op;
+ let fuel=Math.round(base*(fuelRegionMultiplier(currentMission?currentMission.region:"")-1));
+ return base+fuel+insuranceCost();
+}
+function debtService(){return career.debt>0?Math.ceil(career.debt*.015):0;}
+function deadheadCost(){
+ if(!currentMission || !selectedAircraft) return 0;
+ if(!career.lastLocation) career.lastLocation = career.homeBase || "KSEA";
+ if(currentMission.dep === career.lastLocation) return 0;
+
+ // v0.5.4: simple distance-aware deadhead cost.
+ // Short reposition hops are cheaper; longer relocations cost more.
+ let distFactor = currentMission.dist < 100 ? 0.35 :
+                  currentMission.dist < 300 ? 0.45 :
+                  0.55;
+
+ return Math.round(aircraft[selectedAircraft].op * distFactor);
+}
+function netPayout(){return Math.max(0,grossPayout()-opCost()-deadheadCost()-debtService());}
+function updatePayout(){
+ let p=el("payout");
+ if(p)p.textContent=money(grossPayout());
+ let op=el("opCost");
+ if(op)op.textContent=money(opCost()+debtService());
+ let ip=el("insurancePreview");
+ if(ip)ip.textContent=insuranceEstimateText();
+ let ii=el("insuranceInfo");
+ if(ii)ii.textContent=insuranceEstimateText();
+ let dh=el("deadheadCost");
+ if(dh)dh.textContent=money(deadheadCost());
+ let bt=el("bonusTotalDisplay");
+ if(bt)bt.textContent="+"+Math.round(bonusTotal()*100)+"%";
+ let pt=el("penaltyTotal");
+ if(pt)pt.textContent=Math.round(penaltyTotal()*100)+"%";
+ let np=el("netPayout");
+ if(np)np.textContent=money(netPayout());
+ updateTimerTarget();
+ updateDispatchCard();
+}
+function resetChecks(){["penaltyLate","penaltyHardLanding","penaltyDamage","penaltyWrongAirport","penaltyFuel","bonusNight","bonusWeather","bonusShort","bonusNoGPS","bonusClean"].forEach(id=>{let e=el(id);if(e)e.checked=false;});}
+
+function ensureFleetStats(name){
+ if(!career.fleetStats) career.fleetStats={};
+ if(!career.fleetStats[name]) career.fleetStats[name]={flights:0,nm:0,hours:0,gallons:0,sinceInspection:0};
+ return career.fleetStats[name];
+}
+function gallonsForFlight(name, dist){
+ let tier=aircraft[name]?aircraft[name].tier:1;
+ let mult={1:.08,2:.12,3:.20,4:.35,5:.60}[tier] || .10;
+ return dist*mult;
+}
+function inspectionRiskBonus(name){
+ let s=ensureFleetStats(name);
+ return Math.min((s.sinceInspection||0)*.005,.10);
+}
+function inspectionProgress(name){ let s=ensureFleetStats(name); return Math.min(s.sinceInspection||0,20); }
+function updateDispatchCard(){
+ const d=el("dispatchDisplay");
+ if(!d) return;
+ if(!currentMission){
+   d.innerHTML=`<div class="dispatch-card">
+     <div class="dispatch-title">READY</div>
+     <div class="dispatch-timer">Start New Contract</div>
+     <div class="mission-box"><strong>Choose how you want to dispatch:</strong><br>Quick Contract, Browse Jobs, or use Pilot’s Choice below to create your own flight.</div>
+     <div class="start-actions">
+       <button onclick="generateMission()">Quick Contract</button>
+       <button class="secondary" onclick="generateJobBoard()">Browse Jobs</button>
+     </div>
+     <p class="small start-note">After selection, your Dispatch flow will appear automatically.</p>
+   </div>`;
+   return;
+ }
+ let timer=selectedAircraft?formatMinutes(calcTimerMinutesForAircraft(selectedAircraft)):"Pick aircraft";
+ let ac=selectedAircraft||"Pick aircraft";
+ let net=selectedAircraft?money(netPayout()):"Pick aircraft";
+ let gross=selectedAircraft?money(grossPayout()):money(currentMission.base);
+ let ops=selectedAircraft?money(opCost()+debtService()):"$0";
+ let dh=selectedAircraft?money(deadheadCost()):"$0";
+ let netClass=selectedAircraft && netPayout()<=0 ? "net-negative" : "";
+ d.innerHTML=`<div class="dispatch-card">
+   <div class="dispatch-title">EFB TIMER TARGET</div>
+   <div class="dispatch-timer">${timer}</div>
+   <div class="small">Set this in your sim before takeoff. Official timing stays in-sim.</div>
+   <div class="dispatch-grid">
+     <div><strong>Route</strong><br>${currentMission.dep} → ${currentMission.dest}</div>
+     <div><strong>Aircraft</strong><br>${ac}</div>
+     <div><strong>Distance</strong><br>${currentMission.dist} NM</div>
+     <div><strong>Risk / Cargo</strong><br>${currentMission.risk} · ${currentMission.cargo}</div>
+   </div>
+   <div class="dispatch-net"><strong>Estimated Payout:</strong> <span class="${netClass}">${net}</span></div>
+   <div class="flight-economics">
+     <strong>Flight Summary</strong><br>
+     <span class="small">Gross: ${gross} · Op/Debt/Insurance: ${ops} · Deadhead: ${dh} · Bonus: +${Math.round(bonusTotal()*100)}% · Penalty: ${Math.round(penaltyTotal()*100)}%</span>
+   </div>
+ </div>`;
+}
+
+function maintenanceDistanceFactor(){
+ if(!currentMission) return 1;
+
+ // v0.4.2 Flexible Finance: Significant risk reduction for ferry flights / short hops
+ if(currentMission.dist < 25) return 0.25;
+ if(currentMission.dist < 75) return 0.50;
+
+ // Medium-long flights increase wear slightly
+ if(currentMission.dist > 250 && currentMission.tierMin < 5) return 1.25;
+
+ // Long-haul heavy ops slightly increased risk
+ if(currentMission.dist > 1200 && currentMission.tierMin >= 5) return 1.20;
+
+ return 1;
+}
+function maintenanceEvent(){
+ if(!selectedAircraft)return {cost:0,text:"None"};
+ let a=aircraft[selectedAircraft];
+ let factor=maintenanceDistanceFactor();
+ let risk=currentMission.risk.includes("Very")?.18:currentMission.risk.includes("High")?.12:.07;
+ risk *= factor; if(selectedAircraft) risk += inspectionRiskBonus(selectedAircraft);
+ if(currentMission && currentMission.type==="Special Transport")risk+=.08;
+ if(el("penaltyDamage")?.checked) risk += .25;
+ if(el("penaltyHardLanding")?.checked) risk += .12;
+ if(el("bonusClean")?.checked) risk -= .04;
+ risk-=maintenanceRiskReduction();
+ risk=Math.max(.02,risk);
+ if(Math.random()<risk){
+   let c=Math.round(a.maint*(.18+Math.random()*.42)*factor);
+   let label=factor<1?"Short-hop reduced maintenance hit":factor>1?"Long-flight maintenance hit":"Maintenance hit";
+   return {cost:c,text:label+": "+money(c)};
+ }
+ return {cost:0,text:"None"};
+}
+function completeMission(){
+ if(!currentMission){alert("Generate a contract first.");return;} if(!selectedAircraft){alert("Pick an owned aircraft or closest equivalent first.");return;}
+ let gross=Math.round(grossPayout()), cost=opCost()+deadheadCost()+debtService(), maint=maintenanceEvent(), net=Math.max(0,gross-cost-maint.cost);
+ career.cash+=net; career.rep+=currentMission.risk.includes("Very")?3:currentMission.risk.includes("High")?2:1; career.flights++; career.lastLocation=currentMission.dest;
+ let hrs=currentMission.dist/(aircraft[selectedAircraft].cruise||120);
+ let gals=gallonsForFlight(selectedAircraft,currentMission.dist);
+ career.totalNM=(career.totalNM||0)+currentMission.dist;
+ career.totalHours=(career.totalHours||0)+hrs;
+ career.totalGallons=(career.totalGallons||0)+gals;
+ let fs=ensureFleetStats(selectedAircraft);
+ fs.flights=(fs.flights||0)+1; fs.nm=(fs.nm||0)+currentMission.dist; fs.hours=(fs.hours||0)+hrs; fs.gallons=(fs.gallons||0)+gals; fs.sinceInspection=Math.min((fs.sinceInspection||0)+1,20);
+ if(career.debt>0)career.debt+=Math.ceil(career.debt*.005); // small interest growth per completed flight
+ career.log.unshift({date:new Date().toLocaleString(),mission:currentMission.type,route:currentMission.dep+" → "+currentMission.dest,aircraft:selectedAircraft,gross,cost:cost+maint.cost,net,penalty:Math.round(penaltyTotal()*100)+"%",event:maint.text});
+ career.log=career.log.slice(0,35); saveCareer(); currentMission=null; selectedAircraft=null; window.currentJobBoard=null;
+ el("missionDisplay").innerHTML='<p class="small">Contract logged. Generate another contract to continue.</p>'; el("aircraftDisplay").innerHTML='<p class="small">Owned aircraft or closest class-equivalent options appear after contract generation.</p>'; resetChecks(); updatePayout(); updateDispatchCard(); updateUIState();
+}
+function failMission(){
+ if(!currentMission){alert("No active contract to fail.");return;}
+ let penalty=Math.round(currentMission.base*.25+opCost()+deadheadCost()+debtService()); career.cash=Math.max(0,career.cash-penalty); career.rep=Math.max(0,career.rep-2);
+ career.log.unshift({date:new Date().toLocaleString(),mission:"ABORTED: "+currentMission.type,route:currentMission.dep+" → "+currentMission.dest,aircraft:selectedAircraft||"Not selected",gross:0,cost:penalty,net:-penalty,penalty:"Abort",event:"Mission failed"});
+ saveCareer(); currentMission=null; selectedAircraft=null; window.currentJobBoard=null; el("missionDisplay").innerHTML='<p class="small">Contract aborted.</p>'; el("aircraftDisplay").innerHTML='<p class="small">Owned aircraft or closest class-equivalent options appear after contract generation.</p>'; resetChecks(); updatePayout(); updateDispatchCard(); updateUIState();
+}
+function buyAircraft(name){
+ let a=aircraft[name]; if(career.owned.includes(name)){alert("Already owned.");return;} if(getRank().tier<a.tier){alert("Tier locked. Build reputation first.");return;} if(career.cash<a.cost){alert("Not enough cash. Consider a loan, but debt adds pressure.");return;}
+ career.cash-=a.cost; career.owned.push(name); saveCareer(); populateCustomAircraft(); setStatus("Purchased "+name+".");
+}
+function sellAircraft(name){
+ if(["C152","C172"].includes(name)){alert("Starter aircraft cannot be sold.");return;} if(!career.owned.includes(name))return;
+ if(!confirm("Sell "+name+" for 65% value?"))return;
+ career.cash+=Math.round(aircraft[name].cost*.65); career.owned=career.owned.filter(x=>x!==name); saveCareer(); populateCustomAircraft();
+}
+function takeLoan(){
+ let amt = parseInt(el("loanAmountSelect").value);
+ career.cash += amt;
+ career.debt += Math.round(amt * 1.20);
+ saveCareer();
+ setStatus("Loan added: " + money(amt) + " cash. Debt increased by " + money(Math.round(amt * 1.20)) + ".");
+}
+function payLoan(){
+ let selectVal = el("payAmountSelect").value;
+ let amt = selectVal === "all" ? career.debt : parseInt(selectVal);
+ let actualPay = Math.min(amt, career.debt, career.cash);
+
+ if(actualPay <= 0){
+   alert("No cash available or no debt to pay.");
+   return;
+ }
+
+ career.cash -= actualPay;
+ career.debt -= actualPay;
+ saveCareer();
+ setStatus("Paid " + money(actualPay) + " toward debt.");
+}
+
+function clearDispatch(){
+ currentMission=null;
+ selectedAircraft=null;
+ window.currentJobBoard=null;
+ el("missionDisplay").innerHTML='<p class="small">Generate a contract to begin.</p>';
+ el("aircraftDisplay").innerHTML='<p class="small">Owned aircraft or closest class-equivalent options appear after contract generation.</p>';
+ el("jobBoardDisplay").innerHTML='<p class="small">Generate a 5-job board when you want multiple choices.</p>';
+ updateDispatchCard();
+ updateUIState();
+ setStatus("Dispatch cleared.");
+}
+function getSelectedHomeBase(){
+ let base=el("homeBase").value;
+ if(base==="Custom"){
+   let custom=(el("customHomeBase").value||"").trim().toUpperCase().slice(0,4);
+   return custom || career.homeBase || "KSEA";
+ }
+ return base;
+}
+function updateCustomHomeBaseVisibility(){
+ const customInput=el("customHomeBase");
+ const customNote=el("customHomeBaseNote");
+ if(!customInput) return;
+ const isCustom=el("homeBase").value==="Custom";
+ customInput.style.display=isCustom?"block":"none";
+ if(customNote) customNote.style.display=isCustom?"block":"none";
+}
+function regionForHomeBase(base){
+ const map={
+   "KLMT":"Southern Oregon","KMFR":"Southern Oregon","KRBG":"Southern Oregon","KOTH":"Southern Oregon","KONP":"Southern Oregon","S03":"Southern Oregon","KBDN":"Southern Oregon",
+   "KSEA":"Pacific Northwest","KPDX":"Pacific Northwest","KEUG":"Pacific Northwest","KAST":"Pacific Northwest","KGEG":"Pacific Northwest","CYVR":"Pacific Northwest",
+   "PANC":"Alaska Bush","PAHO":"Alaska Bush","PABE":"Alaska Bush","PAKT":"Alaska Bush",
+   "KBOI":"Mountain West","KSUN":"Mountain West","KJAC":"Mountain West","KMSO":"Mountain West","KBZN":"Mountain West","KDEN":"Mountain West","KSLC":"Mountain West",
+   "KPHX":"Southwest Desert","KTUS":"Southwest Desert","KABQ":"Southwest Desert","KLAS":"Southwest Desert","KSAF":"Southwest Desert","KELP":"Southwest Desert",
+   "KOMA":"Midwest Plains","KICT":"Midwest Plains","KOKC":"Midwest Plains","KMCI":"Midwest Plains","KSTL":"Midwest Plains","KMSP":"Midwest Plains","KORD":"Midwest Plains",
+   "KBOS":"East Coast Corridor","KJFK":"East Coast Corridor","KLGA":"East Coast Corridor","KEWR":"East Coast Corridor","KPHL":"East Coast Corridor","KBWI":"East Coast Corridor","KDCA":"East Coast Corridor","KIAD":"East Coast Corridor",
+   "PHNL":"Island / Coastal","PHOG":"Island / Coastal","PHKO":"Island / Coastal","PHLI":"Island / Coastal","PHTO":"Island / Coastal",
+   "EGLL":"International Long Haul","EHAM":"International Long Haul","EDDF":"International Long Haul","LFPG":"International Long Haul",
+   "RJTT":"International Long Haul","YSSY":"International Long Haul","NZAA":"International Long Haul","OMDB":"International Long Haul",
+   "FAOR":"International Long Haul","SBGR":"International Long Haul",
+   "SKBO":"South America / Andes","SPJC":"South America / Andes"
+ };
+ return map[base] || null;
+}
+function syncRegionToHomeBase(base){
+ const region=regionForHomeBase(base);
+ if(region && el("region")) el("region").value=region;
+}
+function setFleetLocationToHomeBase(){
+ const base=getSelectedHomeBase();
+ if(!base){alert("Choose or enter a valid home base first.");return;}
+ career.homeBase=base;
+ career.lastLocation=base;
+ saveCareer();
+ syncRegionToHomeBase(base);
+ setStatus("Fleet location set to home base: "+base);
+}
+function saveSetup(){
+ const oldHome=career.homeBase || "KSEA";
+ const oldLast=career.lastLocation || oldHome;
+ const newHome=getSelectedHomeBase();
+ career.companyName=el("companyName").value.trim()||"Outlaw Air Service";
+ career.homeBase=newHome;
+ if(!career.lastLocation || oldLast===oldHome) career.lastLocation=newHome;
+ career.insurance=el("insurancePlan").value;
+ syncRegionToHomeBase(newHome);
+ if(el("currentHomeBaseLabel")) el("currentHomeBaseLabel").textContent=career.homeBase||"KSEA";
+ if(el("lastLocation")) el("lastLocation").textContent=career.lastLocation||career.homeBase||"KSEA";
+ saveCareerSilent();
+ updatePayout();
+ setStatus("Company setup saved.");
+}
+function runCrewIncome(){
+ const today=new Date().toISOString().slice(0,10);
+ if(career.lastCrewRun===today){alert("Crew income already run today.");return;}
+ if(career.owned.length<3){alert("Crew income unlocks when you own at least 3 aircraft.");return;}
+ let fleetValue=career.owned.reduce((sum,n)=>sum+aircraft[n].cost,0);
+ let income=Math.round(Math.max(2500, fleetValue*.006));
+ let upkeep=Math.round(career.owned.reduce((sum,n)=>sum+aircraft[n].op,0)*.6);
+ let net=Math.max(0,income-upkeep);
+ career.cash+=net;
+ career.lastCrewRun=today;
+ career.log.unshift({date:new Date().toLocaleString(),mission:"CREW INCOME",route:career.homeBase+" passive ops",aircraft:career.owned.length+" aircraft fleet",gross:income,cost:upkeep,net,penalty:"None",event:"Daily crew income"});
+ career.log=career.log.slice(0,35);
+ saveCareer();
+ setStatus("Crew income added: "+money(net)+".");
+}
+function exportSave(){
+ const box=el("saveBox");
+ if(!box) return;
+ box.value=encodeCareerSave();
+ box.focus();
+ box.select();
+ box.setSelectionRange(0,999999);
+ setStatus("Backup code generated and highlighted. Copy it somewhere safe.");
+}
+function importSave(){
+ let raw=el("saveBox").value;
+ let txt=(raw||"").trim();
+
+ if(!txt){
+   alert("Paste save data first.");
+   return;
+ }
+
+ try{
+   if((txt.startsWith('"') && txt.endsWith('"')) || (txt.startsWith("'") && txt.endsWith("'"))){
+     txt=txt.slice(1,-1);
+   }
+
+   let payload=txt;
+
+   if(payload.startsWith(SAVE_VERSION+"|")){
+     payload=payload.slice((SAVE_VERSION+"|").length);
+   }
+   else if(payload.startsWith("{")){
+     payload=payload;
+   }
+   else{
+     let decoded=decodeURIComponent(escape(atob(payload)));
+     payload=decoded.startsWith(SAVE_VERSION+"|") ? decoded.slice((SAVE_VERSION+"|").length) : decoded;
+   }
+
+   let imported=JSON.parse(payload);
+
+   if(!imported || typeof imported!=="object"){
+     throw new Error("Invalid save object");
+   }
+
+   career={...defaultCareer, ...imported};
+   if(!Array.isArray(career.owned) || !career.owned.length){
+     career.owned=[...defaultCareer.owned];
+   }
+
+   saveCareer();
+   populateCustomAircraft();
+   renderCareer();
+   updatePayout();
+   updateUIState();
+
+   alert("Save restored.");
+   setStatus("Save restored successfully.");
+ }
+ catch(e){
+   console.error("Restore failed:", e);
+   alert("Restore failed. Make sure you pasted the FULL backup code from Backup Save.");
+   setStatus("Restore failed. Check the full save text.");
+ }
+}
+
+function applyNightOps(){
+ document.body.classList.toggle("night", !!career.nightOps);
+ const btn=el("nightToggle");
+ if(btn) btn.textContent=career.nightOps?"☀️ Day Mode":"🌙 Night Ops";
+}
+function toggleNightOps(){
+ career.nightOps=!career.nightOps; saveCareer(); applyNightOps();
+}
+function majorInspection(name){
+ let a=aircraft[name]; let cost=Math.round(a.op*5);
+ if(career.cash<cost){alert("Not enough cash for major inspection: "+money(cost));return;}
+ career.cash-=cost; let s=ensureFleetStats(name); s.sinceInspection=0; saveCareer(); setStatus(name+" major inspection completed.");
+}
+function renderFleet(){
+ el("fleetDisplay").innerHTML=`<table><thead><tr><th>Owned</th><th>Stats</th><th></th></tr></thead><tbody>${career.owned.map(n=>{
+ let s=ensureFleetStats(n); let insp=inspectionProgress(n); let pct=Math.round((insp/20)*100);
+ return `<tr><td><strong>${n}</strong><br><span class="small">Tier ${aircraft[n].tier} · ${aircraft[n].cls}<br>Parked with fleet: ${career.lastLocation||career.homeBase||"KSEA"}</span></td>
+ <td><span class="small">Flights: ${s.flights||0}<br>NM: ${Math.round(s.nm||0).toLocaleString()}<br>Hours: ${(s.hours||0).toFixed(1)}<br>Inspection: ${insp}/20</span><div class="progressbar"><span style="width:${pct}%"></span></div></td>
+ <td>${insp>=20?`<button class="blue" onclick="majorInspection('${n}')">Inspect</button>`:(["C152","C172"].includes(n)?'<span class="badge green">Starter</span>':`<button class="danger" onclick="sellAircraft('${n}')">Sell</button>`)}</td></tr>`}).join("")}</tbody></table>`;
+}
+function renderMarket(){
+ let rank=getRank(); let names=Object.keys(aircraft).sort((a,b)=>aircraft[a].tier-aircraft[b].tier||aircraft[a].cost-aircraft[b].cost);
+ el("marketDisplay").innerHTML=`<table><thead><tr><th>Aircraft</th><th>Price</th><th></th></tr></thead><tbody>${names.map(n=>{let a=aircraft[n],owned=career.owned.includes(n),locked=rank.tier<a.tier;return `<tr class="${locked?'locked':''}"><td><strong>${n}</strong><br><span class="small">Tier ${a.tier} · ${a.cls}<br>${owned?"Owned":locked?"Locked by tier":a.note}</span></td><td><strong>${money(a.cost)}</strong><br><span class="small">Op ${money(a.op)} · Maint risk ${money(a.maint)}</span></td><td>${owned?'<span class="badge green">Owned</span>':`<button onclick="buyAircraft('${n}')">Buy</button>`}</td></tr>`}).join("")}</tbody></table>`;
+}
+function renderCareer(){
+ let r=getRank();
+ el("cash").textContent=money(career.cash);
+ el("debt").textContent=money(career.debt);
+ el("rep").textContent=career.rep;
+ el("flights").textContent=career.flights;
+ el("rank").textContent=r.name;
+ el("tierUnlocked").textContent=r.tier;
+ if(el("lastLocation")) el("lastLocation").textContent=career.lastLocation||career.homeBase||"KSEA";
+ if(el("totalNM")) el("totalNM").textContent=Math.round(career.totalNM||0).toLocaleString();
+ if(el("totalHours")) el("totalHours").textContent=(career.totalHours||0).toFixed(1);
+ if(el("totalGallons")) el("totalGallons").textContent=Math.round(career.totalGallons||0).toLocaleString();
+ if(!career.log.length){
+   el("logDisplay").innerHTML='<p class="small">No flights logged yet.</p>';
+ } else {
+   el("logDisplay").innerHTML=`<table><thead><tr><th>Flight</th><th>Net</th></tr></thead><tbody>${career.log.map(l=>`<tr><td><strong>${l.mission}</strong><br><span class="small">${l.route}<br>${l.aircraft}<br>Gross ${money(l.gross)} · Costs ${money(l.cost)} · Penalty ${l.penalty}<br>${l.event||""}<br>${l.date}</span></td><td><strong>${money(l.net)}</strong></td></tr>`).join("")}</tbody></table>`;
+ }
+ el("companyName").value=career.companyName||"Outlaw Air Service";
+ updateCompanyTitle();
+ const hb=career.homeBase||"KSEA";
+ const hbSelect=el("homeBase");
+ const preset=[...hbSelect.options].some(o=>o.value===hb);
+ hbSelect.value=preset?hb:"Custom";
+ if(el("customHomeBase")) el("customHomeBase").value=preset?"":hb;
+ updateCustomHomeBaseVisibility();
+ if(el("currentHomeBaseLabel")) el("currentHomeBaseLabel").textContent=hb;
+ el("insurancePlan").value=career.insurance||"none";
+ applyNightOps();
+ renderFleet();
+ renderMarket();
+}
+function encodeCareerSave(){return SAVE_VERSION+"|"+JSON.stringify(career);}
+function saveCareer(){localStorage.setItem("careerBuilderBeta01",encodeCareerSave());renderCareer();}
+function saveCareerSilent(){localStorage.setItem("careerBuilderBeta01",encodeCareerSave());}
+function resetCareer(){
+ if(confirm("Reset all Career Builder progress?")){
+   career={...defaultCareer};
+   saveCareer();
+   currentMission=null; selectedAircraft=null; window.currentJobBoard=null;
+   el("missionDisplay").innerHTML='<p class="small">Generate a contract to begin.</p>';
+   el("aircraftDisplay").innerHTML='<p class="small">Owned aircraft or closest class-equivalent options appear after contract generation.</p>';
+   el("jobBoardDisplay").innerHTML='<p class="small">Generate a 5-job board when you want multiple choices.</p>';
+   updateDispatchCard();
+   updateUIState();
+ }
+}
+
+function copySave(){
+ const box=el("saveBox");
+ if(!box) return;
+ if(!box.value.trim()){
+   exportSave();
+ }
+ box.focus();
+ box.select();
+ box.setSelectionRange(0,999999);
+ if(navigator.clipboard && navigator.clipboard.writeText){
+   navigator.clipboard.writeText(box.value).then(()=>{
+     setStatus("Save copied to clipboard.");
+   }).catch(()=>{
+     setStatus("Save highlighted. Use Copy to save it somewhere safe.");
+   });
+ }else{
+   setStatus("Save highlighted. Use Copy to save it somewhere safe.");
+ }
+}
+
+function wire(){
+ el("generateBtn").addEventListener("click",()=>generateMission());
+ el("jobBoardBtn").addEventListener("click",generateJobBoard);
+ el("createCustomFlightBtn").addEventListener("click",createCustomFlight);
+ el("estimateCustomDistanceBtn").addEventListener("click",updateCustomDistanceEstimate);
+ ["customFrom","customTo"].forEach(id=>el(id).addEventListener("blur",updateCustomDistanceEstimate));
+ ["customFrom","customTo"].forEach(id=>el(id).addEventListener("input",function(){this.value=this.value.toUpperCase().slice(0,4);}));
+ el("completeBtn").addEventListener("click",completeMission);
+ el("failBtn").addEventListener("click",failMission);
+ el("resetBtn").addEventListener("click",resetCareer);
+ el("loanBtn").addEventListener("click",takeLoan);
+ el("payLoanBtn").addEventListener("click",payLoan);
+ el("crewBtn").addEventListener("click",runCrewIncome);
+ el("clearDispatchBtn").addEventListener("click",clearDispatch);
+ if(el("setFleetHomeBtn")) el("setFleetHomeBtn").addEventListener("click",setFleetLocationToHomeBase);
+ el("exportBtn").addEventListener("click",exportSave);
+ el("importBtn").addEventListener("click",importSave);
+ if(el("copySaveBtn")) el("copySaveBtn").addEventListener("click",copySave);
+ el("nightToggle").addEventListener("click",toggleNightOps);
+
+ // Handle Home Base Dropdown
+ el("homeBase").addEventListener("change", function(){
+   updateCustomHomeBaseVisibility();
+   if(this.value === "Custom"){
+     setStatus("Enter a custom ICAO, then tap the Custom ICAO box and enter your airport code.");
+   } else {
+     saveSetup();
+   }
+ });
+
+ // Handle Custom ICAO Typing
+ el("customHomeBase").addEventListener("input", function(){
+   this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,4);
+   if(el("currentHomeBaseLabel")){
+     el("currentHomeBaseLabel").textContent = this.value || career.homeBase || "KSEA";
+   }
+ });
+
+ // Save only when the user clicks/taps away
+ el("customHomeBase").addEventListener("blur", function(){
+   if(el("homeBase").value === "Custom" && !this.value.trim()){
+     setStatus("Custom home base blank; keeping previous/default base.");
+   }
+   saveSetup();
+ });
+
+ el("companyName").addEventListener("input",updateCompanyTitle);
+ el("companyName").addEventListener("blur",saveSetup);
+ el("insurancePlan").addEventListener("change",function(){saveSetup(); updatePayout();});
+ ["bonusNight","bonusWeather","bonusShort","bonusNoGPS","bonusClean","penaltyLate","penaltyHardLanding","penaltyDamage","penaltyWrongAirport","penaltyFuel"].forEach(id=>el(id).addEventListener("change",updatePayout));
+ document.querySelectorAll(".cockpit-flow a").forEach(a=>a.addEventListener("click",function(ev){
+   ev.preventDefault();
+   const target=document.querySelector(this.getAttribute("href"));
+   if(target) target.scrollIntoView({behavior:"smooth",block:"start"});
+ }));
+}
+document.addEventListener("DOMContentLoaded",()=>{wire();renderCareer();populateCustomAircraft();updatePayout();updateUIState();});
+
+window.addEventListener("error",function(e){try{setStatus("Script error: "+e.message);}catch(_){}});
+</script>
+
+<details class="card">
+  <summary><h2>🧭 Quick Start (How to Use)</h2></summary>
+  <div class="body small">
+
+    <p><strong>Think of this as your EFB career overlay — not a mod.</strong><br>
+    Works alongside MSFS 2024/2020 or X-Plane using Free Flight.</p>
+
+    <hr>
+
+    <strong>1. Generate a Contract</strong><br>
+    Use "Quick Contract" or "5-Job Board" to pick a mission<br><br>
+
+    <strong>2. Review Dispatch</strong><br>
+    Check route, distance, timer, and estimated net payout<br><br>
+
+    <strong>3. Select Aircraft</strong><br>
+    Pick from your fleet (highlighted row = active aircraft)<br><br>
+
+    <strong>4. Set EFB Timer</strong><br>
+    In-sim, set the timer shown in the Dispatch Card before takeoff<br><br>
+
+    <strong>5. Fly the Mission</strong><br>
+    Use Free Flight — follow the route and complete the objective<br><br>
+
+    <strong>6. Apply Results</strong><br>
+    Select bonuses/penalties honestly (pilot-driven system)<br><br>
+
+    <strong>7. Complete Contract</strong><br>
+    Log payout, costs, maintenance, and progress your company<br><br>
+
+    <hr>
+
+    <p><strong>Note:</strong> Your fleet location follows your last completed flight.<br>
+    Relocating aircraft may incur Deadhead costs.</p>
+
+  </div>
+</details>
+
+</body>
+</html>
