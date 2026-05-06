@@ -6,43 +6,44 @@
 <title>Outlaw Air Service — Dispatch Terminal v0.6.6 Save Feature</title>
 <style>
 :root{
-  --navy:#071526; --navy2:#0d2238; --gold:#d8a928; --paper:#f7f2e8;
+  --navy:#07111f; --navy2:#0b1b2d; --gold:#c9a24a; --gold2:#d6b25e; --paper:#f7f2e8;
   --ink:#1d1d1d; --muted:#5b6470; --green:#2d7d46; --red:#9c2f2f;
-  --blue:#225d9c; --card:#ffffff;
+  --blue:#3f8fc7; --card:#ffffff;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--navy),#101820 430px,var(--paper) 430px);color:var(--ink)}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--navy),var(--navy2) 430px,var(--paper) 430px);color:var(--ink)}
 header{color:white;padding:24px 16px 18px;text-align:center;border-bottom:5px solid var(--gold)}
 header h1{margin:0;font-size:2.1rem;letter-spacing:.5px}
 header p{margin:8px auto 0;max-width:1000px;color:#e8edf4;line-height:1.45}
 .wrap{max-width:1280px;margin:18px auto 40px;padding:0 14px}
 .grid{display:grid;grid-template-columns:1.22fr .78fr;gap:16px}
-.card{background:var(--card);border:1px solid #d7d2c5;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.13);overflow:hidden;margin-bottom:16px}
+.card{background:var(--card);border:1px solid #d5c8aa;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.13);overflow:hidden;margin-bottom:16px}
 .card h2{margin:0;background:var(--navy2);color:white;padding:12px 14px;font-size:1.15rem;border-bottom:3px solid var(--gold)}
 .body{padding:14px}.row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.row2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 label{display:block;font-weight:bold;margin-bottom:5px;font-size:.88rem}
 select,input,textarea,button{width:100%;font-size:1rem;border-radius:8px;border:1px solid #bbb;padding:10px}
-button{cursor:pointer;background:var(--gold);border:0;font-weight:bold;color:#151515} button:hover{filter:brightness(.96)}
-button.secondary{background:#e9e2d4} button.danger{background:#cf6c60;color:white} button.good{background:#5dae73;color:white} button.blue{background:#5d8fc8;color:white}
+button{cursor:pointer;background:var(--gold);border:0;font-weight:bold;color:#111827} button:hover{filter:brightness(.96)}
+button.secondary{background:#e7e1d6;color:#172033} button.danger{background:#cf6c60;color:white} button.good{background:#5dae73;color:white} button.blue{background:#4f89bd;color:white}
 .btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.btnrow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
 .mission-title{font-size:1.6rem;color:var(--navy);margin:0 0 8px}.badges{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.badge{display:inline-block;background:#eee7d8;border:1px solid #d4c7aa;padding:6px 9px;border-radius:999px;font-weight:bold;font-size:.84rem}
-.badge.gold{background:#fff1bd;border-color:#d8a928}.badge.green{background:#e3f3e8;border-color:#8fc79e}.badge.red{background:#f7dfdf;border-color:#d49090}.badge.blue{background:#e2edf8;border-color:#94b8dc}
+.badge{display:inline-block;background:#eee8dc;border:1px solid #cfc2a5;padding:6px 9px;border-radius:999px;font-weight:bold;font-size:.84rem}
+.badge.gold{background:#f5ead0;border-color:var(--gold);color:#332817}.badge.green{background:#e3f3e8;border-color:#8fc79e}.badge.red{background:#f7dfdf;border-color:#d49090}.badge.blue{background:#e2edf8;border-color:#94b8dc}
 .mission-box{background:#fbf8f1;border-left:6px solid var(--gold);padding:12px;border-radius:8px;margin:10px 0}
 .timerbox{background:#eaf3ff;border:1px solid #9ebfe3;border-left:6px solid var(--blue);padding:12px;border-radius:8px;margin:10px 0}
 .timerbig{font-size:1.8rem;color:var(--blue);font-weight:bold}
-table{width:100%;border-collapse:collapse;margin-top:8px} th,td{border-bottom:1px solid #e0d8c7;text-align:left;padding:8px;vertical-align:top} th{background:#f1eadb;color:#17283b}
+table{width:100%;border-collapse:collapse;margin-top:8px} th,td{border-bottom:1px solid #ddd3bd;text-align:left;padding:8px;vertical-align:top} th{background:#ebe3d4;color:#17283b}
 .small{font-size:.88rem;color:var(--muted);line-height:1.35}.money{font-size:1.5rem;color:var(--green);font-weight:bold}
-.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.kpi div{background:#f5efe3;padding:12px;border-radius:10px;border:1px solid #ddd1bd}.kpi strong{display:block;font-size:1.18rem;color:var(--navy)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.kpi div{background:#f3eee4;padding:12px;border-radius:10px;border:1px solid #d7c9ad}.kpi strong{display:block;font-size:1.18rem;color:var(--navy)}
 .checklist label{display:flex;align-items:flex-start;gap:8px;font-weight:normal;border-bottom:1px dashed #ddd;padding:8px 0}.checklist input{width:auto;margin-top:2px}
-.notice{background:#fff8d9;border:1px solid #ead17c;padding:10px;border-radius:10px;margin-top:10px}.locked{opacity:.55}.footer{text-align:center;color:#695f50;font-size:.85rem;margin-top:20px}
+.notice{background:#f7efd9;border:1px solid var(--gold2);padding:10px;border-radius:10px;margin-top:10px}.locked{opacity:.55}.footer{text-align:center;color:#695f50;font-size:.85rem;margin-top:20px}
 
 body.night{
   --navy:#02060a;
   --navy2:#0a111a;
-  --gold:#ffb000;
+  --gold:#c9a24a;
+  --gold2:#d6b25e;
   --paper:#02060a;
-  --ink:#f2b824;
+  --ink:#e6c978;
   --muted:#a0a8b3;
   --card:#0d1520;
   --green:#64d47a;
@@ -56,14 +57,14 @@ body.night .card h2{background:#162235;border-bottom:2px solid var(--gold)}
 body.night select, body.night input, body.night textarea, body.night button{
   background:#1a2638;color:white;border:1px solid #334155;
 }
-body.night button{background:var(--gold);color:#050505}
+body.night button{background:var(--gold);color:#06111f}
 body.night button.secondary{background:#263244;color:#fff}
 body.night button.danger{background:#7f2f2f;color:#fff}
 body.night button.good{background:#2d7d46;color:#fff}
 body.night .mission-box{background:#111b27;border-left-color:var(--gold)}
 body.night .timerbox,.dispatch-card{background:#071526;border:1px solid var(--blue);border-left:6px solid var(--blue);box-shadow:0 0 15px rgba(34,93,156,.30)}
 body.night .timerbig{color:#5da9ff;text-shadow:0 0 8px rgba(93,169,255,.5)}
-body.night .notice{background:#1e1b0a;border-color:#423b1c;color:#f2e191}
+body.night .notice{background:#1c1a10;border-color:#4f4222;color:#ead9a7}
 body.night .badge{background:#1e293b;border-color:#334155;color:#cbd5e1}
 body.night .kpi div{background:#111b27;border-color:#1e293b}
 body.night .kpi strong{color:var(--gold)}
@@ -123,8 +124,8 @@ body.night .cockpit-flow a{background:#111b27;color:var(--gold);}
   margin-top:10px;
   padding:12px;
   border-radius:10px;
-  background:#f5efe3;
-  border:1px solid #ddd1bd;
+  background:#f3eee4;
+  border:1px solid #d7c9ad;
 }
 body.night .dispatch-net{
   background:#111b27;
@@ -140,8 +141,8 @@ body.night .dispatch-net{
 .selected-job-row,
 .aircraft-row-selected{
   outline:3px solid var(--gold);
-  background:rgba(216,169,40,.22);
-  box-shadow:inset 0 0 0 9999px rgba(216,169,40,.08);
+  background:rgba(201,162,74,.20);
+  box-shadow:inset 0 0 0 9999px rgba(201,162,74,.08);
 }
 .selected-job-row td,
 .aircraft-row-selected td{
@@ -149,8 +150,8 @@ body.night .dispatch-net{
 }
 body.night .selected-job-row,
 body.night .aircraft-row-selected{
-  background:rgba(255,176,0,.20);
-  box-shadow:inset 0 0 0 9999px rgba(255,176,0,.08);
+  background:rgba(201,162,74,.20);
+  box-shadow:inset 0 0 0 9999px rgba(201,162,74,.08);
 }
 .compact-help{
   font-size:.86rem;
@@ -161,7 +162,7 @@ body.night .aircraft-row-selected{
   margin-top:10px;
   padding:10px;
   border-radius:10px;
-  background:#fbf8f1;
+  background:#f8f4eb;
   border-left:6px solid var(--gold);
 }
 body.night .flight-economics{
@@ -205,7 +206,7 @@ details.card summary h2::after{
   box-shadow:0 6px 24px rgba(0,0,0,.18);
 }
 body.night #dispatchPanel.clean-active{
-  box-shadow:0 0 24px rgba(255,176,0,.20);
+  box-shadow:0 0 24px rgba(201,162,74,.18);
 }
 #scorePanel.clean-secondary h2::after{
   content:"  landing / log";
@@ -228,7 +229,7 @@ body.night #dispatchPanel.clean-active{
   box-shadow:0 0 0 2px var(--gold),0 12px 28px rgba(0,0,0,.28);
 }
 body.night.has-active-flight #dispatchPanel{
-  box-shadow:0 0 0 2px var(--gold),0 0 30px rgba(255,176,0,.22);
+  box-shadow:0 0 0 2px var(--gold),0 0 30px rgba(201,162,74,.20);
 }
 @media(max-width:700px){
   .has-active-flight #dispatchPanel{transform:none;}
@@ -288,7 +289,7 @@ header p.small{
   opacity:.92;
 }
 .start-card{
-  background:linear-gradient(180deg,#fffdf7,#f7f0df);
+  background:linear-gradient(180deg,#fffdf8,#f4edde);
   border:2px solid var(--gold);
 }
 .start-card .start-actions{
