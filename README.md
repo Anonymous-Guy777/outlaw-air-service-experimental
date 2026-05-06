@@ -53,6 +53,8 @@ Build the exact flight or operation you want to fly, then let OAS wrap it in lig
 
 It's still 100% honor-based. You are Pilot in Command. Fly clean, earn it. Fly sloppy, own it.
 
+OAS also includes a lightweight built-in **Operation Timer** designed for tablet/EFB-style flying. Start the timer when your operation begins, pause it anytime, and complete the operation manually when finished. The timer is fully honor-system based and designed for immersion, not enforcement.
+
 ---
 
 ## Primary Flow: Pilot's Choice
@@ -74,7 +76,7 @@ OAS turns it into a proper dispatch card with EFB timer target, estimated payout
 
 1. **Create Operation** (Pilot's Choice)
 2. Review your EFB Dispatch Card
-3. Fly the mission in Free Flight (set EFB timer)
+3. Fly the mission in Free Flight (use the target time or optional OAS Operation Timer)
 4. Complete honestly: apply bonuses/penalties
 5. Log the flight with optional memo
 6. Watch your outlaw career and journal grow
@@ -86,6 +88,7 @@ OAS turns it into a proper dispatch card with EFB timer target, estimated payout
 - **Pilot's Choice** promoted as the main flow
 - Expanded manual / sandbox operation creation
 - Operation Presets for lightweight flight atmosphere and vibe
+- Optional pilot-controlled Operation Timer
 - Flight Memo notes + Print/Copy Log tools
 - Modular `aircraft.html` + `airports.html` for easy community editing
 - Updated metallic gold/navy branding
