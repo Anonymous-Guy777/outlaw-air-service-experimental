@@ -449,6 +449,44 @@ header .header-left h1{
   box-shadow: 0 0 20px rgba(216, 169, 40, 0.4);
 }
 
+/* Experimental banner presentation */
+header{
+  padding:6px 14px 8px;
+  gap:6px 14px;
+}
+.header-banner-wrap{
+  width:min(1180px, calc(100% - 220px));
+  max-width:none;
+  overflow:hidden;
+  line-height:0;
+}
+.header-banner{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  margin:0 auto;
+  object-fit:cover;
+  object-position:center;
+  transform:scale(1.06);
+  transform-origin:center;
+}
+.top-toggle{
+  top:10px;
+}
+@media(max-width:700px){
+  header{
+    padding:6px 10px 8px;
+  }
+  .header-banner-wrap{
+    width:100%;
+    max-width:100%;
+  }
+  .header-banner{
+    transform:scale(1.03);
+  }
+}
+
 </style>
 </head>
 <body>
