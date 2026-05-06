@@ -112,8 +112,51 @@ body.night .dispatch-grid div{background:#111b27;border-color:#1e293b}
   margin-top:10px;
 }
 button.timer-control{
+  background:#182538;
+  color:#d9e5f2;
+  border:1px solid #33475f;
   padding:9px 7px;
   font-size:.86rem;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+  transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease;
+}
+button.timer-control:hover:not(:disabled){
+  filter:none;
+  background:#213047;
+  border-color:#46627f;
+}
+button.timer-control:disabled{
+  opacity:.54;
+}
+button.timer-control.timer-lit-cyan:disabled,
+button.timer-control.timer-lit-amber:disabled,
+button.timer-control.timer-lit-green:disabled,
+button.timer-control.timer-lit-utility:disabled{
+  opacity:.82;
+}
+button.timer-control.timer-lit-cyan{
+  background:#112b42;
+  color:#cfeaff;
+  border-color:#4f94c2;
+  box-shadow:inset 0 0 0 1px rgba(93,169,255,.28),0 0 10px rgba(63,143,199,.24);
+}
+button.timer-control.timer-lit-amber{
+  background:#302817;
+  color:#f1d48a;
+  border-color:#a9843e;
+  box-shadow:inset 0 0 0 1px rgba(214,178,94,.25),0 0 9px rgba(201,162,74,.18);
+}
+button.timer-control.timer-lit-green{
+  background:#163524;
+  color:#dcf6e4;
+  border-color:#3f9760;
+  box-shadow:inset 0 0 0 1px rgba(100,212,122,.22),0 0 10px rgba(45,125,70,.22);
+}
+button.timer-control.timer-lit-utility{
+  background:#252b33;
+  color:#e5d4a1;
+  border-color:#65563a;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.16);
 }
 button:disabled{
   opacity:.5;
@@ -126,6 +169,39 @@ body.night .operation-timer-panel{
 body.night .operation-timer-readout div{
   background:#111b27;
   border-color:#1e293b;
+}
+body.night button.timer-control{
+  background:#142033;
+  color:#dce6f2;
+  border-color:#2e4057;
+}
+body.night button.timer-control:hover:not(:disabled){
+  background:#1b2a40;
+  border-color:#405b77;
+}
+body.night button.timer-control.timer-lit-cyan{
+  background:#112b42;
+  color:#cfeaff;
+  border-color:#4f94c2;
+  box-shadow:inset 0 0 0 1px rgba(93,169,255,.28),0 0 10px rgba(63,143,199,.24);
+}
+body.night button.timer-control.timer-lit-amber{
+  background:#302817;
+  color:#f1d48a;
+  border-color:#a9843e;
+  box-shadow:inset 0 0 0 1px rgba(214,178,94,.25),0 0 9px rgba(201,162,74,.18);
+}
+body.night button.timer-control.timer-lit-green{
+  background:#163524;
+  color:#dcf6e4;
+  border-color:#3f9760;
+  box-shadow:inset 0 0 0 1px rgba(100,212,122,.22),0 0 10px rgba(45,125,70,.22);
+}
+body.night button.timer-control.timer-lit-utility{
+  background:#252b33;
+  color:#e5d4a1;
+  border-color:#65563a;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.16);
 }
 .progressbar{height:12px;background:#d9d0bd;border-radius:999px;overflow:hidden;margin-top:5px}
 .progressbar span{display:block;height:100%;background:var(--gold);width:0%}
@@ -800,6 +876,7 @@ body.night button.secondary{
   • Added Flight Memo notes to the Flight Log<br>
   • Added Print / Save Log and Copy Log Text tools<br>
   • Added an optional pilot-controlled Operation Timer for live dispatch timing<br>
+  • Refined Operation Timer buttons with quiet avionics-style state illumination<br>
   • Updated OAS branding, banner presentation, and metallic gold / navy UI polish
   </p>
 
@@ -1116,11 +1193,21 @@ function renderOperationTimerDisplay(){
  const start=el("operationTimerStart");
  const pause=el("operationTimerPause");
  const resume=el("operationTimerResume");
+ const complete=el("operationTimerComplete");
+ const reset=el("operationTimerReset");
+ const elapsed=operationTimerElapsedMs();
  if(live) live.textContent=formatClock(operationTimerElapsedMs());
  if(pace) pace.textContent=operationTimerPace();
- if(start) start.disabled=!currentMission || operationTimer.running || operationTimerElapsedMs()>0;
+ if(start) start.disabled=!currentMission || operationTimer.running || elapsed>0;
  if(pause) pause.disabled=!currentMission || !operationTimer.running;
- if(resume) resume.disabled=!currentMission || operationTimer.running || operationTimerElapsedMs()===0;
+ if(resume) resume.disabled=!currentMission || operationTimer.running || elapsed===0;
+ if(reset) reset.disabled=!currentMission || elapsed===0;
+ if(complete) complete.disabled=!currentMission || !selectedAircraft;
+ if(start) start.classList.toggle("timer-lit-cyan", operationTimer.running);
+ if(pause) pause.classList.toggle("timer-lit-amber", elapsed>0 && !operationTimer.running);
+ if(resume) resume.classList.toggle("timer-lit-cyan", elapsed>0 && !operationTimer.running);
+ if(reset) reset.classList.toggle("timer-lit-utility", elapsed>0);
+ if(complete) complete.classList.toggle("timer-lit-green", !!currentMission && !!selectedAircraft);
 }
 function ensureOperationTimerTick(){
  if(operationTimerInterval) return;
@@ -1175,8 +1262,8 @@ function operationTimerHtml(timer){
        <button class="secondary timer-control" id="operationTimerStart" type="button" onclick="startOperationTimer()">Start Operation</button>
        <button class="secondary timer-control" id="operationTimerPause" type="button" onclick="pauseOperationTimer()">Pause</button>
        <button class="secondary timer-control" id="operationTimerResume" type="button" onclick="resumeOperationTimer()">Resume</button>
-       <button class="good timer-control" type="button" onclick="completeMission()">Complete Operation</button>
-       <button class="secondary timer-control" type="button" onclick="resetOperationTimer()">Reset Timer</button>
+       <button class="timer-control" id="operationTimerComplete" type="button" onclick="completeMission()">Complete Operation</button>
+       <button class="secondary timer-control" id="operationTimerReset" type="button" onclick="resetOperationTimer()">Reset Timer</button>
      </div>
      <p class="small">Optional and pilot-controlled. Pause anytime for sim pauses, crashes, breaks, or relaxed operations.</p>
    </div>`;
