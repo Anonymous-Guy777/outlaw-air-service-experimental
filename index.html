@@ -487,6 +487,15 @@ header{
   }
 }
 
+@media print{
+  body{background:#fff;color:#111;}
+  body *{visibility:hidden;}
+  #flightLogCard, #flightLogCard *{visibility:visible;}
+  #flightLogCard{position:absolute;left:0;top:0;width:100%;box-shadow:none;border:0;}
+  #flightLogCard summary h2{background:#fff;color:#111;border-bottom:2px solid #111;}
+  .log-actions{display:none !important;}
+}
+
 </style>
 </head>
 <body>
@@ -670,7 +679,7 @@ header{
 
   <details class="card"  ><summary><h2>🛩️ Fleet</h2></summary><div class="body" id="fleetDisplay"><p class="small">Fleet loading...</p></div></details>
   <details class="card"  ><summary><h2>🛒 Aircraft Market</h2></summary><div class="body" id="marketDisplay"><p class="small">Market loading...</p></div></details>
-  <details class="card"  ><summary><h2>🧾 Flight Log</h2></summary><div class="body" id="logDisplay"><p class="small">No flights logged yet.</p></div></details>
+  <details class="card" id="flightLogCard"><summary><h2>🧾 Flight Log</h2></summary><div class="body"><div class="btnrow log-actions"><button id="printLogBtn" class="secondary" type="button">Print / Save Log</button><button id="copyLogBtn" class="secondary" type="button">Copy Log Text</button></div><div id="logDisplay"><p class="small">No flights logged yet.</p></div></div></details>
   <details class="card"  open><summary><h2>☕ Support / Notes</h2></summary><div class="body">
   <p class="small">This tool is free. If you find it useful and want to support future updates, you can do that on Ko-fi.</p>
   <p><a href="https://ko-fi.com/wacky_outlaw" target="_blank" rel="noopener" style="display:inline-block;padding:10px 14px;border-radius:8px;background:var(--gold);color:#111;text-decoration:none;font-weight:bold;">Support on Ko-fi ☕</a></p>
@@ -1759,6 +1768,39 @@ function copySave(){
  }
 }
 
+function flightLogText(){
+ if(!career.log.length) return "Outlaw Air Service Flight Log\n\nNo flights logged yet.";
+ return "Outlaw Air Service Flight Log\n\n"+career.log.map(l=>[
+   l.mission,
+   l.route,
+   "Aircraft: "+l.aircraft,
+   "Gross: "+money(l.gross),
+   "Costs: "+money(l.cost),
+   "Penalty: "+l.penalty,
+   "Net: "+money(l.net),
+   l.event ? "Event: "+l.event : "",
+   l.memo ? "Memo: "+l.memo : "",
+   "Date: "+l.date
+ ].filter(Boolean).join("\n")).join("\n\n---\n\n");
+}
+function printLog(){
+ const card=el("flightLogCard");
+ if(card) card.open=true;
+ window.print();
+}
+function copyLogText(){
+ const text=flightLogText();
+ if(navigator.clipboard && navigator.clipboard.writeText){
+   navigator.clipboard.writeText(text).then(()=>{
+     setStatus("Flight log copied to clipboard.");
+   }).catch(()=>{
+     setStatus("Copy failed. Use Print / Save Log instead.");
+   });
+ }else{
+   setStatus("Clipboard unavailable. Use Print / Save Log instead.");
+ }
+}
+
 function wire(){
  el("generateBtn").addEventListener("click",()=>generateMission());
  el("jobBoardBtn").addEventListener("click",generateJobBoard);
@@ -1777,6 +1819,8 @@ function wire(){
  el("exportBtn").addEventListener("click",exportSave);
  el("importBtn").addEventListener("click",importSave);
  if(el("copySaveBtn")) el("copySaveBtn").addEventListener("click",copySave);
+ if(el("printLogBtn")) el("printLogBtn").addEventListener("click",printLog);
+ if(el("copyLogBtn")) el("copyLogBtn").addEventListener("click",copyLogText);
  el("nightToggle").addEventListener("click",toggleNightOps);
 
  // Handle Home Base Dropdown
