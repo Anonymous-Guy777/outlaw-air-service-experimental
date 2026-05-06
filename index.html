@@ -509,15 +509,45 @@ header{
 
 <div class="cockpit-shell">
   <div class="cockpit-flow">
-    <a href="#jobsPanel">1 Jobs</a>
+    <a href="#customFlightPanel">1 Pilot's Choice</a>
     <a href="#dispatchPanel">2 Dispatch</a>
     <a href="#aircraftPanel">3 Aircraft</a>
     <a href="#scorePanel">4 Score</a>
   </div>
 
-  <section class="card hero-dispatch is-hidden" id="dispatchPanel"><h2>🧾 EFB Dispatch Card</h2><div class="body" id="dispatchDisplay"><p class="small"><strong>No active dispatch.</strong><br>Quick Contract, Browse Jobs, or use Pilot’s Choice below to create your own flight.</p></div></section>
+  <details class="card custom-flight-card" id="customFlightPanel" open>
+    <summary><h2>🧭 Pilot's Choice / Create Your Own Operation</h2></summary>
+    <div class="body">
+      <p class="small"><strong>Start here.</strong> Build the Free Flight operation you already want to fly, then let OAS wrap it in dispatch structure.</p>
+      <div class="row">
+        <div><label for="customFrom">From ICAO</label><input id="customFrom" placeholder="KLMT" maxlength="4" style="text-transform:uppercase;"></div>
+        <div><label for="customTo">To ICAO</label><input id="customTo" placeholder="2S7" maxlength="4" style="text-transform:uppercase;"></div>
+        <div><label for="customDistance">Distance (NM)</label><input id="customDistance" type="number" min="1" max="6000" value="30"><button id="estimateCustomDistanceBtn" class="secondary" type="button" style="margin-top:6px">Estimate (if known)</button></div>
+      </div>
+      <p class="small hint">Tip: Some small airports use local codes like S03 or 3S8. Use the sim map or search by code to locate them.</p>
+      <div class="row">
+        <div><label for="customAircraft">Aircraft</label><select id="customAircraft"></select></div>
+        <div><label for="customFlightType">Operation Type</label><select id="customFlightType">
+          <option value="Scenic Flight">Scenic Flight</option>
+          <option value="Ferry Flight">Ferry Flight</option>
+          <option value="Training Flight">Training Flight</option>
+          <option value="Light Cargo">Light Cargo</option>
+          <option value="Passenger Hop">Passenger Hop</option>
+        </select></div>
+        <div><label for="customRisk">Risk</label><select id="customRisk">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>Medium-High</option>
+        </select></div>
+      </div>
+      <button id="createCustomFlightBtn" type="button">Create Operation</button>
+      <p class="small hint" id="customFlightHint">Enter distance manually. “Estimate” works for known airports only — otherwise use your sim map or EFB.</p>
+    </div>
+  </details>
 
-  <section class="card" id="jobsPanel"><h2>🎯 Contract Board</h2><div class="body">
+  <section class="card hero-dispatch is-hidden" id="dispatchPanel"><h2>🧾 EFB Dispatch Card</h2><div class="body" id="dispatchDisplay"><p class="small"><strong>No active dispatch.</strong><br>Start with Pilot’s Choice above, or use a quick mode when you want OAS to pick the work.</p></div></section>
+
+  <section class="card" id="jobsPanel"><h2>🎲 Quick Start Contracts</h2><div class="body">
   <div class="row">
     <div><label for="missionType">Contract Type</label><select id="missionType">
       <option value="random">Random Available</option>
@@ -541,40 +571,10 @@ header{
   </div>
   <div class="btnrow"><button id="generateBtn">Quick Contract</button><button id="jobBoardBtn" class="secondary">Browse Jobs</button></div>
   <p id="statusLine" class="small" style="margin-top:10px;">Ready.</p>
-  <p class="small">Tip: Quick Contract and Browse Jobs use compatible aircraft filtering. Pilot’s Choice below lets you create your own route before locking into a dispatch.</p>
+  <p class="small">Tip: Quick Contract and Browse Jobs are secondary “surprise me” modes when you want OAS to pick the work for you.</p>
 </div></section>
 
   <section class="card" id="jobBoardPanel"><h2>🗂️ 5-Job Board</h2><div class="body"><p class="compact-help">Tip: Some small airports use local codes like S03 or 3S8. Search by code in the sim map or zoom in.</p></div><div class="body" id="jobBoardDisplay"><p class="small">Generate a 5-job board when you want multiple choices.</p></div></section>
-
-  <details class="card custom-flight-card" id="customFlightPanel">
-    <summary><h2>🧭 Pilot's Choice / Custom Flight</h2></summary>
-    <div class="body">
-      <p class="small"><strong>Fly your own route.</strong> Create a simple dispatch for familiar skies, scenic routes, ferry hops, training runs, or light custom work.</p>
-      <div class="row">
-        <div><label for="customFrom">From ICAO</label><input id="customFrom" placeholder="KLMT" maxlength="4" style="text-transform:uppercase;"></div>
-        <div><label for="customTo">To ICAO</label><input id="customTo" placeholder="2S7" maxlength="4" style="text-transform:uppercase;"></div>
-        <div><label for="customDistance">Distance (NM)</label><input id="customDistance" type="number" min="1" max="6000" value="30"><button id="estimateCustomDistanceBtn" class="secondary" type="button" style="margin-top:6px">Estimate (if known)</button></div>
-      </div>
-      <p class="small hint">Tip: Some small airports use local codes like S03 or 3S8. Use the sim map or search by code to locate them.</p>
-      <div class="row">
-        <div><label for="customAircraft">Aircraft</label><select id="customAircraft"></select></div>
-        <div><label for="customFlightType">Flight Type</label><select id="customFlightType">
-          <option value="Scenic Flight">Scenic Flight</option>
-          <option value="Ferry Flight">Ferry Flight</option>
-          <option value="Training Flight">Training Flight</option>
-          <option value="Light Cargo">Light Cargo</option>
-          <option value="Passenger Hop">Passenger Hop</option>
-        </select></div>
-        <div><label for="customRisk">Risk</label><select id="customRisk">
-          <option>Low</option>
-          <option>Medium</option>
-          <option>Medium-High</option>
-        </select></div>
-      </div>
-      <button id="createCustomFlightBtn" type="button">Create Flight</button>
-      <p class="small hint" id="customFlightHint">Enter distance manually. “Estimate” works for known airports only — otherwise use your sim map or EFB.</p>
-    </div>
-  </details>
 
   <section class="card" id="aircraftPanel"><h2>✈️ Available Aircraft</h2><div class="body" id="aircraftDisplay"><p class="small">Owned aircraft or closest class-equivalent options appear after contract generation.</p></div></section>
 
@@ -956,17 +956,16 @@ function updateUIState(){
    if(d){
      d.innerHTML=`<div class="dispatch-card">
        <div class="dispatch-title">READY</div>
-       <div class="dispatch-timer">Start New Contract</div>
+       <div class="dispatch-timer">Create Your Operation</div>
        <div class="mission-box">
-         <strong>👉 Start here → Generate your contract</strong><br><br>
-         <strong>Choose how you want to dispatch:</strong><br>
-         Quick Contract, Browse Jobs, or use Pilot’s Choice below to create your own flight.
+         <strong>👉 Start with Pilot’s Choice above.</strong><br><br>
+         Build your own route, aircraft, operation type, and risk level. Use Quick Contract or Browse Jobs only when you want OAS to surprise you.
        </div>
        <div class="next-action">
-         <button id="startQuickBtn" type="button">Quick Contract</button>
+         <button id="startQuickBtn" class="secondary" type="button">Quick Contract</button>
          <button id="startBrowseBtn" class="secondary" type="button">Browse Jobs</button>
        </div>
-       <p class="small" style="margin-top:10px;">After selection, your Dispatch flow will appear automatically.</p>
+       <p class="small" style="margin-top:10px;">Pilot’s Choice is the primary sandbox mode. Quick modes are still here when you want a fast prompt.</p>
      </div>`;
 
      const q=el("startQuickBtn");
@@ -1057,7 +1056,7 @@ function customFlightTags(type, acName){
 }
 function createCustomFlight(){
  if(currentMission){
-   alert("You have an active dispatch. Complete or abort it before creating a custom flight.");
+   alert("You have an active dispatch. Complete or abort it before creating another operation.");
    return;
  }
  const from=(el("customFrom")?.value||"").trim().toUpperCase();
@@ -1108,7 +1107,7 @@ function createCustomFlight(){
  displayAircraft();
  updatePayout();
  updateUIState();
- setStatus("Custom flight created.");
+ setStatus("Operation created.");
  scrollToDispatch();
 
  const radio=document.querySelector(`input[name="aircraftPick"][data-aircraft="${ac}"]`);
@@ -1402,13 +1401,13 @@ function updateDispatchCard(){
  if(!currentMission){
    d.innerHTML=`<div class="dispatch-card">
      <div class="dispatch-title">READY</div>
-     <div class="dispatch-timer">Start New Contract</div>
-     <div class="mission-box"><strong>Choose how you want to dispatch:</strong><br>Quick Contract, Browse Jobs, or use Pilot’s Choice below to create your own flight.</div>
+     <div class="dispatch-timer">Create Your Operation</div>
+     <div class="mission-box"><strong>Start with Pilot’s Choice.</strong><br>Create the route and operation you want to fly, or use Quick Contract / Browse Jobs when you want a fast randomized prompt.</div>
      <div class="start-actions">
-       <button onclick="generateMission()">Quick Contract</button>
+       <button class="secondary" onclick="generateMission()">Quick Contract</button>
        <button class="secondary" onclick="generateJobBoard()">Browse Jobs</button>
      </div>
-     <p class="small start-note">After selection, your Dispatch flow will appear automatically.</p>
+     <p class="small start-note">Your dispatch card appears automatically after an operation or quick contract is created.</p>
    </div>`;
    return;
  }
@@ -1873,8 +1872,8 @@ window.addEventListener("error",function(e){try{setStatus("Script error: "+e.mes
 
     <hr>
 
-    <strong>1. Generate a Contract</strong><br>
-    Use "Quick Contract" or "5-Job Board" to pick a mission<br><br>
+    <strong>1. Create an Operation</strong><br>
+    Use Pilot's Choice to build your own route, or use Quick Contract / 5-Job Board for a fast randomized prompt<br><br>
 
     <strong>2. Review Dispatch</strong><br>
     Check route, distance, timer, and estimated net payout<br><br>
