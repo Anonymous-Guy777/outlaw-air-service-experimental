@@ -14,17 +14,17 @@ No purpose. No pressure. No reason to care.
 A **FREE**, lightweight, browser-based dispatch tool that gives your flights real structure — without turning it into a grind.
 
 <p align="center">
-  <a href="https://anonymous-guy777.github.io/outlaw-air-service-dispatch/">
+  <a href="https://anonymous-guy777.github.io/outlaw-air-service-experimental/">
     <img src="https://img.shields.io/badge/%F0%9F%9A%80%20Launch%20App-GO-brightgreen?style=for-the-badge&labelColor=brightgreen" />
   </a>
   &nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/Anonymous-Guy777/outlaw-air-service-dispatch">
+  <a href="https://github.com/Anonymous-Guy777/outlaw-air-service-experimental">
     <img src="https://img.shields.io/badge/%F0%9F%92%BB%20View%20Source-GitHub-blue?style=for-the-badge&labelColor=blue" />
   </a>
 </p>
 
 👉 **Launch the Dispatch Terminal and start your first contract:**  
-https://anonymous-guy777.github.io/outlaw-air-service-dispatch/
+https://anonymous-guy777.github.io/outlaw-air-service-experimental/
 
 ---
 
