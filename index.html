@@ -447,7 +447,7 @@ header .header-left h1{
 
 .has-active-flight #dispatchPanel {
   border: 2px solid var(--gold);
-  box-shadow: 0 0 20px rgba(216, 169, 40, 0.4);
+  box-shadow: 0 0 20px rgba(201, 162, 74, 0.28);
 }
 
 /* Experimental banner presentation */
@@ -495,6 +495,33 @@ header{
   #flightLogCard{position:absolute;left:0;top:0;width:100%;box-shadow:none;border:0;}
   #flightLogCard summary h2{background:#fff;color:#111;border-bottom:2px solid #111;}
   .log-actions{display:none !important;}
+}
+
+/* Close-up UI polish */
+.custom-flight-card{
+  border-color:var(--gold);
+  box-shadow:0 0 0 1px rgba(201,162,74,.18),0 6px 20px rgba(0,0,0,.22);
+}
+body.night .custom-flight-card{
+  box-shadow:0 0 0 1px rgba(201,162,74,.22),0 8px 24px rgba(0,0,0,.42);
+}
+.custom-flight-card h2{
+  background:#142036;
+}
+#dispatchPanel.start-card .dispatch-card{
+  border-color:rgba(93,169,255,.78);
+  box-shadow:inset 0 0 0 1px rgba(93,169,255,.12);
+}
+#dispatchPanel.start-card .dispatch-timer{
+  font-size:clamp(2.15rem,5vw,2.85rem);
+  letter-spacing:.02em;
+}
+#dispatchPanel.start-card .mission-box{
+  border-left-width:4px;
+}
+body.night button.secondary{
+  background:#243145;
+  border-color:#3a4a62;
 }
 
 </style>
