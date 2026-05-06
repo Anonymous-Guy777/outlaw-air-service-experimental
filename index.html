@@ -754,6 +754,72 @@ const aircraft={
 "C-17 Globemaster":{tier:5,cost:125000000,op:210000,cruise:450,maint:6200000,cls:"Strategic Airlifter",mod:.86,tags:["heavy","cargo","military"],note:"Massive cargo endgame."},
 "747-8F":{tier:5,cost:190000000,op:310000,cruise:500,maint:9000000,cls:"Heavy Freighter",mod:.75,tags:["heavy","cargo","longhaul"],note:"Top-tier global cargo."}
 };
+const aircraftTierDefaults={
+  1:{cost:0,op:220,cruise:120,maint:6500,mod:1.10,tags:["ga","small"],note:"Loaded from aircraft.html."},
+  2:{cost:850000,op:2400,cruise:165,maint:65000,mod:.92,tags:["cargo","utility","bush"],note:"Loaded from aircraft.html."},
+  3:{cost:8500000,op:19000,cruise:410,maint:520000,mod:.85,tags:["regional","fast","charter","cargo"],note:"Loaded from aircraft.html."},
+  4:{cost:85000000,op:145000,cruise:470,maint:4200000,mod:.80,tags:["heavy","cargo","longhaul"],note:"Loaded from aircraft.html."}
+};
+function aircraftTagsForType(type,tier){
+ const lower=(type||"").toLowerCase();
+ const tags=[...(aircraftTierDefaults[tier]?.tags||aircraftTierDefaults[1].tags)];
+ if(lower.includes("cargo")) tags.push("cargo");
+ if(lower.includes("ga")) tags.push("ga","small");
+ if(lower.includes("turboprop")||lower.includes("utility")) tags.push("utility","regional");
+ if(lower.includes("jet")) tags.push("fast","charter","regional");
+ if(lower.includes("airliner")) tags.push("airline","passenger","regional");
+ if(lower.includes("passenger")) tags.push("passenger","charter");
+ if(lower.includes("heli")) tags.push("heli","rescue");
+ if(tier>=4) tags.push("heavy","longhaul");
+ return [...new Set(tags)];
+}
+function aircraftFromDataRow(name,type,tier){
+ const defaults=aircraftTierDefaults[tier]||aircraftTierDefaults[1];
+ return {...defaults,tier,cls:type||"Aircraft",tags:aircraftTagsForType(type,tier),note:"Loaded from aircraft.html."};
+}
+function applyAircraftData(text){
+ let count=0;
+ (text||"").split(/\r?\n/).forEach(line=>{
+   const clean=line.trim();
+   if(!clean||clean.startsWith("#")||!clean.includes("|")) return;
+   const parts=clean.split("|").map(part=>part.trim());
+   if(parts.length<3||/^name$/i.test(parts[0])) return;
+   const tier=Math.max(1,Math.min(4,parseInt(parts[2],10)||1));
+   aircraft[parts[0]]=aircraftFromDataRow(parts[0],parts[1],tier);
+   count++;
+ });
+ return count;
+}
+function extractAircraftText(html){
+ const doc=new DOMParser().parseFromString(html,"text/html");
+ const node=doc.getElementById("aircraftData");
+ return node ? node.textContent : "";
+}
+function loadAircraftDataWithFrame(){
+ return new Promise(resolve=>{
+   const frame=document.createElement("iframe");
+   frame.style.display="none";
+   frame.src="aircraft.html";
+   frame.onload=()=>{
+     try{resolve(applyAircraftData(frame.contentDocument.getElementById("aircraftData")?.textContent||""));}
+     catch(e){console.warn("Aircraft iframe load failed; using built-in list.",e);resolve(0);}
+     frame.remove();
+   };
+   frame.onerror=()=>{frame.remove();resolve(0);};
+   document.body.appendChild(frame);
+ });
+}
+async function loadAircraftData(){
+ try{
+   const response=await fetch("aircraft.html",{cache:"no-store"});
+   if(!response.ok) throw new Error("HTTP "+response.status);
+   const count=applyAircraftData(extractAircraftText(await response.text()));
+   if(count) return count;
+ }catch(e){
+   console.warn("Aircraft fetch failed; trying iframe fallback.",e);
+ }
+ return loadAircraftDataWithFrame();
+}
 
 const missionData={
 "Bush Cargo":{tierMin:1,tierMax:3,base:3800,cargo:"parts, mail, groceries, or equipment",risk:"Medium",tags:["bush","stol","ga","cargo"],regions:["Southern Oregon","Pacific Northwest","Alaska Bush","Mountain West","Southwest Desert","Midwest Plains"]},
@@ -885,12 +951,12 @@ function populateCustomAircraft(){
  if(!Array.isArray(career.owned) || !career.owned.length){
    career.owned=[...defaultCareer.owned];
  }
- const owned=(career.owned||[]).filter(n=>aircraft[n]);
- s.innerHTML=owned.map(n=>`<option value="${n}">${n} — ${aircraft[n]?.cls||"Aircraft"}</option>`).join("");
- if(!owned.length){
-   s.innerHTML='<option value="">No owned aircraft found</option>';
+ const names=Object.keys(aircraft).sort((a,b)=>(aircraft[a].tier||1)-(aircraft[b].tier||1)||a.localeCompare(b));
+ s.innerHTML=names.map(n=>`<option value="${n}">${n} - ${aircraft[n]?.cls||"Aircraft"}</option>`).join("");
+ if(!names.length){
+   s.innerHTML='<option value="">No aircraft found</option>';
  }else if(!s.value){
-   s.value=owned[0];
+   s.value=names[0];
  }
 }
 function customFlightBase(type, dist, acName){
@@ -945,8 +1011,8 @@ function createCustomFlight(){
    alert("From and To cannot be the same unless this is a Scenic Flight or Training Flight.");
    return;
  }
- if(!ac || !career.owned.includes(ac)){
-   alert("Choose an owned aircraft.");
+ if(!ac || !aircraft[ac]){
+   alert("Choose an aircraft.");
    return;
  }
 
@@ -1158,7 +1224,7 @@ function displayMission(){
 }
 function ownedAircraftForMission(){
  if(currentMission && currentMission.custom){
-   return career.owned.filter(n=>aircraft[n]);
+   return Object.keys(aircraft).filter(n=>aircraft[n]);
  }
  return career.owned.filter(n=>{let a=aircraft[n], tags=a.tags||[]; return a.tier>=currentMission.tierMin&&a.tier<=currentMission.tierMax&&(currentMission.tags||[]).some(t=>tags.includes(t));});
 }
@@ -1686,7 +1752,7 @@ function wire(){
    if(target) target.scrollIntoView({behavior:"smooth",block:"start"});
  }));
 }
-document.addEventListener("DOMContentLoaded",()=>{wire();renderCareer();populateCustomAircraft();updatePayout();updateUIState();});
+document.addEventListener("DOMContentLoaded",async()=>{wire();const loaded=await loadAircraftData();renderCareer();populateCustomAircraft();updatePayout();updateUIState();if(loaded)setStatus("Loaded "+loaded+" aircraft from aircraft.html.");});
 
 window.addEventListener("error",function(e){try{setStatus("Script error: "+e.message);}catch(_){}});
 </script>
@@ -1731,3 +1797,4 @@ window.addEventListener("error",function(e){try{setStatus("Script error: "+e.mes
 
 </body>
 </html>
+
