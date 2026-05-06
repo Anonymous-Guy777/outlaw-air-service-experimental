@@ -370,6 +370,17 @@ header .header-left h1{
   white-space:normal;
   overflow-wrap:anywhere;
 }
+.header-banner-wrap{
+  min-width:0;
+  max-width:calc(100% - 220px);
+  text-align:center;
+}
+.header-banner{
+  display:block;
+  max-width:100%;
+  height:auto;
+  margin:0 auto;
+}
 #nightToggle{
   white-space:nowrap;
   flex:0 0 auto;
@@ -422,6 +433,9 @@ header .header-left h1{
   header .header-left{
     max-width:100%;
   }
+  .header-banner-wrap{
+    max-width:100%;
+  }
   #nightToggle{
     position:static;
     max-width:220px;
@@ -439,10 +453,8 @@ header .header-left h1{
 </head>
 <body>
 <header>
-  <div class="header-left">
-    <h1 id="companyTitle">OUTLAW AIR SERVICE</h1>
-    <h3 style="margin:6px 0 0;color:#f0c75e;letter-spacing:.04em;">Dispatch Terminal <span class="version">v0.6.6</span></h3>
-    <p class="small">MSFS 2024 / 2020 · X-Plane 12 · Free Flight · No mods required</p>
+  <div class="header-banner-wrap">
+    <img class="header-banner" src="images/banner.jpeg" alt="Outlaw Air Service Banner" />
   </div>
   <button id="nightToggle" class="top-toggle" type="button">🌙 Night Ops</button>
 </header>
