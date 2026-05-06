@@ -1,4 +1,4 @@
-![Outlaw Air Service Banner](images/banner.jpeg)
+![Outlaw Air Service Banner](images/OAS_ad.png)
 
 # ✈️ Outlaw Air Service — Dispatch Terminal (MSFS 2020 / 2024 • X-Plane • Console & PC)
 
