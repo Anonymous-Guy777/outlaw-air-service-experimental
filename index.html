@@ -297,6 +297,104 @@ body.night .flight-economics{
   grid-template-columns:1fr 1fr;
   gap:16px;
 }
+.secondary-panel,
+.support-card,
+.roadmap-card,
+.quiet-card{
+  opacity:.94;
+}
+.secondary-panel h2,
+.support-card h2,
+.roadmap-card h2,
+.quiet-card h2{
+  font-size:1.06rem;
+}
+body.night .secondary-panel,
+body.night .support-card,
+body.night .roadmap-card,
+body.night .quiet-card{
+  background:#0b121c;
+  border-color:#182334;
+  box-shadow:0 3px 14px rgba(0,0,0,.38);
+}
+body.night .secondary-panel h2,
+body.night .support-card h2,
+body.night .roadmap-card h2,
+body.night .quiet-card h2{
+  background:#121d2e;
+  border-bottom-color:rgba(201,162,74,.62);
+}
+#flightLogCard{
+  border-color:rgba(201,162,74,.55);
+}
+body.night #flightLogCard{
+  background:#0d1622;
+  border-color:rgba(201,162,74,.42);
+  box-shadow:0 0 0 1px rgba(201,162,74,.08),0 8px 22px rgba(0,0,0,.42);
+}
+body.night #flightLogCard h2{
+  background:#172235;
+  border-bottom-color:var(--gold);
+}
+.log-actions{
+  margin-bottom:12px;
+}
+.log-journal{
+  display:grid;
+  gap:10px;
+}
+.log-entry{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:12px;
+  padding:12px;
+  border-radius:10px;
+  background:#f8f4eb;
+  border:1px solid #d8cba9;
+  border-left:5px solid var(--gold);
+}
+.log-entry-title{
+  color:var(--navy);
+  font-size:1.05rem;
+  font-weight:900;
+  margin-bottom:4px;
+}
+.log-route{
+  color:var(--ink);
+  font-weight:bold;
+}
+.log-meta{
+  color:var(--muted);
+  font-size:.88rem;
+  line-height:1.42;
+  margin-top:5px;
+}
+.log-memo{
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:8px;
+  background:rgba(201,162,74,.12);
+  color:var(--ink);
+}
+.log-net{
+  color:var(--green);
+  font-size:1.05rem;
+  font-weight:900;
+  white-space:nowrap;
+}
+body.night .log-entry{
+  background:#101a27;
+  border-color:#243247;
+  border-left-color:var(--gold);
+}
+body.night .log-entry-title,
+body.night .log-route{
+  color:#f0d477;
+}
+body.night .log-memo{
+  background:rgba(201,162,74,.10);
+  color:#ead9a7;
+}
 details.card summary{
   cursor:pointer;
   list-style:none;
@@ -311,7 +409,8 @@ details.card summary h2::after{
   .cockpit-flow{grid-template-columns:repeat(2,1fr);}
   .hero-dispatch{position:sticky;top:0;z-index:10;}
   .dispatch-timer{font-size:2.45rem;}
-  .next-action,.office-grid,.operation-timer-controls{grid-template-columns:1fr;}
+  .next-action,.office-grid,.operation-timer-controls,.log-entry{grid-template-columns:1fr;}
+  .log-net{white-space:normal;}
 }
 
 @media(max-width:700px){.dispatch-timer{font-size:2.2rem}.dispatch-grid,.operation-timer-readout{grid-template-columns:1fr}.top-toggle{position:static;margin:12px auto 0;}}
@@ -766,14 +865,14 @@ body.night button.secondary{
   <label><input type="checkbox" id="penaltyFuel"> Fuel planning mistake / emergency fuel situation <strong style="margin-left:auto;">-10%</strong></label>
   <div class="notice">Use the target time and optional OAS Operation Timer as pilot tools. Apply penalties honestly. Late penalty starts after a 5-minute grace period. Abort/Fail is for true failures.</div>
 </div></section>
-      <details class="card"  ><summary><h2>🏆 Bonus Rules</h2></summary><div class="body">
+      <details class="card secondary-panel"  ><summary><h2>🏆 Bonus Rules</h2></summary><div class="body">
   <label><input type="checkbox" id="bonusNight"> Night operation bonus <strong style="float:right;">+10%</strong></label>
   <label><input type="checkbox" id="bonusWeather"> Weather / wind bonus <strong style="float:right;">+15%</strong></label>
   <label><input type="checkbox" id="bonusShort"> Short / rough strip bonus <strong style="float:right;">+12%</strong></label>
   <label><input type="checkbox" id="bonusNoGPS"> No GPS / pilotage bonus <strong style="float:right;">+15%</strong></label>
   <label><input type="checkbox" id="bonusClean"> Clean landing / no damage bonus <strong style="float:right;">+8%</strong></label>
 </div></details>
-      <details class="card"><summary><h2>📉 Cost / Penalty</h2></summary><div class="body"><div class="mission-box">
+      <details class="card secondary-panel"><summary><h2>📉 Cost / Penalty</h2></summary><div class="body"><div class="mission-box">
   Operating/fuel/insurance cost: <span class="money" id="opCost" style="color:var(--red);">$0</span><br>Insurance preview: <span class="money" id="insurancePreview" style="color:var(--blue);">$0</span><br>Deadhead/relocation cost: <span class="money" id="deadheadCost" style="color:var(--red);">$0</span><br><span class="small">Deadhead = cost to move your aircraft from its last location to the departure airport.</span><br>
   Bonus: <span class="money" id="bonusTotalDisplay">0%</span><br>
   Penalty: <span class="money" id="penaltyTotal" style="color:var(--red);">0%</span><br>
@@ -820,7 +919,7 @@ body.night button.secondary{
   <button id="resetBtn" class="secondary" style="margin-top:10px">Reset Career</button>
   <p class="small">Career data saves locally on your device. Clearing browser data/cache can erase it, so use Backup Save before resetting Safari, switching devices, or updating browsers. Save Restore Fix is active. Loans charge interest after completed flights.</p>
 </div></section>
-      <details class="card"  ><summary><h2>🏠 Company Setup</h2></summary><div class="body">
+      <details class="card secondary-panel"  ><summary><h2>🏠 Company Setup</h2></summary><div class="body">
   <div class="row">
     <div><label for="companyName">Company Name</label><input id="companyName" placeholder="Outlaw Air Service"></div>
     <div><label for="homeBase">Home Base</label><select id="homeBase">
@@ -854,13 +953,13 @@ body.night button.secondary{
   </div>
 
   <details class="card"  ><summary><h2>🛩️ Fleet</h2></summary><div class="body" id="fleetDisplay"><p class="small">Fleet loading...</p></div></details>
-  <details class="card"  ><summary><h2>🛒 Aircraft Market</h2></summary><div class="body" id="marketDisplay"><p class="small">Market loading...</p></div></details>
+  <details class="card quiet-card"  ><summary><h2>🛒 Aircraft Market</h2></summary><div class="body" id="marketDisplay"><p class="small">Market loading...</p></div></details>
   <details class="card" id="flightLogCard"><summary><h2>🧾 Flight Log</h2></summary><div class="body"><div class="btnrow log-actions"><button id="printLogBtn" class="secondary" type="button">Print / Save Log</button><button id="copyLogBtn" class="secondary" type="button">Copy Log Text</button></div><div id="logDisplay"><p class="small">No flights logged yet.</p></div></div></details>
-  <details class="card"  open><summary><h2>☕ Support / Notes</h2></summary><div class="body">
+  <details class="card support-card"  open><summary><h2>☕ Support / Notes</h2></summary><div class="body">
   <p class="small">This tool is free. If you find it useful and want to support future updates, you can do that on Ko-fi.</p>
   <p><a href="https://ko-fi.com/wacky_outlaw" target="_blank" rel="noopener" style="display:inline-block;padding:10px 14px;border-radius:8px;background:var(--gold);color:#111;text-decoration:none;font-weight:bold;">Support on Ko-fi ☕</a></p>
 </div></details>
-  <details class="card"  ><summary><h2>🧪 Release Notes / Future Improvements</h2></summary><div class="body">
+  <details class="card roadmap-card"  ><summary><h2>🧪 Release Notes / Future Improvements</h2></summary><div class="body">
   <p><strong>Experimental Build — Operations Sandbox Direction</strong></p>
 
   <p class="small">
@@ -877,6 +976,7 @@ body.night button.secondary{
   • Added Print / Save Log and Copy Log Text tools<br>
   • Added an optional pilot-controlled Operation Timer for live dispatch timing<br>
   • Refined Operation Timer buttons with quiet avionics-style state illumination<br>
+  • Improved lower-half visual hierarchy and Flight Log journal readability<br>
   • Updated OAS branding, banner presentation, and metallic gold / navy UI polish
   </p>
 
@@ -2034,7 +2134,21 @@ function renderCareer(){
  if(!career.log.length){
    el("logDisplay").innerHTML='<p class="small">No flights logged yet.</p>';
  } else {
-   el("logDisplay").innerHTML=`<table><thead><tr><th>Flight</th><th>Net</th></tr></thead><tbody>${career.log.map(l=>`<tr><td><strong>${l.mission}</strong><br><span class="small">${l.route}<br>${l.aircraft}${l.preset&&l.preset!=="Freeform"?`<br>Preset: ${escapeHtml(l.preset)}`:""}${l.actualTime?`<br>Operation Time: ${escapeHtml(l.actualTime)}`:""}<br>Gross ${money(l.gross)} · Costs ${money(l.cost)} · Penalty ${l.penalty}<br>${l.event||""}${l.memo?`<br><strong>Memo:</strong> ${escapeHtml(l.memo)}`:""}<br>${l.date}</span></td><td><strong>${money(l.net)}</strong></td></tr>`).join("")}</tbody></table>`;
+   el("logDisplay").innerHTML=`<div class="log-journal">${career.log.map(l=>{
+     const preset=l.preset&&l.preset!=="Freeform"?`Preset: ${escapeHtml(l.preset)} · `:"";
+     const time=l.actualTime?`Operation Time: ${escapeHtml(l.actualTime)} · `:"";
+     const event=l.event?`<br>${escapeHtml(l.event)}`:"";
+     const memo=l.memo?`<div class="log-memo"><strong>Memo:</strong> ${escapeHtml(l.memo)}</div>`:"";
+     return `<article class="log-entry">
+       <div>
+         <div class="log-entry-title">${escapeHtml(l.mission)}</div>
+         <div class="log-route">${escapeHtml(l.route)}</div>
+         <div class="log-meta">${escapeHtml(l.aircraft)}<br>${preset}${time}Gross ${money(l.gross)} · Costs ${money(l.cost)} · Penalty ${escapeHtml(l.penalty)}${event}<br>${escapeHtml(l.date)}</div>
+         ${memo}
+       </div>
+       <div class="log-net">${money(l.net)}</div>
+     </article>`;
+   }).join("")}</div>`;
  }
  el("companyName").value=career.companyName||"Outlaw Air Service";
  updateCompanyTitle();
