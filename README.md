@@ -156,7 +156,30 @@ Export / import your entire career anytime.
 
 ## 🧪 Status
 
-**v0.6.6 — Final Beta (Release Ready)**
+**Experimental Build — Operations Sandbox Direction**
+
+This repo is the active sandbox for new OAS features. For the latest notes, open the app and expand:
+
+**Release Notes / Future Improvements**
+
+Latest Experimental highlights:
+
+- Pilot’s Choice / Create Your Own Operation is now the primary app flow
+- Quick Contract and 5-Job Board are now secondary quick-start modes
+- Modular aircraft and airport data pages were added for easier user editing
+- Manual aircraft assignment was expanded for sandbox operations
+- Flight Memo notes were added to the Flight Log
+- Print / Save Log and Copy Log Text tools were added
+- OAS branding, banner presentation, and metallic gold / navy UI polish were updated
+
+Future direction:
+
+- airport pool integration for regional operation packs
+- operation presets such as Alaska Bush Ops, Caribbean Island Hopper, VIP Charter, and Medical Relief
+- optional relaxed / scenic / untimed operation modes
+- aircraft identity bonuses for bush, cargo, VIP, heli, vintage, and heavy operations
+- multi-leg operation support for fuel stops, relays, transfers, and overnight routes
+- continued UI polish while preserving the KISS philosophy
 
 ---
 
