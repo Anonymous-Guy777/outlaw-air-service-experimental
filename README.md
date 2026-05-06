@@ -1,211 +1,132 @@
 ![Outlaw Air Service Banner](images/OAS_ad.png)
 
-# ✈️ Outlaw Air Service — Dispatch Terminal (MSFS 2020 / 2024 • X-Plane • Console & PC)
+# Outlaw Air Service - Dispatch Terminal (Experimental)
 
-**Free Flight is great… until it isn’t.**
+**EXPERIMENTAL BUILD**
 
-At some point it just turns into:  
-spawn → fly → land → repeat  
+This is the active development sandbox. Features may change, saves may not be fully compatible with Stable, and things can break. Use at your own pace.
 
-No purpose. No pressure. No reason to care.
+For the stable, polished version visit the [main Outlaw Air Service repo](https://github.com/Anonymous-Guy777/outlaw-air-service-dispatch).
+
+---
+
+**Free Flight is great... until it isn't.**
+
+Eventually it becomes:
+
+**spawn -> fly -> land -> repeat**
+
+No purpose. No pressure. No story.
 
 **So I built this.**
 
-A **FREE**, lightweight, browser-based dispatch tool that gives your flights real structure — without turning it into a grind.
+A **free**, lightweight, browser-based **Operations Sandbox** that gives your free flights real dispatch structure and a personal flight journal without bloat, mods, or management sim overhead.
 
 <p align="center">
   <a href="https://anonymous-guy777.github.io/outlaw-air-service-experimental/">
-    <img src="https://img.shields.io/badge/%F0%9F%9A%80%20Launch%20App-GO-brightgreen?style=for-the-badge&labelColor=brightgreen" />
-  </a>
-  &nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/Anonymous-Guy777/outlaw-air-service-experimental">
-    <img src="https://img.shields.io/badge/%F0%9F%92%BB%20View%20Source-GitHub-blue?style=for-the-badge&labelColor=blue" />
+    <img src="https://img.shields.io/badge/%F0%9F%9A%80%20Launch%20Experimental%20OAS-NOW-brightgreen?style=for-the-badge" alt="Launch Experimental" />
   </a>
 </p>
-
-👉 **Launch the Dispatch Terminal and start your first contract:**  
-https://anonymous-guy777.github.io/outlaw-air-service-experimental/
 
 ---
 
 **Works on:**
+
 - MSFS 2020 / 2024 (PC)
 - X-Plane (PC)
 - PS5 & Xbox (via phone/tablet EFB)
-- Any device with a browser
+- Any modern browser
 
-**No mods. No SimConnect. No plugins. No AI.**  
-Just open → generate a contract → fly → log the result.
+**No mods. No plugins. No AI. No tracking.**
 
----
-
-## 🧠 The idea
-
-This runs alongside your sim as a simple browser-based EFB.
-
-**Generate a contract. Fly it. Log the result.**
-
-No automation. No tracking. No background scripts.
-
-It’s an honor system — that’s the whole point.
-
-Fly it smooth. Hit your marks. Keep it clean.
-
-If you butter the landing and hit your timing, you earn it.  
-If you slam it in or miss your marks… you own it.
-
-**You are Pilot in Command.**
+Pure honor system.
 
 ---
 
-## 📸 How it works
+## The Philosophy
 
-### 👉 1. Generate a contract
+**OAS is an Operations Sandbox + Personal Flight Journal.**
 
-![Main Screen](images/screen_01_main_v1.jpeg)
+**Pilot's Choice** is now the primary experience:
 
-Tap → **Start here → Generate your contract**
+Build the exact flight or operation you want to fly, then let OAS wrap it in lightweight dispatch structure, timing, payouts, and logging.
 
-- Quick Contract (fast, randomized)  
-- Browse Jobs / Pilot’s Choice (more control)  
-
----
-
-### 🧾 2. Get your mission
-
-![Dispatch Card](images/screen_02_dispatch_v1.jpeg)
-
-Your **EFB Dispatch Card** includes:
-
-- Route (departure → arrival)  
-- Recommended aircraft  
-- Distance & mission type  
-- Estimated payout  
-- **EFB timer target** (set in-sim on the MSFS EFB before takeoff)
-
-Perfect for console pilots and X-Plane users without plugins.
+It's still 100% honor-based. You are Pilot in Command. Fly clean, earn it. Fly sloppy, own it.
 
 ---
 
-### ⚠️ 3. Fly the mission (Honor System)
+## Primary Flow: Pilot's Choice
 
-No automation. No tracking.
+**Start here.** Create the operation you actually want to fly.
 
-You decide the outcome:
-- On-time arrival  
-- Landing quality  
-- Runway used  
-- Weather / night bonuses  
+- Choose any route
+- Pick your aircraft
+- Set operation type and vibe
+- Add optional notes / memo
 
----
+OAS turns it into a proper dispatch card with EFB timer target, estimated payout, and logging.
 
-### 💰 4. Complete the contract
-
-![Contract Screen](images/screen_03_contract_v1.jpeg)
-
-After landing:
-
-- Apply bonuses & penalties  
-- Confirm payout  
-- Stats update automatically  
+**Quick Contract** and **5-Job Board** are still available as "surprise me" options lower down.
 
 ---
 
-### 📊 5. Track your career
+## How It Works
 
-![Dashboard](images/screen_04_dashboard_v1.jpeg)
-
-Track:
-
-- Cash & Debt  
-- Rank / Tier progression  
-- Flight log  
-- Company stats  
-
-Includes a simple loan system for that outlaw feel.
+1. **Create Operation** (Pilot's Choice)
+2. Review your EFB Dispatch Card
+3. Fly the mission in Free Flight (set EFB timer)
+4. Complete honestly: apply bonuses/penalties
+5. Log the flight with optional memo
+6. Watch your outlaw career and journal grow
 
 ---
 
-### 💾 6. Backup / Restore your save
+## What's New in Experimental
 
-![Save and Restore](images/screen_05_save_restore_v1.jpeg)
-
-Export / import your entire career anytime.
-
-- Backup progress  
-- Restore previous saves  
-- Move between devices  
-
-**Always back up your save before major updates.**
+- **Pilot's Choice** promoted as the main flow
+- Expanded manual / sandbox operation creation
+- Operation Presets for lightweight flight atmosphere and vibe
+- Flight Memo notes + Print/Copy Log tools
+- Modular `aircraft.html` + `airports.html` for easy community editing
+- Updated metallic gold/navy branding
+- Stronger Operations Sandbox direction
 
 ---
 
-## 🚀 Features
+## Status
 
-- Random + custom contract generation  
-- Payout & cost tracking  
-- In-sim EFB timer integration  
-- Career progression & ranks  
-- Loan system  
-- Full backup / restore  
-- Mobile + tablet optimized  
-- Console-friendly design  
-- Works with MSFS 2020/2024 and X-Plane  
+**Experimental - Operations Sandbox**
+
+Iterating carefully while protecting the core KISS experience.
+
+**Future lightweight directions:** Operation presets, regional airport pools, aircraft identity bonuses, simple multi-leg operations, relaxed/untimed modes.
 
 ---
 
-## 🧪 Status
+## Save System
 
-**Experimental Build — Operations Sandbox Direction**
+Export / Import anytime.
 
-This repo is the active sandbox for new OAS features. For the latest notes, open the app and expand:
-
-**Release Notes / Future Improvements**
-
-Latest Experimental highlights:
-
-- Pilot’s Choice / Create Your Own Operation is now the primary app flow
-- Quick Contract and 5-Job Board are now secondary quick-start modes
-- Modular aircraft and airport data pages were added for easier user editing
-- Manual aircraft assignment was expanded for sandbox operations
-- Flight Memo notes were added to the Flight Log
-- Print / Save Log and Copy Log Text tools were added
-- OAS branding, banner presentation, and metallic gold / navy UI polish were updated
-
-Future direction:
-
-- airport pool integration for regional operation packs
-- operation presets such as Alaska Bush Ops, Caribbean Island Hopper, VIP Charter, and Medical Relief
-- optional relaxed / scenic / untimed operation modes
-- aircraft identity bonuses for bush, cargo, VIP, heli, vintage, and heavy operations
-- multi-leg operation support for fuel stops, relays, transfers, and overnight routes
-- continued UI polish while preserving the KISS philosophy
+**Always back up before testing big changes.**
 
 ---
 
-## 💬 Feedback
+## Feedback & Support
 
-Found a bug or have an idea?  
-Open an issue on GitHub or drop feedback where you found the project.
+Found a bug or have thoughts? Open an issue or drop feedback where you found the project.
 
----
-
-## 💙 Support
-
-https://ko-fi.com/wacky_outlaw
+Support future development: [Ko-fi - wacky_outlaw](https://ko-fi.com/wacky_outlaw)
 
 ---
 
-## ⚠️ Disclaimer
+## Disclaimer
 
-Not affiliated with Microsoft Flight Simulator, Asobo Studio, Laminar Research, or X-Plane.
-
----
-
-## 📄 License
-
-Free to use and share for personal use within the flight sim community.
+Not affiliated with Microsoft Flight Simulator, Asobo, Laminar Research, or X-Plane.
 
 ---
 
 **Built for pilots who just want to fly with purpose.**
+
+---
+
+*Experimental repo for testing new ideas before they reach the stable build.*
