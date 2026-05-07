@@ -88,7 +88,7 @@ OAS turns it into a proper dispatch card with EFB timer target, estimated payout
 - **Pilot's Choice** promoted as the main flow
 - Expanded manual / sandbox operation creation
 - Operation Presets for lightweight flight atmosphere and vibe
-- Optional pilot-controlled Operation Timer
+- **Working pilot-controlled Operation Timer** with start, pause, resume, reset, completion, and Flight Log time capture
 - Flight Memo notes + Print/Copy Log tools
 - Modular `aircraft.html` + `airports.html` for easy community editing
 - Updated metallic gold/navy branding
