@@ -1145,6 +1145,7 @@ body.night button.secondary{
   • Added completion protection for running timers and early accidental completion<br>
   • Added no-penalty Cancel Dispatch for planning/test operations that never began<br>
   • Adjusted Pilot’s Choice heavy-aircraft payout scaling for C-17 / heavy cargo operations<br>
+  • Normalized Pilot’s Choice preset payout floors so Scenic, Ferry, VIP, and Heavy presets all respect selected aircraft operating scale<br>
   • Replaced aircraft data placeholder notes with pilot-facing operational flavor<br>
   • Added final Phase 2 identity refinements: atmospheric dispatch lines and Notable Flights<br>
   • Clarified PNW/Oregon regional DNA while preserving worldwide Pilot’s Choice freedom<br>
@@ -1675,17 +1676,23 @@ function customFlightBase(type, dist, acName){
    "Heavy Cargo":8500,
    "Passenger Hop":1600
  };
- const margin={
-   "Scenic Flight":1.25,
-   "Ferry Flight":1.20,
-   "Training Flight":1.10,
-   "Light Cargo":1.65,
+ const grossFloor={
+   "Scenic Flight":1.80,
+   "Ferry Flight":1.75,
+   "Training Flight":1.55,
+   "Light Cargo":2.00,
    "Heavy Cargo":2.25,
-   "Passenger Hop":1.45
+   "Passenger Hop":1.90
  };
  let routeBase=(fixed[type]||1000)+(dist*(multipliers[type]||18))+(tier*250);
- let aircraftFloor=(a.op||0)*(margin[type]||1.35);
+ let payoutDivisor=Math.max(.45,(a.mod||1)*customPayoutLimiter(type, acName));
+ let aircraftFloor=((a.op||0)*(grossFloor[type]||1.80))/payoutDivisor;
  return Math.max(500, Math.round(Math.max(routeBase, aircraftFloor)));
+}
+function customPayoutLimiter(type, acName){
+ const a=aircraft[acName] || aircraft["C172"];
+ const heavyCustom=a.tier>=5 || type==="Heavy Cargo";
+ return heavyCustom?1:.70;
 }
 function customFlightTags(type, acName){
  const a=aircraft[acName] || aircraft["C172"];
@@ -2012,8 +2019,7 @@ function penaltyTotal(){
 function grossPayout(){if(!currentMission)return 0;let mod=selectedAircraft?aircraft[selectedAircraft].mod:1;let homeBonus=(currentMission.dep===career.homeBase||currentMission.dest===career.homeBase)?.06:0;
  let passengerBonus=currentMission.tags&&currentMission.tags.includes("passenger")?.05:0;
  let specialBonus=currentMission.type==="Special Transport"?.50:0;
- let heavyCustom=currentMission.custom && selectedAircraft && (aircraft[selectedAircraft].tier>=5 || currentMission.type==="Heavy Cargo");
- let customLimiter=currentMission.custom?(heavyCustom?1:.70):1;
+ let customLimiter=currentMission.custom?customPayoutLimiter(currentMission.type,selectedAircraft):1;
  return currentMission.base*mod*customLimiter*(1+bonusTotal()+homeBonus+passengerBonus+specialBonus)*(1-penaltyTotal());}
 function opCost(){
  if(!selectedAircraft)return 0;
