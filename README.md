@@ -6,6 +6,10 @@
 
 This is the active development sandbox. Features may change, saves may not be fully compatible with Stable, and things can break. Use at your own pace.
 
+**This is experimental, but it is not random.**
+
+OAS Experimental is the current beta build for the next Dispatch Terminal release: actively tested, intentionally scoped, and guided by the core goal of giving Free Flight a purpose without turning it into a management sim.
+
 For the stable, polished version visit the [main Outlaw Air Service repo](https://github.com/Anonymous-Guy777/outlaw-air-service-dispatch).
 
 ---
