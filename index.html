@@ -106,6 +106,89 @@ body.night .ops-guidance{
 body.night .ops-guidance span{
   color:#8fa8bd;
 }
+.ops-flow{
+  margin:0 0 12px;
+  border:1px solid rgba(143,168,189,.35);
+  border-radius:10px;
+  background:rgba(255,255,255,.36);
+  overflow:hidden;
+}
+.ops-flow summary{
+  cursor:pointer;
+  padding:8px 10px;
+  color:var(--blue);
+  font-size:.82rem;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+.ops-flow div{
+  padding:0 10px 10px;
+  color:var(--muted);
+  font-size:.88rem;
+  line-height:1.35;
+}
+body.night .ops-flow{
+  background:#0e1825;
+  border-color:#26384e;
+}
+body.night .ops-flow summary{
+  color:#8ac7ff;
+}
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(0,0,0,.68);
+}
+.modal-backdrop.is-hidden{
+  display:none;
+}
+.ops-modal{
+  width:min(520px,100%);
+  background:#f8f4eb;
+  border:2px solid var(--gold);
+  border-radius:12px;
+  box-shadow:0 18px 48px rgba(0,0,0,.45);
+  overflow:hidden;
+}
+.ops-modal h2{
+  margin:0;
+  padding:12px 14px;
+  background:var(--navy2);
+  color:white;
+  font-size:1.15rem;
+  border-bottom:2px solid var(--gold);
+}
+.ops-modal-body{
+  padding:14px;
+}
+.ops-modal-body p{
+  margin:0 0 10px;
+  line-height:1.42;
+}
+.ops-modal-warning{
+  padding:10px;
+  border-radius:8px;
+  background:#fff2cc;
+  border-left:5px solid var(--gold);
+  color:#3b2c0f;
+  font-weight:bold;
+}
+body.night .ops-modal{
+  background:#0d1622;
+  border-color:var(--gold);
+}
+body.night .ops-modal h2{
+  background:#172235;
+}
+body.night .ops-modal-warning{
+  background:#1c1a10;
+  color:#ead9a7;
+}
 .operation-timer-panel{
   margin-top:12px;
   padding:12px;
@@ -1005,6 +1088,7 @@ body.night button.secondary{
   • Refined Operation Timer buttons with quiet avionics-style state illumination<br>
   • Improved lower-half visual hierarchy and Flight Log journal readability<br>
   • Added inline contextual operational guidance for the next dispatch step<br>
+  • Added completion protection for running timers and early accidental completion<br>
   • Updated OAS branding, banner presentation, and metallic gold / navy UI polish
   </p>
 
@@ -1020,6 +1104,20 @@ body.night button.secondary{
 
   <div class="notice">Experimental is the sandbox for new OAS ideas. Expect testing features, feedback-driven changes, and lightweight iteration. Stable builds will remain polished, reliable, and beginner friendly.</div>
 </div></details>
+</div>
+
+<div class="modal-backdrop is-hidden" id="completeConfirmModal" role="dialog" aria-modal="true" aria-labelledby="completeConfirmTitle">
+  <div class="ops-modal">
+    <h2 id="completeConfirmTitle">Complete Operation?</h2>
+    <div class="ops-modal-body">
+      <p>This will finalize the current dispatch, capture operation time, and move the mission into the Flight Log.</p>
+      <div class="ops-modal-warning" id="completeConfirmReason">Confirm completion when the operation is finished.</div>
+      <div class="btnrow">
+        <button class="good" id="confirmCompleteBtn" type="button">Complete Operation</button>
+        <button class="secondary" id="returnDispatchBtn" type="button">Return to Dispatch</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -1268,6 +1366,7 @@ function updateUIState(){
        <div class="dispatch-title">READY</div>
        <div class="dispatch-timer">Create Your Operation</div>
        ${operationGuidanceHtml(operationGuidanceMessage())}
+       ${opsFlowHtml()}
        <div class="mission-box">
          <strong>👉 Start with Pilot’s Choice above.</strong><br><br>
          Build your own route, aircraft, operation type, and risk level. Use Quick Contract or Browse Jobs only when you want OAS to surprise you.
@@ -1301,14 +1400,17 @@ function setOperationalGuidance(message){
 function operationGuidanceHtml(message){
  return `<div class="ops-guidance"><span>Next Step</span>${escapeHtml(message)}</div>`;
 }
+function opsFlowHtml(){
+ return `<details class="ops-flow"><summary>OPS FLOW / QUICK OPS</summary><div>Create &rarr; Assign Aircraft &rarr; Review Dispatch &rarr; Start Timer Optional &rarr; Fly &rarr; Complete &rarr; Log</div></details>`;
+}
 function operationGuidanceMessage(){
  if(operationalGuidance) return operationalGuidance;
  if(!currentMission) return "Create an operation in Pilot's Choice, or use a quick-start mode when you want OAS to surprise you.";
  if(!selectedAircraft) return "Assign an aircraft for this dispatch.";
  const elapsed=operationTimerElapsedMs();
- if(operationTimer.running) return "Operation timer running. Fly the route, then complete the operation after arrival.";
- if(elapsed>0) return "Operation timer paused. Resume anytime, reset if restarting, or complete manually after arrival.";
- return "Dispatch ready for review. Optional: start the Operation Timer before departure.";
+ if(operationTimer.running) return "TIMER RUNNING: Fly the operation. Complete only after arrival.";
+ if(elapsed>0) return "TIMER PAUSED: Resume when ready, or reset if restarting.";
+ return "DISPATCH READY: Review route, aircraft, payout, then start timer before departure if desired.";
 }
 function operationTimerElapsedMs(){
  return operationTimer.elapsedMs + (operationTimer.running && operationTimer.startedAt ? Date.now()-operationTimer.startedAt : 0);
@@ -1370,14 +1472,14 @@ function resetOperationTimer(manual){
  stopOperationTimerTick();
  renderOperationTimerDisplay();
  if(manual&&currentMission){
-   operationalGuidance=selectedAircraft?"Timer reset. Optional: start the Operation Timer before departure.":"Timer reset. Assign an aircraft for this dispatch.";
+   operationalGuidance=selectedAircraft?"DISPATCH READY: Review route, aircraft, payout, then start timer before departure if desired.":"Timer reset. Assign an aircraft for this dispatch.";
    updateDispatchCard();
  }
 }
 function startOperationTimer(){
  if(!currentMission){alert("Create an operation first.");return;}
  operationTimer={elapsedMs:0,running:true,startedAt:Date.now()};
- operationalGuidance="Operation timer running. Fly the route, then complete the operation after arrival.";
+ operationalGuidance="TIMER RUNNING: Fly the operation. Complete only after arrival.";
  ensureOperationTimerTick();
  updateDispatchCard();
  setStatus("Operation timer started.");
@@ -1387,7 +1489,7 @@ function pauseOperationTimer(){
  operationTimer.elapsedMs=operationTimerElapsedMs();
  operationTimer.running=false;
  operationTimer.startedAt=null;
- operationalGuidance="Operation timer paused. Resume anytime, reset if restarting, or complete manually after arrival.";
+ operationalGuidance="TIMER PAUSED: Resume when ready, or reset if restarting.";
  stopOperationTimerTick();
  updateDispatchCard();
  setStatus("Operation timer paused.");
@@ -1397,7 +1499,7 @@ function resumeOperationTimer(){
  if(operationTimer.running) return;
  operationTimer.running=true;
  operationTimer.startedAt=Date.now();
- operationalGuidance="Operation timer resumed. Continue the operation and complete after arrival.";
+ operationalGuidance="TIMER RUNNING: Fly the operation. Complete only after arrival.";
  ensureOperationTimerTick();
  updateDispatchCard();
  setStatus("Operation timer resumed.");
@@ -1562,12 +1664,13 @@ function createCustomFlight(){
    tierMax:aircraft[ac]?.tier || 5,
    custom:true,
    preset:preset,
-   flavor:presetHint
+   flavor:presetHint,
+   createdAt:Date.now()
  };
  selectedAircraft=ac;
  window.currentJobBoard=null;
  resetChecks();
- operationalGuidance="Dispatch ready for review. Optional: start the Operation Timer before departure.";
+ operationalGuidance="DISPATCH READY: Review route, aircraft, payout, then start timer before departure if desired.";
  displayMission();
  displayAircraft();
  updatePayout();
@@ -1646,7 +1749,7 @@ if(currentMission){
  let distRange=data.tierMin>=5?5200:data.tierMin>=4?850:data.tierMin>=3?260:180;
  let dist=Math.floor(distBase+Math.random()*distRange);
  if(data.tierMin>=5 && dist<500) dist=500+Math.floor(Math.random()*3500);
- currentMission={type,region,dep,dest,dist,base:Math.round((data.base+dist*(data.tierMin>=5?58:data.tierMin>=4?85:34))*difficultyMod()),cargo:data.cargo,risk:data.risk,tags:data.tags,tierMin:data.tierMin,tierMax:data.tierMax};
+ currentMission={type,region,dep,dest,dist,base:Math.round((data.base+dist*(data.tierMin>=5?58:data.tierMin>=4?85:34))*difficultyMod()),cargo:data.cargo,risk:data.risk,tags:data.tags,tierMin:data.tierMin,tierMax:data.tierMax,createdAt:Date.now()};
  selectedAircraft=null; resetChecks(); operationalGuidance="Assign an aircraft for this dispatch."; displayMission(); displayAircraft(); updatePayout(); updateUIState(); setStatus("Contract generated."); scrollToDispatch();
 }
 function generateRandomMissionData(){
@@ -1742,7 +1845,7 @@ function generateJobBoard(){
  const board=el("jobBoardPanel");
  if(board) board.scrollIntoView({behavior:"smooth",block:"start"});
 }
-function selectJobFromBoard(i){currentMission=window.currentJobBoard[i]; selectedAircraft=null; resetChecks(); operationalGuidance="Assign an aircraft for this dispatch."; displayMission(); displayAircraft(); updatePayout(); updateUIState(); scrollToDispatch();}
+function selectJobFromBoard(i){currentMission={...window.currentJobBoard[i],createdAt:Date.now()}; selectedAircraft=null; resetChecks(); operationalGuidance="Assign an aircraft for this dispatch."; displayMission(); displayAircraft(); updatePayout(); updateUIState(); scrollToDispatch();}
 function highlightJobRow(btn){
  document.querySelectorAll("[data-job-row]").forEach(r=>r.classList.remove("selected-job-row"));
  const row=btn.closest("tr");
@@ -1768,7 +1871,7 @@ function displayAircraft(){
  el("aircraftDisplay").innerHTML=`<table><thead><tr><th>Pick</th><th>Aircraft</th><th>Notes</th><th>Cost</th></tr></thead><tbody>${choices.map(a=>`<tr data-aircraft-row="${a}"><td><input type="radio" name="aircraftPick" data-aircraft="${a}"></td><td><strong>${a}</strong><br><span class="small">Tier ${aircraft[a].tier} · ${aircraft[a].cls}</span></td><td>${aircraft[a].note}<br><span class="small">Cruise: ${aircraft[a].cruise} kt</span></td><td><strong>${Math.round(aircraft[a].mod*100)}%</strong><br><span class="small">Op ${money(aircraft[a].op)}<br>EFB ${formatMinutes(calcTimerMinutesForAircraft(a))}</span></td></tr>`).join("")}</tbody></table><div class="mission-box">Estimated gross: <span class="money" id="payout">${money(currentMission.base)}</span></div>`;
  document.querySelectorAll('input[name="aircraftPick"]').forEach(e=>e.addEventListener("change",function(){
    selectedAircraft=this.dataset.aircraft;
-   operationalGuidance="Dispatch ready for review. Optional: start the Operation Timer before departure.";
+   operationalGuidance="DISPATCH READY: Review route, aircraft, payout, then start timer before departure if desired.";
    document.querySelectorAll("[data-aircraft-row]").forEach(row=>row.classList.remove("aircraft-row-selected"));
    const row=document.querySelector(`[data-aircraft-row="${selectedAircraft}"]`);
    if(row) row.classList.add("aircraft-row-selected");
@@ -1872,6 +1975,7 @@ function updateDispatchCard(){
      <div class="dispatch-title">READY</div>
      <div class="dispatch-timer">Create Your Operation</div>
      ${operationGuidanceHtml(operationGuidanceMessage())}
+     ${opsFlowHtml()}
      <div class="mission-box"><strong>Start with Pilot’s Choice.</strong><br>Create the route and operation you want to fly, or use Quick Contract / Browse Jobs when you want a fast randomized prompt.</div>
      <div class="start-actions">
        <button class="secondary" onclick="generateMission()">Quick Contract</button>
@@ -1893,6 +1997,7 @@ function updateDispatchCard(){
    <div class="dispatch-timer">${timer}</div>
    <div class="small">Use this as the target for your sim/EFB timing. The built-in OAS timer below is optional and honor-system based.</div>
    ${operationGuidanceHtml(operationGuidanceMessage())}
+   ${opsFlowHtml()}
    ${operationTimerHtml(timer)}
    <div class="dispatch-grid">
      <div><strong>Route</strong><br>${currentMission.dep} → ${currentMission.dest}</div>
@@ -1943,8 +2048,34 @@ function maintenanceEvent(){
  }
  return {cost:0,text:"None"};
 }
-function completeMission(){
+function completeProtectionReason(){
+ if(!currentMission) return "";
+ const elapsed=operationTimerElapsedMs();
+ const age=Date.now()-(currentMission.createdAt||Date.now());
+ if(operationTimer.running) return "Operation timer is still running. Complete operation anyway?";
+ if(elapsed>0 && elapsed<60000) return "Operation time is under 1 minute. Complete operation anyway?";
+ if(age<90000) return "This dispatch was created very recently. Complete operation anyway?";
+ return "";
+}
+function showCompleteConfirm(reason){
+ const modal=el("completeConfirmModal");
+ const msg=el("completeConfirmReason");
+ if(msg) msg.textContent=reason||"Confirm completion when the operation is finished.";
+ if(modal) modal.classList.remove("is-hidden");
+}
+function hideCompleteConfirm(){
+ const modal=el("completeConfirmModal");
+ if(modal) modal.classList.add("is-hidden");
+}
+function completeMission(confirmed){
+ confirmed=confirmed===true;
  if(!currentMission){alert("Generate a contract first.");return;} if(!selectedAircraft){alert("Pick an owned aircraft or closest equivalent first.");return;}
+ const protection=completeProtectionReason();
+ if(protection&&!confirmed){
+   showCompleteConfirm(protection);
+   return;
+ }
+ hideCompleteConfirm();
  let memo=flightMemoText();
  let actualTime=operationTimerElapsedMs()>0?formatClock(operationTimerElapsedMs()):"";
  let gross=Math.round(grossPayout()), cost=opCost()+deadheadCost()+debtService(), maint=maintenanceEvent(), net=Math.max(0,gross-cost-maint.cost);
@@ -1962,6 +2093,7 @@ function completeMission(){
  el("missionDisplay").innerHTML='<p class="small">Contract logged. Generate another contract to continue.</p>'; el("aircraftDisplay").innerHTML='<p class="small">Owned aircraft or closest class-equivalent options appear after contract generation.</p>'; resetChecks(); updatePayout(); updateDispatchCard(); updateUIState();
 }
 function failMission(){
+ hideCompleteConfirm();
  if(!currentMission){alert("No active contract to fail.");return;}
  let memo=flightMemoText();
  let actualTime=operationTimerElapsedMs()>0?formatClock(operationTimerElapsedMs()):"";
@@ -2002,6 +2134,7 @@ function payLoan(){
 }
 
 function clearDispatch(){
+ hideCompleteConfirm();
  currentMission=null;
  selectedAircraft=null;
  window.currentJobBoard=null;
@@ -2227,6 +2360,7 @@ function saveCareer(){localStorage.setItem("careerBuilderBeta01",encodeCareerSav
 function saveCareerSilent(){localStorage.setItem("careerBuilderBeta01",encodeCareerSave());}
 function resetCareer(){
  if(confirm("Reset all Career Builder progress?")){
+   hideCompleteConfirm();
    career={...defaultCareer};
    saveCareer();
    currentMission=null; selectedAircraft=null; window.currentJobBoard=null;
@@ -2303,7 +2437,7 @@ function wire(){
  el("estimateCustomDistanceBtn").addEventListener("click",updateCustomDistanceEstimate);
  ["customFrom","customTo"].forEach(id=>el(id).addEventListener("blur",updateCustomDistanceEstimate));
  ["customFrom","customTo"].forEach(id=>el(id).addEventListener("input",function(){this.value=this.value.toUpperCase().slice(0,4);}));
- el("completeBtn").addEventListener("click",completeMission);
+ el("completeBtn").addEventListener("click",()=>completeMission());
  el("failBtn").addEventListener("click",failMission);
  el("resetBtn").addEventListener("click",resetCareer);
  el("loanBtn").addEventListener("click",takeLoan);
@@ -2316,6 +2450,9 @@ function wire(){
  if(el("copySaveBtn")) el("copySaveBtn").addEventListener("click",copySave);
  if(el("printLogBtn")) el("printLogBtn").addEventListener("click",printLog);
  if(el("copyLogBtn")) el("copyLogBtn").addEventListener("click",copyLogText);
+ if(el("confirmCompleteBtn")) el("confirmCompleteBtn").addEventListener("click",()=>completeMission(true));
+ if(el("returnDispatchBtn")) el("returnDispatchBtn").addEventListener("click",hideCompleteConfirm);
+ if(el("completeConfirmModal")) el("completeConfirmModal").addEventListener("click",function(ev){if(ev.target===this)hideCompleteConfirm();});
  el("nightToggle").addEventListener("click",toggleNightOps);
 
  // Handle Home Base Dropdown
