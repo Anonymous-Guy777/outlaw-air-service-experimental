@@ -134,6 +134,20 @@ body.night .ops-flow{
 body.night .ops-flow summary{
   color:#8ac7ff;
 }
+.dispatch-atmosphere{
+  margin:10px 0 12px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#fbf8f1;
+  border-left:5px solid var(--blue);
+  color:#405061;
+  font-style:italic;
+}
+body.night .dispatch-atmosphere{
+  background:#0b1828;
+  color:#b9c7d8;
+  border-left-color:#3f8fc7;
+}
 .modal-backdrop{
   position:fixed;
   inset:0;
@@ -449,6 +463,44 @@ body.night #flightLogCard h2{
 .log-actions{
   margin-bottom:12px;
 }
+.notable-flights{
+  margin-bottom:12px;
+  padding:12px;
+  border-radius:10px;
+  background:#f5ecd5;
+  border:1px solid #dac17a;
+}
+.notable-flights-title{
+  color:var(--navy);
+  font-weight:900;
+  margin-bottom:8px;
+}
+.notable-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.notable-item{
+  padding:9px;
+  border-radius:8px;
+  background:rgba(255,255,255,.54);
+  border:1px solid rgba(201,162,74,.32);
+}
+.notable-item strong{
+  display:block;
+  color:var(--gold);
+}
+body.night .notable-flights{
+  background:#151613;
+  border-color:#47391a;
+}
+body.night .notable-flights-title{
+  color:#f0d477;
+}
+body.night .notable-item{
+  background:#111b27;
+  border-color:#243247;
+}
 .log-journal{
   display:grid;
   gap:10px;
@@ -519,7 +571,7 @@ details.card summary h2::after{
   .cockpit-flow{grid-template-columns:repeat(2,1fr);}
   .hero-dispatch{position:sticky;top:0;z-index:10;}
   .dispatch-timer{font-size:2.45rem;}
-  .next-action,.office-grid,.operation-timer-controls,.log-entry{grid-template-columns:1fr;}
+  .next-action,.office-grid,.operation-timer-controls,.log-entry,.notable-grid{grid-template-columns:1fr;}
   .log-net{white-space:normal;}
 }
 
@@ -995,7 +1047,7 @@ body.night button.secondary{
   <div class="kpi" style="margin-top:10px;"><div><span class="small">Flights</span><strong id="flights">0</strong></div><div><span class="small">Rank</span><strong id="rank">Rookie Courier</strong></div><div><span class="small">Tier</span><strong id="tierUnlocked">1</strong></div></div><div class="mission-box">Current fleet location: <strong id="lastLocation">KSEA</strong><br>Total NM: <strong id="totalNM">0</strong><br>Total Hours: <strong id="totalHours">0.0</strong><br>Est. Gallons Burned: <strong id="totalGallons">0</strong></div>
   <label for="flightMemo">Flight Memo</label>
   <textarea id="flightMemo" rows="3" maxlength="500" placeholder="Optional notes for this flight log entry."></textarea>
-  <div class="btnrow"><button id="completeBtn" class="good">Complete Contract</button><button id="failBtn" class="danger">Abort / Fail</button></div>
+  <div class="btnrow"><button id="completeBtn" class="good">Complete Operation</button><button id="failBtn" class="danger">Abort / Fail</button></div>
   <div class="row2">
     <div>
       <label for="loanAmountSelect">Take Loan</label>
@@ -1090,13 +1142,15 @@ body.night button.secondary{
   • Added inline contextual operational guidance for the next dispatch step<br>
   • Added completion protection for running timers and early accidental completion<br>
   • Replaced aircraft data placeholder notes with pilot-facing operational flavor<br>
+  • Added final Phase 2 identity refinements: atmospheric dispatch lines and Notable Flights<br>
+  • Shifted Experimental focus toward polish, QA, wording consistency, and immersion cleanup<br>
   • Updated OAS branding, banner presentation, and metallic gold / navy UI polish
   </p>
 
   <p class="small">
   <strong>Future Improvements:</strong><br>
   • Airport pool integration for regional operation packs<br>
-  • Operation presets such as Alaska Bush Ops, Caribbean Island Hopper, VIP Charter, and Medical Relief<br>
+  • Curated Historic / Legendary operation flavors as optional sandbox presets<br>
   • Optional relaxed / scenic / untimed operation modes<br>
   • Better aircraft identity bonuses for bush, cargo, VIP, heli, vintage, and heavy operations<br>
   • Multi-leg operation support for fuel stops, relays, transfers, and overnight routes<br>
@@ -1416,6 +1470,24 @@ function operationGuidanceHtml(message){
 }
 function opsFlowHtml(){
  return `<details class="ops-flow"><summary>OPS FLOW / QUICK OPS</summary><div>Create &rarr; Assign Aircraft &rarr; Review Dispatch &rarr; Start Timer Optional &rarr; Fly &rarr; Complete &rarr; Log</div></details>`;
+}
+function operationAtmosphereLine(m){
+ if(!m) return "";
+ const preset=(m.preset||"").toLowerCase();
+ const type=(m.type||"").toLowerCase();
+ const cargo=(m.cargo||"").toLowerCase();
+ if(preset.includes("night")||type.includes("night")) return "Low visibility. Quiet cargo lanes. Long shadows.";
+ if(preset.includes("alaska")||type.includes("bush")||cargo.includes("rough")) return "Weather, terrain, and rough strips demand precision.";
+ if(preset.includes("amazon")||type.includes("jungle")) return "Remote corridors, humid air, and thin margins shape the run.";
+ if(preset.includes("arctic")) return "Cold air, sparse alternates, and careful fuel planning define the operation.";
+ if(preset.includes("caribbean")||m.region==="Island / Coastal") return "Short legs, blue water, and island arrivals keep the rhythm tight.";
+ if(preset.includes("vip")||type.includes("vip")) return "Smooth routing. Professional arrival expected.";
+ if(preset.includes("heavy")||type.includes("heavy")) return "Heavy payloads, long rollouts, and disciplined dispatch timing.";
+ if(type.includes("medical")) return "Urgent handling. Clean routing. No wasted motion.";
+ if(type.includes("scenic")) return "Relaxed exploration with enough structure to make the route matter.";
+ if(type.includes("ferry")) return "A repositioning leg with a purpose and a place in the company story.";
+ if(type.includes("cargo")||cargo.includes("cargo")) return "Freight, timing, and practical routing keep the operation honest.";
+ return "A self-directed operation with just enough dispatch structure to make the flight matter.";
 }
 function operationGuidanceMessage(){
  if(operationalGuidance) return operationalGuidance;
@@ -2012,6 +2084,7 @@ function updateDispatchCard(){
    <div class="small">Use this as the target for your sim/EFB timing. The built-in OAS timer below is optional and honor-system based.</div>
    ${operationGuidanceHtml(operationGuidanceMessage())}
    ${opsFlowHtml()}
+   <div class="dispatch-atmosphere">${escapeHtml(operationAtmosphereLine(currentMission))}</div>
    ${operationTimerHtml(timer)}
    <div class="dispatch-grid">
      <div><strong>Route</strong><br>${currentMission.dep} → ${currentMission.dest}</div>
@@ -2324,6 +2397,26 @@ function renderMarket(){
  let rank=getRank(); let names=Object.keys(aircraft).sort((a,b)=>aircraft[a].tier-aircraft[b].tier||aircraft[a].cost-aircraft[b].cost);
  el("marketDisplay").innerHTML=`<table><thead><tr><th>Aircraft</th><th>Price</th><th></th></tr></thead><tbody>${names.map(n=>{let a=aircraft[n],owned=career.owned.includes(n),locked=rank.tier<a.tier;return `<tr class="${locked?'locked':''}"><td><strong>${n}</strong><br><span class="small">Tier ${a.tier} · ${a.cls}<br>${owned?"Owned":locked?"Locked by tier":a.note}</span></td><td><strong>${money(a.cost)}</strong><br><span class="small">Op ${money(a.op)} · Maint risk ${money(a.maint)}</span></td><td>${owned?'<span class="badge green">Owned</span>':`<button onclick="buyAircraft('${n}')">Buy</button>`}</td></tr>`}).join("")}</tbody></table>`;
 }
+function clockToSeconds(clock){
+ const parts=String(clock||"").split(":").map(n=>parseInt(n,10)||0);
+ if(parts.length!==3) return 0;
+ return parts[0]*3600+parts[1]*60+parts[2];
+}
+function flightLogTitle(l){
+ return `${l.route||"Operation"} | ${l.aircraft||"Aircraft"}`;
+}
+function notableFlightsHtml(){
+ if(!career.log.length) return "";
+ const best=[...career.log].sort((a,b)=>(b.net||0)-(a.net||0))[0];
+ const timed=career.log.filter(l=>l.actualTime).sort((a,b)=>clockToSeconds(b.actualTime)-clockToSeconds(a.actualTime))[0];
+ const latest=career.log[0];
+ const items=[
+   best?`<div class="notable-item"><strong>Best Net</strong>${escapeHtml(flightLogTitle(best))}<br><span class="small">${money(best.net)}</span></div>`:"",
+   timed?`<div class="notable-item"><strong>Longest Timer</strong>${escapeHtml(flightLogTitle(timed))}<br><span class="small">${escapeHtml(timed.actualTime)}</span></div>`:"",
+   latest?`<div class="notable-item"><strong>Latest Entry</strong>${escapeHtml(flightLogTitle(latest))}<br><span class="small">${escapeHtml(latest.date)}</span></div>`:""
+ ].filter(Boolean).join("");
+ return `<div class="notable-flights"><div class="notable-flights-title">Notable Flights</div><div class="notable-grid">${items}</div></div>`;
+}
 function renderCareer(){
  let r=getRank();
  el("cash").textContent=money(career.cash);
@@ -2339,7 +2432,7 @@ function renderCareer(){
  if(!career.log.length){
    el("logDisplay").innerHTML='<p class="small">No flights logged yet.</p>';
  } else {
-   el("logDisplay").innerHTML=`<div class="log-journal">${career.log.map(l=>{
+   el("logDisplay").innerHTML=`${notableFlightsHtml()}<div class="log-journal">${career.log.map(l=>{
      const preset=l.preset&&l.preset!=="Freeform"?`Preset: ${escapeHtml(l.preset)} · `:"";
      const time=l.actualTime?`Operation Time: ${escapeHtml(l.actualTime)} · `:"";
      const event=l.event?`<br>${escapeHtml(l.event)}`:"";
@@ -2537,7 +2630,7 @@ window.addEventListener("error",function(e){try{setStatus("Script error: "+e.mes
     <strong>6. Apply Results</strong><br>
     Select bonuses/penalties honestly (pilot-driven system)<br><br>
 
-    <strong>7. Complete Contract</strong><br>
+    <strong>7. Complete Operation</strong><br>
     Log payout, costs, maintenance, and progress your company<br><br>
 
     <hr>

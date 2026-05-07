@@ -89,7 +89,8 @@ OAS turns it into a proper dispatch card with EFB timer target, estimated payout
 - Expanded manual / sandbox operation creation
 - Operation Presets for lightweight flight atmosphere and vibe
 - **Working pilot-controlled Operation Timer** with start, pause, resume, reset, completion, and Flight Log time capture
-- Flight Memo notes + Print/Copy Log tools
+- Flight Memo notes, Notable Flights, and Print/Copy Log tools
+- Atmospheric dispatch flavor lines and pilot-facing aircraft notes
 - Modular `aircraft.html` + `airports.html` for easy community editing
 - Updated metallic gold/navy branding
 - Stronger Operations Sandbox direction
@@ -100,9 +101,9 @@ OAS turns it into a proper dispatch card with EFB timer target, estimated payout
 
 **Experimental - Operations Sandbox**
 
-Iterating carefully while protecting the core KISS experience.
+Phase 2 identity refinement is settling into polish and QA. Future work should prioritize workflow checks, wording consistency, mobile/tablet usability, Dispatch Card clarity, Flight Log readability, and immersion cleanup while protecting the core KISS experience.
 
-**Future lightweight directions:** Operation presets, regional airport pools, aircraft identity bonuses, simple multi-leg operations, relaxed/untimed modes.
+**Future lightweight directions:** curated Historic / Legendary operation flavors, regional airport pools, aircraft identity bonuses, simple multi-leg operations, relaxed/untimed modes.
 
 ---
 
