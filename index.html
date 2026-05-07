@@ -1089,6 +1089,7 @@ body.night button.secondary{
   • Improved lower-half visual hierarchy and Flight Log journal readability<br>
   • Added inline contextual operational guidance for the next dispatch step<br>
   • Added completion protection for running timers and early accidental completion<br>
+  • Replaced aircraft data placeholder notes with pilot-facing operational flavor<br>
   • Updated OAS branding, banner presentation, and metallic gold / navy UI polish
   </p>
 
@@ -1221,10 +1222,10 @@ const aircraft={
 "747-8F":{tier:5,cost:190000000,op:310000,cruise:500,maint:9000000,cls:"Heavy Freighter",mod:.75,tags:["heavy","cargo","longhaul"],note:"Top-tier global cargo."}
 };
 const aircraftTierDefaults={
-  1:{cost:0,op:220,cruise:120,maint:6500,mod:1.10,tags:["ga","small"],note:"Loaded from aircraft.html."},
-  2:{cost:850000,op:2400,cruise:165,maint:65000,mod:.92,tags:["cargo","utility","bush"],note:"Loaded from aircraft.html."},
-  3:{cost:8500000,op:19000,cruise:410,maint:520000,mod:.85,tags:["regional","fast","charter","cargo"],note:"Loaded from aircraft.html."},
-  4:{cost:85000000,op:145000,cruise:470,maint:4200000,mod:.80,tags:["heavy","cargo","longhaul"],note:"Loaded from aircraft.html."}
+  1:{cost:0,op:220,cruise:120,maint:6500,mod:1.10,tags:["ga","small"],note:"Reliable short-haul utility aircraft."},
+  2:{cost:850000,op:2400,cruise:165,maint:65000,mod:.92,tags:["cargo","utility","bush"],note:"Rugged utility aircraft for regional support work."},
+  3:{cost:8500000,op:19000,cruise:410,maint:520000,mod:.85,tags:["regional","fast","charter","cargo"],note:"Fast charter and priority dispatch platform."},
+  4:{cost:85000000,op:145000,cruise:470,maint:4200000,mod:.80,tags:["heavy","cargo","longhaul"],note:"Heavy-lift platform for serious cargo operations."}
 };
 function aircraftTagsForType(type,tier){
  const lower=(type||"").toLowerCase();
@@ -1241,7 +1242,20 @@ function aircraftTagsForType(type,tier){
 }
 function aircraftFromDataRow(name,type,tier){
  const defaults=aircraftTierDefaults[tier]||aircraftTierDefaults[1];
- return {...defaults,tier,cls:type||"Aircraft",tags:aircraftTagsForType(type,tier),note:"Loaded from aircraft.html."};
+ const existing=aircraft[name]||{};
+ return {...defaults,tier,cls:type||existing.cls||"Aircraft",tags:aircraftTagsForType(type,tier),note:existing.note||aircraftNoteForType(type,tier)};
+}
+function aircraftNoteForType(type,tier){
+ const lower=(type||"").toLowerCase();
+ if(lower.includes("light ga")||lower.includes("ga")) return "Reliable short-haul utility aircraft.";
+ if(lower.includes("bush")||lower.includes("stol")) return "Bush-ready aircraft for rough-field operations.";
+ if(lower.includes("cargo")&&tier>=4) return "Heavy-lift platform for serious cargo operations.";
+ if(lower.includes("cargo")) return "Rugged cargo and regional support workhorse.";
+ if(lower.includes("turboprop")||lower.includes("utility")) return "Utility platform for flexible regional operations.";
+ if(lower.includes("jet")||lower.includes("charter")) return "Fast executive and priority response platform.";
+ if(lower.includes("airliner")||lower.includes("passenger")) return "Passenger platform for structured regional service.";
+ if(lower.includes("heli")) return "Utility rotorcraft for precision support work.";
+ return (aircraftTierDefaults[tier]||aircraftTierDefaults[1]).note;
 }
 function applyAircraftData(text){
  let count=0;
