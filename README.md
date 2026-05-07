@@ -93,6 +93,22 @@ OAS turns it into a proper dispatch card with EFB timer target, estimated payout
 
 ---
 
+## Company Setup
+
+Company Setup adds a lightweight persistence layer to your OAS sandbox without turning the app into a management sim.
+
+You can customize:
+
+- **Company Name** - your operational identity
+- **Home Base** - default fleet location and return hub
+- **Insurance** - optional per-flight cost that lowers maintenance-hit risk
+- **Crew Passive Income** - small once-per-real-day support income
+- **Set Fleet Location to Home Base** - quick operational reset for your fleet
+
+These systems are intentionally lightweight and honor-system based. Their purpose is to support atmosphere, organization, and operational continuity, not grind, spreadsheets, or deep management mechanics.
+
+---
+
 ## What's New in Experimental
 
 - **Pilot's Choice** promoted as the main flow
