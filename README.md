@@ -39,6 +39,7 @@ A **free**, lightweight, browser-based **Operations Sandbox** that gives your fr
 - [Company Setup](#company-setup)
 - [What's New in Experimental](#whats-new-in-experimental)
 - [Status](#status)
+- [QA Checklist](#qa-checklist)
 - [Save System](#save-system)
 - [Feedback & Support](#feedback--support)
 - [Disclaimer](#disclaimer)
@@ -146,6 +147,12 @@ These systems are intentionally lightweight and honor-system based. Their purpos
 Phase 2 identity refinement is settling into polish and QA. Future work should prioritize workflow checks, wording consistency, mobile/tablet usability, Dispatch Card clarity, Flight Log readability, and immersion cleanup while protecting the core KISS experience.
 
 **Future lightweight directions:** curated Historic / Legendary operation flavors, regional airport pools, aircraft identity bonuses, simple multi-leg operations, relaxed/untimed modes.
+
+---
+
+## QA Checklist
+
+Testing the Experimental build? Use the [OAS QA Checklist](data/OAS_QA_CHECKLIST.md) to verify operational flow, timer behavior, payouts, presets, Flight Log entries, save/restore behavior, mobile readability, and regression risks.
 
 ---
 
