@@ -30,6 +30,21 @@ A **free**, lightweight, browser-based **Operations Sandbox** that gives your fr
 
 ---
 
+## Index
+
+- [The Philosophy](#the-philosophy)
+- [Regional DNA](#regional-dna)
+- [Primary Flow: Pilot's Choice](#primary-flow-pilots-choice)
+- [How It Works](#how-it-works)
+- [Company Setup](#company-setup)
+- [What's New in Experimental](#whats-new-in-experimental)
+- [Status](#status)
+- [Save System](#save-system)
+- [Feedback & Support](#feedback--support)
+- [Disclaimer](#disclaimer)
+
+---
+
 **Works on:**
 
 - MSFS 2020 / 2024 (PC)
