@@ -143,10 +143,23 @@ body.night .ops-flow summary{
   color:#405061;
   font-style:italic;
 }
+.dispatch-atmosphere span{
+  display:block;
+  margin-bottom:3px;
+  color:#315f8a;
+  font-size:.76rem;
+  font-style:normal;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
 body.night .dispatch-atmosphere{
   background:#0b1828;
   color:#b9c7d8;
   border-left-color:#3f8fc7;
+}
+body.night .dispatch-atmosphere span{
+  color:#8ac7ff;
 }
 .modal-backdrop{
   position:fixed;
@@ -1142,6 +1155,7 @@ body.night button.secondary{
   • Refined Operation Timer buttons with quiet avionics-style state illumination<br>
   • Improved lower-half visual hierarchy and Flight Log journal readability<br>
   • Added inline contextual operational guidance for the next dispatch step<br>
+  • Added subtle Ops Desk advisory flavor to bring more life to the Dispatch Card<br>
   • Added completion protection for running timers and early accidental completion<br>
   • Added no-penalty Cancel Dispatch for planning/test operations that never began<br>
   • Adjusted Pilot’s Choice heavy-aircraft payout scaling for C-17 / heavy cargo operations<br>
@@ -1482,18 +1496,22 @@ function operationAtmosphereLine(m){
  const preset=(m.preset||"").toLowerCase();
  const type=(m.type||"").toLowerCase();
  const cargo=(m.cargo||"").toLowerCase();
- if(preset.includes("night")||type.includes("night")) return "Low visibility. Quiet cargo lanes. Long shadows.";
- if(preset.includes("alaska")||type.includes("bush")||cargo.includes("rough")) return "Weather, terrain, and rough strips demand precision.";
- if(preset.includes("amazon")||type.includes("jungle")) return "Remote corridors, humid air, and thin margins shape the run.";
- if(preset.includes("arctic")) return "Cold air, sparse alternates, and careful fuel planning define the operation.";
- if(preset.includes("caribbean")||m.region==="Island / Coastal") return "Short legs, blue water, and island arrivals keep the rhythm tight.";
- if(preset.includes("vip")||type.includes("vip")) return "Smooth routing. Professional arrival expected.";
- if(preset.includes("heavy")||type.includes("heavy")) return "Heavy payloads, long rollouts, and disciplined dispatch timing.";
- if(type.includes("medical")) return "Urgent handling. Clean routing. No wasted motion.";
- if(type.includes("scenic")) return "Relaxed exploration with enough structure to make the route matter.";
- if(type.includes("ferry")) return "A repositioning leg with a purpose and a place in the company story.";
- if(type.includes("cargo")||cargo.includes("cargo")) return "Freight, timing, and practical routing keep the operation honest.";
- return "A self-directed operation with just enough dispatch structure to make the flight matter.";
+ if(preset.includes("night")||type.includes("night")) return "Night operation. Slow down, brief the approach, and trust the instruments.";
+ if(preset.includes("alaska")||type.includes("bush")||cargo.includes("rough")) return "Mountain and rough-strip work today. Watch terrain, weather, and alternates.";
+ if(preset.includes("amazon")||type.includes("jungle")) return "Remote strip run. Keep fuel, escape routes, and weather in the front of your mind.";
+ if(preset.includes("arctic")) return "Cold-weather operation. Sparse alternates make planning discipline matter.";
+ if(preset.includes("caribbean")||m.region==="Island / Coastal") return "Island hopping today. Mind the water crossings and keep the arrivals tidy.";
+ if(preset.includes("vip")||type.includes("vip")) return "VIP movement. Smooth handling and a clean arrival are the whole job.";
+ if(preset.includes("heavy")||type.includes("heavy")) return "Heavy cargo profile. Respect weight, runway length, and disciplined dispatch timing.";
+ if(type.includes("medical")) return "Medical priority. Fly direct, stay smooth, and keep the operation clean.";
+ if(type.includes("scenic")) return "Scenic profile. Timer is optional; enjoy the route and bring back a good log entry.";
+ if(type.includes("ferry")) return "Repositioning flight. Clean handoff beats rushing the schedule.";
+ if(type.includes("cargo")||cargo.includes("cargo")) return "Cargo run. Practical routing beats heroics; deliver it intact.";
+ return "Self-directed operation. You choose the flight; OAS keeps the dispatch thread together.";
+}
+function operationAtmosphereHtml(m){
+ const line=operationAtmosphereLine(m);
+ return `<div class="dispatch-atmosphere"><span>Ops Desk</span>${escapeHtml(line)}</div>`;
 }
 function operationGuidanceMessage(){
  if(operationalGuidance) return operationalGuidance;
@@ -2114,7 +2132,7 @@ function updateDispatchCard(){
    <div class="small">Use this as the target for your sim/EFB timing. The built-in OAS timer below is optional and honor-system based.</div>
    ${operationGuidanceHtml(operationGuidanceMessage())}
    ${opsFlowHtml()}
-   <div class="dispatch-atmosphere">${escapeHtml(operationAtmosphereLine(currentMission))}</div>
+   ${operationAtmosphereHtml(currentMission)}
    ${operationTimerHtml(timer)}
    <div class="dispatch-grid">
      <div><strong>Route</strong><br>${currentMission.dep} → ${currentMission.dest}</div>
