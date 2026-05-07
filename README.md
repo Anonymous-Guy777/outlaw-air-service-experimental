@@ -57,6 +57,16 @@ OAS also includes a lightweight built-in **Operation Timer** designed for tablet
 
 ---
 
+## Regional DNA
+
+OAS currently gives the Pacific Northwest / Oregon region extra operational density because it naturally fits the kind of flying this sandbox was built around: mountains, forests, valleys, coastal weather, fog, rain, snow, desert edges, IFR conditions, Night Ops atmosphere, short strips, regional airports, cargo-capable runways, medevac-style hops, scenic routes, and compact operational distances.
+
+That makes it a strong default sandbox for bush ops, cargo runs, medical relief, mountain flying, weather operations, scenic touring, and regional hops.
+
+This does **not** limit OAS to the Pacific Northwest. **Pilot's Choice remains worldwide:** fly Japan, South America, Alaska, Europe, the Philippines, or anywhere your sim and imagination can support. International regions remain available as lighter flavor-expansion layers while the default pools keep OAS's PNW/Oregon operational DNA.
+
+---
+
 ## Primary Flow: Pilot's Choice
 
 **Start here.** Create the operation you actually want to fly.
@@ -92,6 +102,7 @@ OAS turns it into a proper dispatch card with EFB timer target, estimated payout
 - Flight Memo notes, Notable Flights, and Print/Copy Log tools
 - Atmospheric dispatch flavor lines and pilot-facing aircraft notes
 - Modular `aircraft.html` + `airports.html` for easy community editing
+- PNW/Oregon regional DNA clarified while preserving worldwide Pilot's Choice freedom
 - Updated metallic gold/navy branding
 - Stronger Operations Sandbox direction
 
