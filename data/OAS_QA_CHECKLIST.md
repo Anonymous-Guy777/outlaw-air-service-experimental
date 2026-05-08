@@ -119,6 +119,7 @@ Expected result: aircraft choice matters without exposing implementation details
 - [ ] Timer running state changes the dynamic button label to Pause.
 - [ ] Timer paused state changes the dynamic button label to Resume.
 - [ ] Pause freezes the timer.
+- [ ] Pausing the timer smoothly guides the view to the Company Ledger closeout area.
 - [ ] Resume continues from the paused value.
 - [ ] Reset Timer returns to 00:00:00.
 - [ ] Complete Operation captures actual elapsed time in the Flight Log.

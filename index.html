@@ -1812,6 +1812,10 @@ function scrollToDispatch(){
  const panel=el("dispatchPanel");
  if(panel) panel.scrollIntoView({behavior:"smooth",block:"start"});
 }
+function scrollToCloseoutDesk(){
+ const panel=el("officePanel");
+ if(panel) panel.scrollIntoView({behavior:"smooth",block:"start"});
+}
 
 function money(n){return "$"+Math.round(n).toLocaleString();}
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
@@ -1934,10 +1938,11 @@ function pauseOperationTimer(){
  operationTimer.elapsedMs=operationTimerElapsedMs();
  operationTimer.running=false;
  operationTimer.startedAt=null;
- operationalGuidance="TIMER PAUSED: Resume when ready, or reset if restarting.";
+ operationalGuidance="TIMER PAUSED: Resume when ready, or use the Company Ledger after arrival.";
  stopOperationTimerTick();
  updateDispatchCard();
  setStatus("Operation timer paused.");
+ setTimeout(scrollToCloseoutDesk,120);
 }
 function resumeOperationTimer(){
  if(!currentMission){alert("Create an operation first.");return;}
