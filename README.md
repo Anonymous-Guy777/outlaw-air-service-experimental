@@ -39,6 +39,7 @@ A **free**, lightweight, browser-based **Operations Sandbox** that gives your fr
 - [The Philosophy](#the-philosophy)
 - [Regional DNA](#regional-dna)
 - [Primary Flow: Pilot's Choice](#primary-flow-pilots-choice)
+- [Cockpit Navigation](#cockpit-navigation)
 - [How It Works](#how-it-works)
 - [Company Setup](#company-setup)
 - [What's New in Experimental](#whats-new-in-experimental)
@@ -99,6 +100,19 @@ This does **not** limit OAS to the Pacific Northwest. **Pilot's Choice remains w
 OAS turns it into a proper dispatch card with EFB timer target, estimated payout, and logging.
 
 **Quick Contract** and **5-Job Board** are still available as "surprise me" options lower down.
+
+---
+
+## Cockpit Navigation
+
+The top cockpit buttons follow the normal operation sequence:
+
+1. **Pilot's Choice** - build or choose the operation
+2. **Dispatch** - review the active EFB Dispatch Card
+3. **Aircraft** - assign or compare aircraft after a dispatch exists
+4. **Score** - review bonuses, penalties, costs, and closeout flow
+
+The later buttons become most useful after an operation is created. Before that, they may lead to placeholder sections because there is no active dispatch to brief yet.
 
 ---
 
