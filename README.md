@@ -149,7 +149,7 @@ These systems are intentionally lightweight and honor-system based. Their purpos
 
 - **Pilot's Choice** promoted as the main flow
 - Expanded manual / sandbox operation creation
-- Operation Presets for lightweight flight atmosphere and vibe
+- Global Operation Presets for lightweight role/vibe selection
 - **Working pilot-controlled Operation Timer** with start, pause, resume, reset, completion, and Flight Log time capture
 - Flight Memo notes, Notable Flights, and Print/Copy Log tools
 - Atmospheric dispatch flavor lines and pilot-facing aircraft notes

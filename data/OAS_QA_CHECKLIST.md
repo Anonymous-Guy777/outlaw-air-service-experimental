@@ -192,19 +192,21 @@ Expected result: economy remains an incentive, not a grind or punishment trap.
 
 Run at least one test flight for each preset using a reasonable aircraft:
 
-- [ ] Freeform / Pilot's Choice
-- [ ] Alaska Bush Ops
-- [ ] Pacific Northwest Cargo
-- [ ] Caribbean Island Hopper
-- [ ] European Charter
-- [ ] Amazon Jungle Supply
-- [ ] Arctic Survival
-- [ ] Desert Cargo Corridor
-- [ ] VIP Charter
+- [ ] Airshow / Demo
+- [ ] Bush / STOL
+- [ ] Ferry / Positioning
 - [ ] Heavy Cargo
-- [ ] Medical Relief Flights
+- [ ] Humanitarian / Relief
+- [ ] Island Hopper
+- [ ] Light Cargo
+- [ ] Medium Cargo
 - [ ] Night Ops
-- [ ] Scenic Touring
+- [ ] Pilot's Choice / Freeform
+- [ ] Scenic / Sightseeing
+- [ ] Search & Rescue
+- [ ] Test / Maintenance
+- [ ] Training / Checkride
+- [ ] VIP / Charter
 
 For each preset:
 
