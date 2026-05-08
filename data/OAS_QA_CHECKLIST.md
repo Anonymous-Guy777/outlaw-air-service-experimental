@@ -81,7 +81,7 @@ Expected result: job board is optional quick-start content, not the main app ide
 
 ## Dispatch Card Sequencing
 
-- [ ] No active operation: Dispatch Card says Create Your Operation.
+- [ ] No active operation: Dispatch Card shows EFB Dispatch Hub / Awaiting Dispatch Orders.
 - [ ] Operation created with no aircraft: Dispatch Card says Pick aircraft.
 - [ ] Aircraft assigned: Dispatch Card shows route, aircraft, distance, risk/cargo, payout, timer target, summary.
 - [ ] Pilot's Choice creation guidance says Operation Created and points to Dispatch Card review.
@@ -149,7 +149,7 @@ Expected result: planning cleanup and true failed operations feel clearly differ
 
 ## Flight Log Validation
 
-- [ ] Completed flights show mission title, route, aircraft, gross, costs, penalty, net, date.
+- [ ] Completed flights show operation title, route, aircraft, gross, costs, penalty, net, date.
 - [ ] Pilot's Choice entries show preset when applicable.
 - [ ] Timer entries show Operation Time when timer was used.
 - [ ] Memo text appears under the correct log entry.

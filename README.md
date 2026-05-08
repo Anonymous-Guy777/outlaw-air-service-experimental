@@ -114,7 +114,7 @@ The top cockpit buttons follow the normal operation sequence:
 3. **Aircraft** - assign or compare aircraft after a dispatch exists
 4. **Score** - review bonuses, penalties, costs, and closeout flow
 
-The later buttons become most useful after an operation is created. Before that, they may lead to placeholder sections because there is no active dispatch to brief yet.
+The later buttons are dimmed until they apply. Aircraft unlocks after a dispatch exists; Score unlocks after an aircraft is assigned.
 
 ---
 
@@ -122,7 +122,7 @@ The later buttons become most useful after an operation is created. Before that,
 
 1. **Create Operation** (Pilot's Choice)
 2. Review your EFB Dispatch Card
-3. Fly the mission in Free Flight (use the target time or optional OAS Operation Timer)
+3. Fly the operation in Free Flight (use the target time or optional OAS Operation Timer)
 4. Complete honestly: apply bonuses/penalties
 5. Log the flight with optional memo
 6. Watch your outlaw career and journal grow

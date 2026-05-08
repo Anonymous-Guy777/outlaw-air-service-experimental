@@ -718,12 +718,6 @@ header p.small{
   background:linear-gradient(180deg,#fffdf8,#f4edde);
   border:2px solid var(--gold);
 }
-.start-card .start-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:12px;
-}
 .start-card .start-note{
   margin-top:10px;
 }
@@ -742,9 +736,6 @@ body.night .start-card .mission-box{
   }
   header h3{
     font-size:.95rem;
-  }
-  .start-card .start-actions{
-    grid-template-columns:1fr;
   }
 }
 
@@ -1814,27 +1805,6 @@ function updateUIState(){
    if(d){
      d.innerHTML=idleDispatchHubHtml();
      wireIdleDispatchHub();
-     return;
-     d.innerHTML=`<div class="dispatch-card">
-       <div class="dispatch-title">READY</div>
-       <div class="dispatch-timer">Create Your Operation</div>
-       ${operationGuidanceHtml(operationGuidanceMessage())}
-       ${opsFlowHtml()}
-       <div class="mission-box">
-         <strong>👉 Start with Pilot’s Choice above.</strong><br><br>
-         Build your own route, aircraft, operation type, and risk level. Use Quick Contract or Browse Jobs only when you want OAS to surprise you.
-       </div>
-       <div class="next-action">
-         <button id="startQuickBtn" class="secondary" type="button">Quick Contract</button>
-         <button id="startBrowseBtn" class="secondary" type="button">Browse Jobs</button>
-       </div>
-       <p class="small" style="margin-top:10px;">Pilot’s Choice is the primary sandbox mode. Quick modes are still here when you want a fast prompt.</p>
-     </div>`;
-
-     const q=el("startQuickBtn");
-     const b=el("startBrowseBtn");
-     if(q) q.onclick=()=>generateMission();
-     if(b) b.onclick=()=>generateJobBoard();
    }
  }
 }
@@ -2258,7 +2228,7 @@ if(currentMission){
    return;
  }
 
- const data=missionData[type]; if(!data){alert("Mission data missing for: "+type); return;} let region=el("region").value; if(!data.regions.includes(region))region=pick(data.regions);
+ const data=missionData[type]; if(!data){alert("Operation data missing for: "+type); return;} let region=el("region").value; if(!data.regions.includes(region))region=pick(data.regions);
  let dep=pick(airports[region]),dest=pick(airports[region]); while(dest===dep)dest=pick(airports[region]);
  let distBase=data.tierMin>=5?500:data.tierMin>=4?220:data.tierMin>=3?120:35;
  let distRange=data.tierMin>=5?5200:data.tierMin>=4?850:data.tierMin>=3?260:180;
@@ -2494,19 +2464,6 @@ function updateDispatchCard(){
  if(!currentMission){
    d.innerHTML=idleDispatchHubHtml();
    wireIdleDispatchHub();
-   return;
-   d.innerHTML=`<div class="dispatch-card">
-     <div class="dispatch-title">READY</div>
-     <div class="dispatch-timer">Create Your Operation</div>
-     ${operationGuidanceHtml(operationGuidanceMessage())}
-     ${opsFlowHtml()}
-     <div class="mission-box"><strong>Start with Pilot’s Choice.</strong><br>Create the route and operation you want to fly, or use Quick Contract / Browse Jobs when you want a fast randomized prompt.</div>
-     <div class="start-actions">
-       <button class="secondary" onclick="generateMission()">Quick Contract</button>
-       <button class="secondary" onclick="generateJobBoard()">Browse Jobs</button>
-     </div>
-     <p class="small start-note">Your dispatch card appears automatically after an operation or quick contract is created.</p>
-   </div>`;
    return;
  }
  let timer=selectedAircraft?formatMinutes(calcTimerMinutesForAircraft(selectedAircraft)):"Pick aircraft";
@@ -3120,4 +3077,3 @@ window.addEventListener("error",function(e){try{setStatus("Script error: "+e.mes
 
 </body>
 </html>
-
