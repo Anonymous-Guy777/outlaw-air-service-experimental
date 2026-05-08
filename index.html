@@ -6,7 +6,7 @@
 <title>Outlaw Air Service — Dispatch Terminal v0.6.7 Experimental</title>
 <style>
 :root{
-  --navy:#07111f; --navy2:#0b1b2d; --gold:#c9a24a; --gold2:#d6b25e; --paper:#f7f2e8;
+  --navy:#07111f; --navy2:#0b1b2d; --gold:#c9a24a; --gold2:#d6b25e; --paper:#FAF9F6;
   --ink:#1d1d1d; --muted:#5b6470; --green:#2d7d46; --red:#9c2f2f;
   --blue:#3f8fc7; --card:#ffffff;
   --efb-paper:#f4f4f4; --efb-paper2:#e9e9e9; --efb-ink:#1a1a1a; --efb-muted:#3f4650;
@@ -1067,6 +1067,100 @@ body.night #aircraftPanel .body{
   background:var(--efb-paper);
   color:var(--efb-ink);
 }
+.cockpit-flow a{
+  border:1px solid rgba(214,178,94,.94) !important;
+  background:linear-gradient(180deg,#172337,#0b1727) !important;
+  color:#f3d67a !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 6px rgba(0,0,0,.25);
+}
+.cockpit-flow a:hover{
+  filter:brightness(1.08);
+}
+#customFlightPanel,
+#dispatchPanel,
+#aircraftPanel,
+#scorePanel{
+  scroll-margin-top:92px;
+}
+select,
+input,
+textarea,
+body.night select,
+body.night input,
+body.night textarea{
+  background:#fff !important;
+  color:#111827 !important;
+  border:1px solid #c8c8c8 !important;
+}
+select option,
+body.night select option{
+  background:#fff;
+  color:#111827;
+}
+input[type="checkbox"],
+input[type="radio"]{
+  width:auto !important;
+}
+input::placeholder,
+textarea::placeholder{
+  color:#687386;
+}
+#estimateCustomDistanceBtn{
+  background:#7F8C8D !important;
+  color:#fff !important;
+}
+#flightLogCard .body,
+body.night #flightLogCard .body{
+  background:var(--efb-paper);
+  color:var(--efb-ink);
+}
+#flightLogCard .small,
+body.night #flightLogCard .small{
+  color:#2f3b49 !important;
+}
+.notable-flights,
+.notable-item,
+.log-entry,
+.log-memo,
+body.night .notable-flights,
+body.night .notable-item,
+body.night .log-entry,
+body.night .log-memo{
+  background:var(--efb-paper) !important;
+  color:var(--efb-ink) !important;
+  border-color:#d0d0d0 !important;
+  box-shadow:none !important;
+}
+.notable-flights-title,
+body.night .notable-flights-title,
+.log-entry-title,
+.log-route,
+body.night .log-entry-title,
+body.night .log-route{
+  color:#111827 !important;
+}
+.notable-item strong,
+body.night .notable-item strong{
+  color:#8a6f2f !important;
+}
+.log-meta,
+body.night .log-meta,
+.log-memo,
+body.night .log-memo{
+  color:#2f3b49 !important;
+}
+.log-entry-aborted{
+  border-left-color:#E67E22 !important;
+}
+.log-entry-aborted .log-entry-title{
+  color:#9c2f2f !important;
+}
+.log-net{
+  color:#16804a !important;
+}
+.log-net-negative{
+  color:#b63232 !important;
+}
 .selected-job-row td,
 .aircraft-row-selected td,
 body.night .selected-job-row td,
@@ -1091,10 +1185,10 @@ body.night .aircraft-row-selected td{
 
 <div class="cockpit-shell">
   <div class="cockpit-flow">
-    <a href="#customFlightPanel">1 Pilot's Choice</a>
-    <a href="#dispatchPanel">2 Dispatch</a>
-    <a href="#aircraftPanel">3 Aircraft</a>
-    <a href="#scorePanel">4 Score</a>
+    <a href="#customFlightPanel">1 - Pilot's Choice</a>
+    <a href="#dispatchPanel">2 - Dispatch</a>
+    <a href="#aircraftPanel">3 - Aircraft</a>
+    <a href="#scorePanel">4 - Score</a>
   </div>
 
   <details class="card custom-flight-card" id="customFlightPanel" open>
@@ -1191,14 +1285,14 @@ body.night .aircraft-row-selected td{
   <label><input type="checkbox" id="penaltyFuel"> Fuel planning mistake / emergency fuel situation <strong style="margin-left:auto;">-10%</strong></label>
   <div class="notice">Use the target time and optional OAS Operation Timer as pilot tools. Apply penalties honestly. Late penalty starts after a 5-minute grace period. Abort/Fail is for true failures.</div>
 </div></section>
-      <details class="card secondary-panel"  ><summary><h2>🏆 Bonus Rules</h2></summary><div class="body">
+      <details class="card secondary-panel" id="bonusPanel"><summary><h2>🏆 Bonus Rules</h2></summary><div class="body">
   <label><input type="checkbox" id="bonusNight"> Night operation bonus <strong style="float:right;">+10%</strong></label>
   <label><input type="checkbox" id="bonusWeather"> Weather / wind bonus <strong style="float:right;">+15%</strong></label>
   <label><input type="checkbox" id="bonusShort"> Short / rough strip bonus <strong style="float:right;">+12%</strong></label>
   <label><input type="checkbox" id="bonusNoGPS"> No GPS / pilotage bonus <strong style="float:right;">+15%</strong></label>
   <label><input type="checkbox" id="bonusClean"> Clean landing / no damage bonus <strong style="float:right;">+8%</strong></label>
 </div></details>
-      <details class="card secondary-panel"><summary><h2>📉 Cost / Penalty</h2></summary><div class="body"><div class="mission-box">
+      <details class="card secondary-panel" id="costPanel"><summary><h2>📉 Cost / Penalty</h2></summary><div class="body"><div class="mission-box">
   Operating/fuel/insurance cost: <span class="money" id="opCost" style="color:var(--red);">$0</span><br>Insurance preview: <span class="money" id="insurancePreview" style="color:var(--blue);">$0</span><br>Deadhead/relocation cost: <span class="money" id="deadheadCost" style="color:var(--red);">$0</span><br><span class="small">Deadhead = cost to move your aircraft from its last location to the departure airport.</span><br>
   Bonus: <span class="money" id="bonusTotalDisplay">0%</span><br>
   Penalty: <span class="money" id="penaltyTotal" style="color:var(--red);">0%</span><br>
@@ -1294,6 +1388,7 @@ body.night .aircraft-row-selected td{
 
   <p class="small">
   <strong>Recent Experimental Changes:</strong><br>
+  &bull; v0.6.7 beta polish: aviation cream Day Ops canvas, readable form controls, briefing auto-expansion, and Flight Log archive styling<br>
   • v0.6.7 Paper EFB pass: light dispatch-data cards in Day and Night Ops with clearer action buttons<br>
   • Consolidated timer Pause / Resume into one dynamic control and moved EFB controls to Start / Pause-Resume / Reset / Cancel<br>
   • Promoted Pilot’s Choice / Create Your Own Operation as the primary app flow<br>
@@ -1573,6 +1668,14 @@ function toggleSection(id, show){
  const node=el(id);
  if(!node) return;
  node.classList.toggle("is-hidden", !show);
+}
+function expandBriefingSections(){
+ const bonus=el("bonusPanel");
+ const cost=el("costPanel");
+ const score=el("scorePanel");
+ if(bonus) bonus.open=true;
+ if(cost) cost.open=true;
+ if(score) score.classList.remove("is-hidden");
 }
 function hasActiveContract(){ return !!currentMission; }
 function updateUIState(){
@@ -1966,6 +2069,7 @@ function createCustomFlight(){
    const row=document.querySelector(`[data-aircraft-row="${ac}"]`);
    if(row) row.classList.add("aircraft-row-selected");
  }
+ expandBriefingSections();
  updatePayout();
  updateUIState();
 }
@@ -2162,6 +2266,7 @@ document.querySelectorAll('input[name="aircraftPick"]').forEach(e=>e.addEventLis
   document.querySelectorAll("[data-aircraft-row]").forEach(row=>row.classList.remove("aircraft-row-selected"));
    const row=document.querySelector(`[data-aircraft-row="${selectedAircraft}"]`);
    if(row) row.classList.add("aircraft-row-selected");
+   expandBriefingSections();
    updatePayout();
    updateUIState();
  }));
@@ -2655,14 +2760,16 @@ function renderCareer(){
      const time=l.actualTime?`Operation Time: ${escapeHtml(l.actualTime)} · `:"";
      const event=l.event?`<br>${escapeHtml(l.event)}`:"";
      const memo=l.memo?`<div class="log-memo"><strong>Memo:</strong> ${escapeHtml(l.memo)}</div>`:"";
-     return `<article class="log-entry">
+     const aborted=String(l.mission||"").startsWith("ABORTED:");
+     const netClass=l.net<0?" log-net-negative":"";
+     return `<article class="log-entry${aborted?" log-entry-aborted":""}">
        <div>
          <div class="log-entry-title">${escapeHtml(l.mission)}</div>
          <div class="log-route">${escapeHtml(l.route)}</div>
          <div class="log-meta">${escapeHtml(l.aircraft)}<br>${preset}${time}Gross ${money(l.gross)} · Costs ${money(l.cost)} · Penalty ${escapeHtml(l.penalty)}${event}<br>${escapeHtml(l.date)}</div>
          ${memo}
        </div>
-       <div class="log-net">${money(l.net)}</div>
+       <div class="log-net${netClass}">${money(l.net)}</div>
      </article>`;
    }).join("")}</div>`;
  }

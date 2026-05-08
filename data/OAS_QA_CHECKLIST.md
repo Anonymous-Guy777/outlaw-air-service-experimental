@@ -15,6 +15,21 @@ Use this checklist for regression passes after UI, economy, timer, preset, save,
 - [ ] Create a Backup Save before destructive tests.
 - [ ] If testing from a dirty save, note starting cash, debt, rep, fleet location, and log count.
 
+## v0.6.7 Paper EFB Visual Pass
+
+- [ ] Day Ops uses the warm Aviation Cream canvas instead of pure white.
+- [ ] Night Ops keeps the outer cockpit shell dark while data cards stay light and readable.
+- [ ] Pilot's Choice inputs and dropdowns use white fields with dark text in Day and Night Ops.
+- [ ] Estimate (if known) reads as a distinct solid action button.
+- [ ] Top navigation labels read 1 - Pilot's Choice, 2 - Dispatch, 3 - Aircraft, 4 - Score.
+- [ ] Top navigation buttons look clickable and scroll to the correct sections.
+- [ ] Available Aircraft table keeps Paper EFB contrast in Day and Night Ops.
+- [ ] Company Ledger stat cards keep Paper EFB contrast in Day and Night Ops.
+- [ ] Flight Log entries look like readable archived dispatch records.
+- [ ] Profit, loss, and ABORTED entries remain easy to scan.
+
+Expected result: OAS feels like a cockpit shell around readable dispatch paperwork.
+
 ## First-Run Operational Flow
 
 - [ ] On a fresh/default save, confirm Pilot's Choice appears as the primary first action.
@@ -86,6 +101,9 @@ Expected result: the card always answers "what happens next?"
 - [ ] Aircraft row highlight follows the selected aircraft.
 - [ ] Timer target updates when aircraft changes.
 - [ ] Payout updates when aircraft changes.
+- [ ] Mission Penalties expands automatically after aircraft selection.
+- [ ] Bonus Rules expands automatically after aircraft selection.
+- [ ] Cost / Penalty expands automatically after aircraft selection.
 
 Expected result: aircraft choice matters without exposing implementation details.
 
