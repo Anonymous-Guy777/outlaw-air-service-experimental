@@ -67,6 +67,9 @@ Expected result: job board is optional quick-start content, not the main app ide
 - [ ] No active operation: Dispatch Card says Create Your Operation.
 - [ ] Operation created with no aircraft: Dispatch Card says Pick aircraft.
 - [ ] Aircraft assigned: Dispatch Card shows route, aircraft, distance, risk/cargo, payout, timer target, summary.
+- [ ] EFB Dispatch Card uses Paper EFB data cards instead of dark data panels.
+- [ ] EFB Dispatch Card does not contain a Complete Operation button.
+- [ ] EFB control row is Start Operation | Pause/Resume | Reset Timer | Cancel Dispatch.
 - [ ] Timer running: guidance says complete only after arrival.
 - [ ] Timer paused: guidance says resume or reset if restarting.
 - [ ] Operation completed: guidance points to Flight Log or next operation.
@@ -89,6 +92,9 @@ Expected result: aircraft choice matters without exposing implementation details
 ## Operation Timer
 
 - [ ] Start Operation begins the live timer.
+- [ ] Pause / Resume appears as one dynamic button, not two separate buttons.
+- [ ] Timer running state changes the dynamic button label to Pause.
+- [ ] Timer paused state changes the dynamic button label to Resume.
 - [ ] Pause freezes the timer.
 - [ ] Resume continues from the paused value.
 - [ ] Reset Timer returns to 00:00:00.
@@ -103,6 +109,8 @@ Expected result: timer behaves like an optional EFB companion, not enforcement.
 
 ## Cancel Dispatch vs Abort / Fail
 
+- [ ] Cancel Dispatch opens a confirmation prompt.
+- [ ] Canceling the prompt returns to the active dispatch unchanged.
 - [ ] Cancel Dispatch clears the current dispatch.
 - [ ] Cancel Dispatch does not charge operating cost.
 - [ ] Cancel Dispatch does not charge insurance.
@@ -244,6 +252,8 @@ Expected result: OAS remains console-friendly as a phone/tablet EFB companion.
 
 ## Day vs Night Mode
 
+- [ ] Day Mode uses the Paper EFB look for operational data cards.
+- [ ] Night Mode keeps Paper EFB data containers light grey with dark text.
 - [ ] Night Mode retains navy/gold/silver branding.
 - [ ] Day Mode remains readable and does not wash out important guidance.
 - [ ] Ops Desk advisory is readable in both modes.
@@ -298,6 +308,9 @@ Expected result: edge cases fail gracefully and do not corrupt the operational s
 
 ## Release Readiness Notes
 
+- [ ] Paper EFB data cards remain readable in both Day Ops and Night Ops.
+- [ ] Available Aircraft table remains readable in both Day Ops and Night Ops.
+- [ ] Company Ledger stats remain readable in both Day Ops and Night Ops.
 - [ ] No known payout path produces unexpected $0 net on successful, appropriately scaled operations.
 - [ ] Cancel Dispatch and Abort / Fail semantics are clear in UI and Flight Log.
 - [ ] Flight Log entries remain useful for QA and enjoyable as pilot history.

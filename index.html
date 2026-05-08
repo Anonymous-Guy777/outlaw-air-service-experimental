@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Outlaw Air Service — Dispatch Terminal v0.6.6 Save Feature</title>
+<title>Outlaw Air Service — Dispatch Terminal v0.6.7 Experimental</title>
 <style>
 :root{
   --navy:#07111f; --navy2:#0b1b2d; --gold:#c9a24a; --gold2:#d6b25e; --paper:#f7f2e8;
   --ink:#1d1d1d; --muted:#5b6470; --green:#2d7d46; --red:#9c2f2f;
   --blue:#3f8fc7; --card:#ffffff;
+  --efb-paper:#f4f4f4; --efb-paper2:#e9e9e9; --efb-ink:#1a1a1a; --efb-muted:#3f4650;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--navy),var(--navy2) 430px,var(--paper) 430px);color:var(--ink)}
@@ -929,6 +930,154 @@ body.night button.secondary{
   border-color:#3a4a62;
 }
 
+/* v0.6.7 Paper EFB readability pass */
+.dispatch-card{
+  background:#08182a;
+  border:1px solid #2f5577;
+  border-left:6px solid var(--blue);
+}
+body.night .dispatch-card{
+  background:#071526;
+  border-color:#2f5577;
+}
+.paper-efb,
+.mission-box,
+.ops-guidance,
+.dispatch-atmosphere,
+.operation-timer-panel,
+.operation-timer-readout div,
+.dispatch-grid div,
+.dispatch-net,
+.flight-economics,
+.kpi div{
+  background:var(--efb-paper) !important;
+  color:var(--efb-ink) !important;
+  border-color:#d0d0d0 !important;
+  box-shadow:none !important;
+}
+.paper-efb .small,
+.mission-box .small,
+.ops-guidance span,
+.dispatch-atmosphere span,
+.operation-timer-panel .small,
+.dispatch-grid strong,
+.dispatch-net strong,
+.flight-economics strong,
+.kpi .small{
+  color:#8a6f2f !important;
+}
+.dispatch-title{
+  color:#5d6670;
+}
+.operation-time,
+.dispatch-timer{
+  color:#315f8a;
+  text-shadow:none;
+}
+body.night .operation-time,
+body.night .dispatch-timer{
+  color:#5da9ff;
+}
+table{
+  background:var(--efb-paper);
+  color:var(--efb-ink);
+  border-radius:8px;
+  overflow:hidden;
+}
+th{
+  background:#e1e1e1 !important;
+  color:#111827 !important;
+}
+td{
+  background:var(--efb-paper);
+  color:var(--efb-ink);
+  border-bottom-color:#d2d2d2 !important;
+}
+td .small,
+th .small{
+  color:#2f3b49 !important;
+}
+td strong{
+  color:#111827;
+}
+body.night table,
+body.night th,
+body.night td{
+  background:var(--efb-paper) !important;
+  color:var(--efb-ink) !important;
+}
+body.night td .small,
+body.night th .small{
+  color:#2f3b49 !important;
+}
+body.night .kpi strong{
+  color:#111827;
+}
+body.night .mission-box.paper-efb,
+body.night .mission-box,
+body.night .ops-guidance,
+body.night .dispatch-atmosphere,
+body.night .operation-timer-panel,
+body.night .operation-timer-readout div,
+body.night .dispatch-grid div,
+body.night .dispatch-net,
+body.night .flight-economics,
+body.night .kpi div{
+  background:var(--efb-paper) !important;
+  color:var(--efb-ink) !important;
+}
+.operation-timer-controls{
+  grid-template-columns:repeat(4,1fr);
+}
+button.timer-control{
+  color:#111 !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+button.timer-start{
+  background:#2ECC71 !important;
+  color:#092514 !important;
+}
+button.timer-toggle{
+  background:#F1C40F !important;
+  color:#1f1a05 !important;
+}
+button.timer-reset{
+  background:#E67E22 !important;
+  color:#1f1003 !important;
+}
+button.timer-cancel{
+  background:#E74C3C !important;
+  color:#fff !important;
+}
+button.timer-control:hover:not(:disabled){
+  filter:brightness(.96);
+}
+button.timer-control:disabled{
+  opacity:.52;
+}
+body.night button.timer-control{
+  border:0 !important;
+}
+#aircraftPanel .body{
+  background:var(--efb-paper);
+  color:var(--efb-ink);
+}
+body.night #aircraftPanel .body{
+  background:var(--efb-paper);
+  color:var(--efb-ink);
+}
+.selected-job-row td,
+.aircraft-row-selected td,
+body.night .selected-job-row td,
+body.night .aircraft-row-selected td{
+  background:#eee4c8 !important;
+}
+.mission-box,
+.flight-economics{
+  border-left-color:var(--gold) !important;
+}
+
 </style>
 </head>
 <body>
@@ -1062,7 +1211,7 @@ body.night button.secondary{
   <div class="kpi" style="margin-top:10px;"><div><span class="small">Flights</span><strong id="flights">0</strong></div><div><span class="small">Rank</span><strong id="rank">Rookie Courier</strong></div><div><span class="small">Tier</span><strong id="tierUnlocked">1</strong></div></div><div class="mission-box">Current fleet location: <strong id="lastLocation">KSEA</strong><br>Total NM: <strong id="totalNM">0</strong><br>Total Hours: <strong id="totalHours">0.0</strong><br>Est. Gallons Burned: <strong id="totalGallons">0</strong></div>
   <label for="flightMemo">Flight Memo</label>
   <textarea id="flightMemo" rows="3" maxlength="500" placeholder="Optional notes for this flight log entry."></textarea>
-  <div class="btnrow3"><button id="completeBtn" class="good">Complete Operation</button><button id="failBtn" class="danger">Abort / Fail</button><button id="cancelDispatchBtn" class="secondary" type="button">Cancel Dispatch</button></div>
+  <div class="btnrow"><button id="completeBtn" class="good">Complete Operation</button><button id="failBtn" class="danger">Abort / Fail</button></div>
   <div class="row2">
     <div>
       <label for="loanAmountSelect">Take Loan</label>
@@ -1145,6 +1294,8 @@ body.night button.secondary{
 
   <p class="small">
   <strong>Recent Experimental Changes:</strong><br>
+  • v0.6.7 Paper EFB pass: light dispatch-data cards in Day and Night Ops with clearer action buttons<br>
+  • Consolidated timer Pause / Resume into one dynamic control and moved EFB controls to Start / Pause-Resume / Reset / Cancel<br>
   • Promoted Pilot’s Choice / Create Your Own Operation as the primary app flow<br>
   • Reframed Quick Contract and 5-Job Board as secondary quick-start modes<br>
   • Added modular aircraft and airport data pages for easier user editing<br>
@@ -1549,23 +1700,19 @@ function renderOperationTimerDisplay(){
  const live=el("operationTimerLive");
  const pace=el("operationTimerPace");
  const start=el("operationTimerStart");
- const pause=el("operationTimerPause");
- const resume=el("operationTimerResume");
- const complete=el("operationTimerComplete");
+ const toggle=el("operationTimerToggle");
  const reset=el("operationTimerReset");
+ const cancel=el("operationTimerCancel");
  const elapsed=operationTimerElapsedMs();
  if(live) live.textContent=formatClock(operationTimerElapsedMs());
  if(pace) pace.textContent=operationTimerPace();
  if(start) start.disabled=!currentMission || operationTimer.running || elapsed>0;
- if(pause) pause.disabled=!currentMission || !operationTimer.running;
- if(resume) resume.disabled=!currentMission || operationTimer.running || elapsed===0;
+ if(toggle){
+   toggle.disabled=!currentMission || elapsed===0;
+   toggle.textContent=elapsed===0?"Pause / Resume":operationTimer.running?"Pause":"Resume";
+ }
  if(reset) reset.disabled=!currentMission || elapsed===0;
- if(complete) complete.disabled=!currentMission || !selectedAircraft;
- if(start) start.classList.toggle("timer-lit-cyan", operationTimer.running);
- if(pause) pause.classList.toggle("timer-lit-amber", elapsed>0 && !operationTimer.running);
- if(resume) resume.classList.toggle("timer-lit-cyan", elapsed>0 && !operationTimer.running);
- if(reset) reset.classList.toggle("timer-lit-utility", elapsed>0);
- if(complete) complete.classList.toggle("timer-lit-green", !!currentMission && !!selectedAircraft);
+ if(cancel) cancel.disabled=!currentMission;
 }
 function ensureOperationTimerTick(){
  if(operationTimerInterval) return;
@@ -1614,6 +1761,13 @@ function resumeOperationTimer(){
  updateDispatchCard();
  setStatus("Operation timer resumed.");
 }
+function toggleOperationTimer(){
+ if(operationTimer.running){
+   pauseOperationTimer();
+ }else{
+   resumeOperationTimer();
+ }
+}
 function operationTimerHtml(timer){
  const elapsed=formatClock(operationTimerElapsedMs());
  return `<div class="operation-timer-panel">
@@ -1624,11 +1778,10 @@ function operationTimerHtml(timer){
      </div>
      <p class="small" id="operationTimerPace">${operationTimerPace()}</p>
      <div class="operation-timer-controls">
-       <button class="secondary timer-control" id="operationTimerStart" type="button" onclick="startOperationTimer()">Start Operation</button>
-       <button class="secondary timer-control" id="operationTimerPause" type="button" onclick="pauseOperationTimer()">Pause</button>
-       <button class="secondary timer-control" id="operationTimerResume" type="button" onclick="resumeOperationTimer()">Resume</button>
-       <button class="timer-control" id="operationTimerComplete" type="button" onclick="completeMission()">Complete Operation</button>
-       <button class="secondary timer-control" id="operationTimerReset" type="button" onclick="resetOperationTimer(true)">Reset Timer</button>
+       <button class="timer-control timer-start" id="operationTimerStart" type="button" onclick="startOperationTimer()">Start Operation</button>
+       <button class="timer-control timer-toggle" id="operationTimerToggle" type="button" onclick="toggleOperationTimer()">Pause</button>
+       <button class="timer-control timer-reset" id="operationTimerReset" type="button" onclick="resetOperationTimer(true)">Reset Timer</button>
+       <button class="timer-control timer-cancel" id="operationTimerCancel" type="button" onclick="cancelDispatch()">Cancel Dispatch</button>
      </div>
      <p class="small">Optional and pilot-controlled. Pause anytime for sim pauses, crashes, breaks, or relaxed operations.</p>
    </div>`;
@@ -2240,6 +2393,7 @@ function failMission(){
 function cancelDispatch(){
  hideCompleteConfirm();
  if(!currentMission){alert("No active dispatch to cancel.");return;}
+ if(!confirm("Are you sure you want to cancel this dispatch? This will reset the current card without logging a flight."))return;
  currentMission=null;
  selectedAircraft=null;
  window.currentJobBoard=null;
@@ -2610,7 +2764,7 @@ function wire(){
  ["customFrom","customTo"].forEach(id=>el(id).addEventListener("input",function(){this.value=this.value.toUpperCase().slice(0,4);}));
  el("completeBtn").addEventListener("click",()=>completeMission());
  el("failBtn").addEventListener("click",failMission);
- el("cancelDispatchBtn").addEventListener("click",cancelDispatch);
+ if(el("cancelDispatchBtn")) el("cancelDispatchBtn").addEventListener("click",cancelDispatch);
  el("resetBtn").addEventListener("click",resetCareer);
  el("loanBtn").addEventListener("click",takeLoan);
  el("payLoanBtn").addEventListener("click",payLoan);
