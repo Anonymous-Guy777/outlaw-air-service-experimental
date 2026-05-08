@@ -404,6 +404,9 @@ body.night .dispatch-net{
   gap:10px;
   margin-top:12px;
 }
+#openPilotChoiceBtn{
+  grid-column:1/-1;
+}
 .selected-job-row,
 .aircraft-row-selected{
   outline:3px solid var(--gold);
@@ -556,6 +559,22 @@ body.night .notable-item{
   background:rgba(201,162,74,.12);
   color:var(--ink);
 }
+.log-entry-new{
+  animation:logFocusFlash 1.8s ease-out;
+}
+.log-memo-actions{
+  margin-top:8px;
+}
+.log-memo-actions button{
+  width:auto;
+  min-width:112px;
+  padding:7px 10px;
+  font-size:.82rem;
+}
+@keyframes logFocusFlash{
+  0%{box-shadow:0 0 0 3px rgba(46,204,113,.72);background:#fff8dd;}
+  100%{box-shadow:none;}
+}
 .log-net{
   color:var(--green);
   font-size:1.05rem;
@@ -587,10 +606,14 @@ details.card summary h2::after{
 }
 @media(max-width:900px){
   .cockpit-flow{grid-template-columns:repeat(2,1fr);}
-  .hero-dispatch{position:sticky;top:0;z-index:10;}
   .dispatch-timer{font-size:2.45rem;}
   .next-action,.office-grid,.operation-timer-controls,.log-entry,.notable-grid{grid-template-columns:1fr;}
   .log-net{white-space:normal;}
+  .cockpit-shell,
+  .card,
+  .body{
+    overflow:visible;
+  }
 }
 
 @media(max-width:700px){.dispatch-timer{font-size:2.2rem}.dispatch-grid,.operation-timer-readout{grid-template-columns:1fr}.top-toggle{position:static;margin:12px auto 0;}}
@@ -640,13 +663,12 @@ body.night.has-active-flight #dispatchPanel{
 }
 
 
-/* v0.6.7 Text Polish (Mobile Sticky Dispatch) */
+/* v0.6.7 Text Polish (Mobile Dispatch) */
 @media(max-width:700px){
   body.has-active-flight #dispatchPanel{
-    position:sticky;
-    top:0;
-    z-index:50;
+    position:static;
     margin-bottom:10px;
+    overflow:visible;
   }
 
   body.has-active-flight .dispatch-card{
@@ -1216,7 +1238,7 @@ body.night .aircraft-row-selected td{
     <a href="#scorePanel">4 - Score</a>
   </div>
 
-  <details class="card custom-flight-card" id="customFlightPanel" open>
+  <details class="card custom-flight-card" id="customFlightPanel">
     <summary><h2>🧭 Pilot's Choice / Create Your Own Operation</h2></summary>
     <div class="body">
       <p class="small"><strong>Start here.</strong> Build the Free Flight operation you already want to fly, then let OAS wrap it in dispatch structure.</p>
@@ -1730,6 +1752,39 @@ function setCockpitNavAvailability(){
    }
  });
 }
+function idleDispatchHubHtml(){
+ return `<div class="dispatch-card">
+       <div class="dispatch-title">EFB DISPATCH HUB</div>
+       <div class="dispatch-timer">Awaiting Dispatch Orders</div>
+       ${operationGuidanceHtml(operationGuidanceMessage())}
+       ${opsFlowHtml()}
+       <div class="mission-box">
+         <strong>Ready for Pilot's Choice.</strong><br>
+         Build a custom operation, or use a quick-start when you want OAS to choose the work.
+       </div>
+       <div class="next-action">
+         <button id="openPilotChoiceBtn" type="button">Create Operation (Pilot's Choice)</button>
+         <button id="startQuickBtn" class="secondary" type="button">Quick Contract</button>
+         <button id="startBrowseBtn" class="secondary" type="button">Browse Jobs</button>
+       </div>
+       <p class="small" style="margin-top:10px;">No active dispatch. The EFB card will populate after orders are created.</p>
+     </div>`;
+}
+function openPilotChoice(){
+ const panel=el("customFlightPanel");
+ if(panel){
+   panel.open=true;
+   panel.scrollIntoView({behavior:"smooth",block:"start"});
+ }
+}
+function wireIdleDispatchHub(){
+ const pc=el("openPilotChoiceBtn");
+ const q=el("startQuickBtn");
+ const b=el("startBrowseBtn");
+ if(pc) pc.onclick=openPilotChoice;
+ if(q) q.onclick=()=>generateMission();
+ if(b) b.onclick=()=>generateJobBoard();
+}
 function updateUIState(){
  const active=hasActiveContract();
  const hasBoard=window.currentJobBoard && window.currentJobBoard.length;
@@ -1757,6 +1812,9 @@ function updateUIState(){
  if(!active && !hasBoard){
    const d=el("dispatchDisplay");
    if(d){
+     d.innerHTML=idleDispatchHubHtml();
+     wireIdleDispatchHub();
+     return;
      d.innerHTML=`<div class="dispatch-card">
        <div class="dispatch-title">READY</div>
        <div class="dispatch-timer">Create Your Operation</div>
@@ -1826,7 +1884,7 @@ function operationCreatedGuidance(){
 function operationGuidanceMessage(){
  if(operationalGuidance) return operationalGuidance;
  if(!currentMission) return "Create an operation in Pilot's Choice, or use a quick-start mode when you want OAS to surprise you.";
- if(!selectedAircraft) return "Assign an aircraft for this dispatch.";
+ if(currentMission && !selectedAircraft) return "Now select your aircraft.";
  const elapsed=operationTimerElapsedMs();
  if(operationTimer.running) return "TIMER RUNNING: Fly the operation. Complete only after arrival.";
  if(elapsed>0) return "TIMER PAUSED: Resume when ready, or reset if restarting.";
@@ -1865,7 +1923,7 @@ function renderOperationTimerDisplay(){
  const elapsed=operationTimerElapsedMs();
  if(live) live.textContent=formatClock(operationTimerElapsedMs());
  if(pace) pace.textContent=operationTimerPace();
- if(start) start.disabled=!currentMission || operationTimer.running || elapsed>0;
+ if(start) start.disabled=!currentMission || !selectedAircraft || operationTimer.running || elapsed>0;
  if(toggle){
    toggle.disabled=!currentMission || elapsed===0;
    toggle.textContent=elapsed===0?"Pause / Resume":operationTimer.running?"Pause":"Resume";
@@ -1894,6 +1952,7 @@ function resetOperationTimer(manual){
 }
 function startOperationTimer(){
  if(!currentMission){alert("Create an operation first.");return;}
+ if(!selectedAircraft){alert("Select an aircraft before starting the operation timer.");return;}
  operationTimer={elapsedMs:0,running:true,startedAt:Date.now()};
  operationalGuidance="TIMER RUNNING: Fly the operation. Complete only after arrival.";
  ensureOperationTimerTick();
@@ -1950,6 +2009,20 @@ function escapeHtml(s){
 }
 function flightMemoText(){
  return (el("flightMemo")?.value||"").trim().slice(0,500);
+}
+function focusFlightLogNewest(){
+ const card=el("flightLogCard");
+ if(!card) return;
+ card.open=true;
+ setTimeout(()=>{
+   card.scrollIntoView({behavior:"smooth",block:"start"});
+   const newest=card.querySelector(".log-entry");
+   if(newest){
+     newest.classList.remove("log-entry-new");
+     void newest.offsetWidth;
+     newest.classList.add("log-entry-new");
+   }
+ },60);
 }
 function updateCompanyTitle(){
  const title=el("companyTitle");
@@ -2419,6 +2492,9 @@ function updateDispatchCard(){
  const d=el("dispatchDisplay");
  if(!d) return;
  if(!currentMission){
+   d.innerHTML=idleDispatchHubHtml();
+   wireIdleDispatchHub();
+   return;
    d.innerHTML=`<div class="dispatch-card">
      <div class="dispatch-title">READY</div>
      <div class="dispatch-timer">Create Your Operation</div>
@@ -2538,8 +2614,8 @@ function completeMission(confirmed){
  fs.flights=(fs.flights||0)+1; fs.nm=(fs.nm||0)+currentMission.dist; fs.hours=(fs.hours||0)+hrs; fs.gallons=(fs.gallons||0)+gals; fs.sinceInspection=Math.min((fs.sinceInspection||0)+1,20);
  if(career.debt>0)career.debt+=Math.ceil(career.debt*.005); // small interest growth per completed flight
  career.log.unshift({date:new Date().toLocaleString(),mission:currentMission.type,route:currentMission.dep+" → "+currentMission.dest,aircraft:selectedAircraft,gross,cost:cost+maint.cost,net,penalty:Math.round(penaltyTotal()*100)+"%",event:maint.text,memo,preset:currentMission.preset||"",actualTime});
- career.log=career.log.slice(0,35); saveCareer(); currentMission=null; selectedAircraft=null; window.currentJobBoard=null; operationalGuidance="Operation logged. Review the Flight Log or create the next operation.";
- el("missionDisplay").innerHTML='<p class="small">Operation logged. Create another operation to continue.</p>'; el("aircraftDisplay").innerHTML='<p class="small">Aircraft options appear after you create or select a dispatch.</p>'; resetChecks(); updatePayout(); updateDispatchCard(); updateUIState();
+ career.log=career.log.slice(0,35); saveCareer(); currentMission=null; selectedAircraft=null; window.currentJobBoard=null; resetOperationTimer(); operationalGuidance="Operation logged. Review the Flight Log or create the next operation.";
+ el("missionDisplay").innerHTML='<p class="small">Operation logged. Create another operation to continue.</p>'; el("aircraftDisplay").innerHTML='<p class="small">Aircraft options appear after you create or select a dispatch.</p>'; resetChecks(); updatePayout(); updateDispatchCard(); updateUIState(); focusFlightLogNewest();
 }
 function failMission(){
  hideCompleteConfirm();
@@ -2549,7 +2625,7 @@ function failMission(){
  let actualTime=operationTimerElapsedMs()>0?formatClock(operationTimerElapsedMs()):"";
  let penalty=Math.round(currentMission.base*.25+opCost()+deadheadCost()+debtService()); career.cash=Math.max(0,career.cash-penalty); career.rep=Math.max(0,career.rep-2);
  career.log.unshift({date:new Date().toLocaleString(),mission:"ABORTED: "+currentMission.type,route:currentMission.dep+" → "+currentMission.dest,aircraft:selectedAircraft||"Not selected",gross:0,cost:penalty,net:-penalty,penalty:"Abort",event:"Operation failed",memo,preset:currentMission.preset||"",actualTime});
- saveCareer(); currentMission=null; selectedAircraft=null; window.currentJobBoard=null; operationalGuidance="Operation aborted. Review the Flight Log or create another dispatch."; el("missionDisplay").innerHTML='<p class="small">Operation aborted.</p>'; el("aircraftDisplay").innerHTML='<p class="small">Aircraft options appear after you create or select a dispatch.</p>'; resetChecks(); updatePayout(); updateDispatchCard(); updateUIState();
+ saveCareer(); currentMission=null; selectedAircraft=null; window.currentJobBoard=null; resetOperationTimer(); operationalGuidance="Operation aborted. Review the Flight Log or create another dispatch."; el("missionDisplay").innerHTML='<p class="small">Operation aborted.</p>'; el("aircraftDisplay").innerHTML='<p class="small">Aircraft options appear after you create or select a dispatch.</p>'; resetChecks(); updatePayout(); updateDispatchCard(); updateUIState(); focusFlightLogNewest();
 }
 function cancelDispatch(){
  hideCompleteConfirm();
@@ -2558,6 +2634,7 @@ function cancelDispatch(){
  currentMission=null;
  selectedAircraft=null;
  window.currentJobBoard=null;
+ resetOperationTimer();
  operationalGuidance="Dispatch canceled with no log entry or financial penalty. Create another operation when ready.";
  resetChecks();
  el("missionDisplay").innerHTML='<p class="small">Dispatch canceled. Create another operation when ready.</p>';
@@ -2799,6 +2876,17 @@ function notableFlightsHtml(){
  ].filter(Boolean).join("");
  return `<div class="notable-flights"><div class="notable-flights-title">Notable Flights</div><div class="notable-grid">${items}</div></div>`;
 }
+function editMemo(index){
+ const entry=career.log[index];
+ if(!entry) return;
+ const next=prompt("Edit Flight Memo", entry.memo||"");
+ if(next===null) return;
+ entry.memo=next.trim().slice(0,500);
+ saveCareer();
+ const card=el("flightLogCard");
+ if(card) card.open=true;
+ setStatus("Flight memo updated.");
+}
 function renderCareer(){
  let r=getRank();
  el("cash").textContent=money(career.cash);
@@ -2814,11 +2902,12 @@ function renderCareer(){
  if(!career.log.length){
    el("logDisplay").innerHTML='<p class="small">No flights logged yet. Completed operations will appear here with route, aircraft, payout, timer, and memo details.</p>';
  } else {
-   el("logDisplay").innerHTML=`${notableFlightsHtml()}<div class="log-journal">${career.log.map(l=>{
+   el("logDisplay").innerHTML=`${notableFlightsHtml()}<div class="log-journal">${career.log.map((l,index)=>{
      const preset=l.preset&&l.preset!=="Freeform"?`Preset: ${escapeHtml(l.preset)} · `:"";
      const time=l.actualTime?`Operation Time: ${escapeHtml(l.actualTime)} · `:"";
      const event=l.event?`<br>${escapeHtml(l.event)}`:"";
      const memo=l.memo?`<div class="log-memo"><strong>Memo:</strong> ${escapeHtml(l.memo)}</div>`:"";
+     const memoAction=`<div class="log-memo-actions"><button class="secondary" type="button" onclick="editMemo(${index})">${l.memo?"Edit Memo":"Add Memo"}</button></div>`;
      const aborted=String(l.mission||"").startsWith("ABORTED:");
      const netClass=l.net<0?" log-net-negative":"";
      return `<article class="log-entry${aborted?" log-entry-aborted":""}">
@@ -2827,6 +2916,7 @@ function renderCareer(){
          <div class="log-route">${escapeHtml(l.route)}</div>
          <div class="log-meta">${escapeHtml(l.aircraft)}<br>${preset}${time}Gross ${money(l.gross)} · Costs ${money(l.cost)} · Penalty ${escapeHtml(l.penalty)}${event}<br>${escapeHtml(l.date)}</div>
          ${memo}
+         ${memoAction}
        </div>
        <div class="log-net${netClass}">${money(l.net)}</div>
      </article>`;
@@ -2981,6 +3071,7 @@ function wire(){
    ev.preventDefault();
    if(this.classList.contains("nav-disabled")) return;
    const target=document.querySelector(this.getAttribute("href"));
+   if(target && this.getAttribute("href")==="#customFlightPanel") target.open=true;
    if(target) target.scrollIntoView({behavior:"smooth",block:"start"});
  }));
 }

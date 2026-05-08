@@ -35,6 +35,8 @@ Expected result: OAS feels like a cockpit shell around readable dispatch paperwo
 - [ ] On a fresh/default save, confirm Pilot's Choice appears as the primary first action.
 - [ ] Confirm Quick Contract and Browse Jobs are present but visually secondary.
 - [ ] Confirm the Dispatch Card starts in the ready/create-operation state.
+- [ ] Confirm Pilot's Choice starts collapsed and the EFB Dispatch Hub is the startup focus.
+- [ ] Confirm Create Operation (Pilot's Choice) opens Pilot's Choice and scrolls to it.
 - [ ] Confirm inline guidance tells the user what to do next.
 - [ ] Confirm the OPS FLOW / QUICK OPS strip describes the current flow clearly.
 - [ ] Confirm no popups appear during normal first-run flow.
@@ -111,6 +113,8 @@ Expected result: aircraft choice matters without exposing implementation details
 ## Operation Timer
 
 - [ ] Start Operation begins the live timer.
+- [ ] Start Operation remains disabled until an aircraft is selected.
+- [ ] Attempting to start the timer without aircraft selection is blocked.
 - [ ] Pause / Resume appears as one dynamic button, not two separate buttons.
 - [ ] Timer running state changes the dynamic button label to Pause.
 - [ ] Timer paused state changes the dynamic button label to Resume.
@@ -149,6 +153,8 @@ Expected result: planning cleanup and true failed operations feel clearly differ
 - [ ] Pilot's Choice entries show preset when applicable.
 - [ ] Timer entries show Operation Time when timer was used.
 - [ ] Memo text appears under the correct log entry.
+- [ ] Edit Memo / Add Memo changes only the memo text and leaves route, gross, costs, penalty, timer, and net locked.
+- [ ] Completing or aborting an operation opens the Flight Log and highlights the newest entry.
 - [ ] Empty memo does not create awkward blank blocks.
 - [ ] Abort entries show ABORTED title, gross 0, costs, abort penalty, event, memo if provided.
 - [ ] Copy Log Text includes route, aircraft, gross, costs, penalty, net, event, preset, time, and memo.
