@@ -82,6 +82,7 @@ Expected result: job board is optional quick-start content, not the main app ide
 - [ ] No active operation: Dispatch Card says Create Your Operation.
 - [ ] Operation created with no aircraft: Dispatch Card says Pick aircraft.
 - [ ] Aircraft assigned: Dispatch Card shows route, aircraft, distance, risk/cargo, payout, timer target, summary.
+- [ ] Pilot's Choice creation guidance says Operation Created and points to Dispatch Card review.
 - [ ] EFB Dispatch Card uses Paper EFB data cards instead of dark data panels.
 - [ ] EFB Dispatch Card does not contain a Complete Operation button.
 - [ ] EFB control row is Start Operation | Pause/Resume | Reset Timer | Cancel Dispatch.
@@ -101,7 +102,7 @@ Expected result: the card always answers "what happens next?"
 - [ ] Aircraft row highlight follows the selected aircraft.
 - [ ] Timer target updates when aircraft changes.
 - [ ] Payout updates when aircraft changes.
-- [ ] Mission Penalties expands automatically after aircraft selection.
+- [ ] Operation Penalties expands automatically after aircraft selection.
 - [ ] Bonus Rules expands automatically after aircraft selection.
 - [ ] Cost / Penalty expands automatically after aircraft selection.
 
@@ -225,8 +226,11 @@ Expected result: heavy aircraft feel expensive but viable when used for appropri
 - [ ] Change Home Base and confirm it persists after refresh.
 - [ ] Set custom home base and confirm it displays correctly.
 - [ ] Set Fleet Location to Home Base and confirm fleet location updates.
+- [ ] Clear Dispatch confirms before clearing active dispatch planning state.
 - [ ] Clear Dispatch does not reset company setup.
+- [ ] Reset Career warning names the career data and Flight Log impact before confirming.
 - [ ] Reset Career restores defaults only after confirmation.
+- [ ] Take Loan confirms debt added before changing cash/debt.
 
 Expected result: Company Setup supports identity and continuity without feeling like a management sim.
 
