@@ -12,6 +12,10 @@
   --efb-paper:#f4f4f4; --efb-paper2:#e9e9e9; --efb-ink:#1a1a1a; --efb-muted:#3f4650;
 }
 *{box-sizing:border-box}
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top:80px;
+}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--navy),var(--navy2) 430px,var(--paper) 430px);color:var(--ink)}
 header{color:white;padding:24px 16px 18px;text-align:center;border-bottom:5px solid var(--gold)}
 header h1{margin:0;font-size:2.1rem;letter-spacing:.5px}
@@ -1075,6 +1079,18 @@ body.night #aircraftPanel .body{
 }
 .cockpit-flow a:hover{
   filter:brightness(1.08);
+}
+@media(min-width:901px){
+  .cockpit-flow{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:var(--navy);
+    padding:8px 0;
+  }
+  body.night .cockpit-flow{
+    background:var(--navy);
+  }
 }
 #customFlightPanel,
 #dispatchPanel,
