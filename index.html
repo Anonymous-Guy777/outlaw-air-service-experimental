@@ -1158,6 +1158,12 @@ body.night select option{
   background:#fff;
   color:#111827;
 }
+select optgroup,
+body.night select optgroup{
+  background:#e7e1d2;
+  color:#1a1a1a;
+  font-weight:900;
+}
 input[type="checkbox"],
 input[type="radio"]{
   width:auto !important;
@@ -1257,7 +1263,7 @@ body.night .aircraft-row-selected td{
     <div class="body">
       <p class="small"><strong>Start here.</strong> Build the Free Flight operation you already want to fly, then let OAS wrap it in dispatch structure.</p>
       <div class="row">
-        <div><label for="operationPreset">Operation Type</label><select id="operationPreset">
+        <div><label for="operationPreset">Operation Type / Intent</label><select id="operationPreset">
           <option value="Airshow / Demo">Airshow / Demo</option>
           <option value="Bush / STOL">Bush / STOL</option>
           <option value="Cargo">Cargo</option>
@@ -1610,8 +1616,8 @@ const msfsAircraftRoster={
  "Planes":[
   "Aero Adventure Aventura II","Aero Vodochody L-39 Albatros","Airbus A310-300","Airbus A320neo (Asobo)","Airbus A321LR","Airbus A330-200","Airbus A330-300","Airbus A330-743L Beluga XL","Airbus A400M Atlas","Antonov An-2","Antonov An-225 Mriya","Aviat Pitts Special S1S","Aviat Pitts Special S2S","Beechcraft Baron G58","Beechcraft Bonanza G36","Beechcraft King Air 350i","Beechcraft Model 17 Staggerwing","Beechcraft Model 18 Twin Beech","Beechcraft Twin Bonanza","Boeing 737 MAX 8","Boeing 747-400 Global Supertanker","Boeing 747-400 LCF Dreamlifter","Boeing 747-8 Intercontinental","Boeing 787-10 Dreamliner","Boeing C-17 Globemaster III","Cessna 140","Cessna 150 Commuter","Cessna 152","Cessna 170B","Cessna 172 Skyhawk (G1000)","Cessna 182 Skylane RG","Cessna 185 Skywagon","Cessna 188 AgTruck","Cessna 195 Businessliner","Cessna 208B Grand Caravan EX","Cessna 310R","Cessna 400 Corvalis TT","Cessna 404 Titan","Cessna 408 SkyCourier","Cessna Citation CJ4","Cessna Citation Longitude","Cirrus SR22T","Cirrus Vision SF50","Curtiss JN-4 Jenny","Dassault Falcon 2000EX","Dassault Falcon 7X","Diamond DA40 NG","Diamond DA42-VI","Diamond DA62","Diamond HK36 Skymotorglider","Dornier Do 31","Dornier Do J Wal","Douglas C-47D Skytrain","Douglas DC-3","Extra 330LT","Fairchild Republic A-10 Thunderbolt II","Focke-Wulf Fw 44 Stieglitz","General Dynamics F-16 Falcon","Grumman G-21A Goose","Grumman HU-16 Albatross","H-4 Hercules 'Spruce Goose'","Junkers Ju 52","Lockheed L-1049 Constellation","Lockheed Martin F-35 Lightning II","North American P-51 Mustang","North American T-6 Texan","Pilatus PC-12 NGX","Pilatus PC-24","Pilatus PC-6 Porter","Piper PA-18 Super Cub","Piper PA-24-250 Comanche","Piper PA-28 Warrior II","Robin CAP 10","Robin DR400-100 Cadet","Ryan NYP 'Spirit of St. Louis'","Saab 340B","Short SC.7 Skyvan","Stemme S12-G","Vickers Vimy","Wright Flyer","Zlin Savage Cub","de Havilland Canada DHC-1 Chipmunk","de Havilland Canada DHC-2 Beaver","de Havilland Canada DHC-3 Otter","de Havilland Canada DHC-4 Caribou","de Havilland Canada DHC-6 Twin Otter"
  ],
- "Helicopters":[
-  "Airbus Helicopters H125","Airbus Helicopters H160","Bell 206 JetRanger","Bell 407","Bell 412EP","Boeing CH-47D Chinook","Guimbal Cabri G2","Robinson R44 Raven II","Sikorsky S-64F Aircrane","Sikorsky S-70 Black Hawk","Westland Sea King"
+  "Helicopters":[
+   "Airbus Helicopters H125","Airbus Helicopters H160","Bell 206 JetRanger","Bell 407","Bell 412EP","Boeing CH-47D Chinook","Guimbal Cabri G2","Huey UH-1H","Robinson R44 Raven II","Sikorsky S-64F Aircrane","Sikorsky S-70 Black Hawk","Westland Sea King"
  ],
  "Drones / Other":[
   "Archer Midnight","Cameron Balloons Z-160","Claudio Mazzei Orbis (Airship)","Eviation Alice","Heart Aerospace ES-30","Jetson One","Joby S4","Pipistrel Alpha Electro","Pipistrel Velis Electro","Volocopter VoloCity","Zipline P2 ZipBoy"
@@ -1651,7 +1657,7 @@ function aircraftNoteForType(type,tier){
 }
 function rosterCategoryForAircraft(name){
  const lower=(name||"").toLowerCase();
- if(lower.includes("heli")||lower.includes("bell ")||lower.includes("cabri")||lower.includes("robinson")||lower.includes("sikorsky")||lower.includes("black hawk")||lower.includes("chinook")||lower.includes("sea king")) return "Helicopters";
+ if(lower.includes("heli")||lower.includes("huey")||lower.includes("uh-1")||lower.includes("bell ")||lower.includes("cabri")||lower.includes("robinson")||lower.includes("sikorsky")||lower.includes("black hawk")||lower.includes("chinook")||lower.includes("sea king")) return "Helicopters";
  if(lower.includes("drone")||lower.includes("balloon")||lower.includes("airship")||lower.includes("volo")||lower.includes("zipline")||lower.includes("jetson")||lower.includes("joby")||lower.includes("archer")||lower.includes("midnight")) return "Drones / Other";
  return "Planes";
 }
@@ -2068,11 +2074,12 @@ function populateCustomAircraft(){
    career.owned=[...defaultCareer.owned];
  }
  const groups={"Planes":new Set(msfsAircraftRoster.Planes),"Helicopters":new Set(msfsAircraftRoster.Helicopters),"Drones / Other":new Set(msfsAircraftRoster["Drones / Other"])};
+ const groupLabels={"Planes":"--- PLANES ---","Helicopters":"--- HELICOPTERS ---","Drones / Other":"--- DRONES / OTHERS ---"};
  Object.keys(aircraft).forEach(name=>groups[rosterCategoryForAircraft(name)].add(name));
  s.innerHTML=Object.keys(groups).map(label=>{
    const names=[...groups[label]].sort((a,b)=>a.localeCompare(b));
-   return `<optgroup label="${label}">${names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join("")}</optgroup>`;
- }).join("")+`<option value="${manualAircraftValue}">Manual Entry / Custom Mod</option>`;
+    return `<optgroup label="${groupLabels[label]||label}">${names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join("")}</optgroup>`;
+  }).join("")+`<option value="${manualAircraftValue}">Manual Entry / Custom Mod</option>`;
  if(!s.value) s.value="C172";
  updateManualAircraftVisibility();
 }
