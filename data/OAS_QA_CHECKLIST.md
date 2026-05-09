@@ -6,6 +6,48 @@ North star: Choose the flight -> Fly the operation -> Preserve the story.
 
 Use this checklist for regression passes after UI, economy, timer, preset, save, or Flight Log changes.
 
+## v1.0 Beta Final PMCF Checklist
+
+- [ ] Fresh load works in Night Ops and Day Mode with no script errors.
+- [ ] Pilot's Choice creates a dispatch using one of the 12 intent-based Operation Types.
+- [ ] Operation Types act as purpose/flavor only; route, aircraft, risk, timer target, and final closeout remain pilot-controlled.
+- [ ] EFB Dispatch Card shows the selected Operation Type and dispatch intent clearly.
+- [ ] Aircraft selection supports grouped MSFS roster choices plus Manual Entry / Custom Mod.
+- [ ] Manual Target Timer adjustment works for multi-hop, fuel stop, and RON-style operations.
+- [ ] Start, Pause/Resume, Reset Timer, and Cancel Dispatch work without changing payout/logging rules.
+- [ ] Complete Operation remains only in Company Ledger and writes Flight Memo to the Flight Log.
+- [ ] Abort / Fail and Cancel Dispatch still have clear, different meanings.
+- [ ] Aircraft Market explains it is representative, supports duplicate purchases, and sells one aircraft at a deflated resale value.
+- [ ] Crew Passive Income wording explains the once-per-real-day support payment without implying a management sim.
+- [ ] Save, Backup Save, Copy Save, Restore Save, and localStorage persistence survive a browser refresh.
+- [ ] Flight Log entries are readable and preserve operation type, aircraft, route, payout, timer, event, and memo.
+- [ ] README wording matches the current app: v1.0 Beta direction, Universal Dispatch, intent vs. rules, Operation Timer, and project links.
+
+Expected result: OAS is ready for public v1.0 Beta sharing as a lightweight Universal Dispatch sandbox.
+
+## README Screenshot Capture List
+
+Use these filenames when capturing the v1.0 Beta screenshot set for the README. Capture PNG files unless a platform requires JPG.
+
+- [ ] `01_fresh_load_night_ops.png` - first load in Night Ops, showing banner, cockpit nav, and Pilot's Choice entry point.
+- [ ] `02_fresh_load_day_mode.png` - first load in Day Mode, showing Aviation Cream canvas and readable form fields.
+- [ ] `03_pilots_choice_operation_type.png` - Pilot's Choice open with the Operation Type dropdown and dispatch intent text visible.
+- [ ] `04_dispatch_created_no_timer.png` - EFB Dispatch Card after creating an operation, before starting the timer.
+- [ ] `05_timer_running.png` - Live Operation Timer running with Next Step guidance visible.
+- [ ] `06_timer_paused.png` - timer paused with Pause/Resume state clear.
+- [ ] `07_aircraft_selector_manual_entry.png` - aircraft selector showing grouped aircraft and Manual Entry / Custom Mod behavior.
+- [ ] `08_company_ledger_closeout_day_mode.png` - Company Ledger closeout area in Day Mode with Flight Memo and Complete Operation visible.
+- [ ] `09_flight_log_with_memo.png` - Flight Log showing a completed operation, memo, operation time, and Notable Flights.
+- [ ] `10_fleet_market_duplicates.png` - Fleet/Market showing duplicate aircraft ownership, Buy Another, and Sell One.
+- [ ] `11_support_project_links.png` - Support OAS Development / Project Links section with Ko-fi and GitHub links.
+- [ ] `12_mobile_ipad_opening.png` - iPad or tablet opening view showing banner, nav, and first Pilot's Choice area.
+
+Optional extras for release posts:
+
+- [ ] `13_cancel_dispatch_confirmation.png` - Cancel Dispatch confirmation modal.
+- [ ] `14_abort_fail_confirmation.png` - Abort / Fail confirmation modal.
+- [ ] `15_readme_repo_overview.png` - GitHub README top section showing launch links and philosophy.
+
 ## Test Setup
 
 - [ ] Open the Experimental app fresh in a modern browser.
@@ -45,8 +87,9 @@ Expected result: a new user can understand where to start without reading extern
 
 ## Pilot's Choice Flow
 
-- [ ] Select each Operation Preset once and confirm the operation type/risk update.
-- [ ] Confirm preset flavor text updates and remains advisory only.
+- [ ] Select each of the 12 Operation Types once and confirm the dispatch intent/risk update.
+- [ ] Confirm Operation Type flavor text updates and remains advisory only.
+- [ ] Confirm Operation Types define purpose only, not route rules or scripted mission behavior.
 - [ ] Enter valid 3 or 4 character airport identifiers.
 - [ ] Enter a manual distance and create the operation.
 - [ ] Use Estimate on known routes and confirm distance updates when available.
@@ -72,7 +115,7 @@ Expected result: Quick Contract works as a fast "surprise me" mode.
 
 - [ ] Generate Browse Jobs / 5-Job Board.
 - [ ] Confirm five jobs appear with route, type, risk/tier, and base value.
-- [ ] Pick a job and confirm it becomes the active dispatch.
+- [ ] Pick a dispatch and confirm it becomes the active dispatch.
 - [ ] Confirm aircraft assignment guidance appears.
 - [ ] Confirm job board clears or becomes secondary after selecting a job.
 - [ ] Confirm no stale job remains active after completion, abort, cancel, or clear dispatch.
@@ -181,7 +224,7 @@ Expected result: notable summaries reinforce operational memory.
 - [ ] C152/C172 short operations produce sensible low-tier payouts.
 - [ ] C208/utility operations produce medium payouts.
 - [ ] C-47 or similar vintage cargo operations cover operating cost on appropriate presets.
-- [ ] C-17 / heavy cargo operations produce positive net on Heavy Cargo after costs.
+- [ ] C-17 / heavy aircraft operations produce positive net on Cargo after costs.
 - [ ] Scenic/Ferry operations with higher-cost aircraft do not unexpectedly clamp to $0 when completed successfully.
 - [ ] Gross, costs, and net shown in Dispatch Card match the Flight Log after completion.
 - [ ] Bonuses increase estimated and logged net.
@@ -196,36 +239,33 @@ Run at least one test flight for each preset using a reasonable aircraft:
 
 - [ ] Airshow / Demo
 - [ ] Bush / STOL
+- [ ] Cargo
 - [ ] Ferry / Positioning
-- [ ] Heavy Cargo
-- [ ] Humanitarian / Relief
-- [ ] Island Hopper
-- [ ] Light Cargo
-- [ ] Medium Cargo
-- [ ] Night Ops
-- [ ] Pilot's Choice / Freeform
-- [ ] Scenic / Sightseeing
-- [ ] Search & Rescue
-- [ ] Test / Maintenance
+- [ ] Firefighting
+- [ ] Medevac
+- [ ] Oddball / Custom Ops
+- [ ] Scenic / Tourism
+- [ ] Search and Rescue
+- [ ] Skydiving
 - [ ] Training / Checkride
-- [ ] VIP / Charter
+- [ ] VIP Charter
 
 For each preset:
 
-- [ ] Correct operation type is selected.
+- [ ] Correct Operation Type is selected and appears in the Dispatch Card / Flight Log.
 - [ ] Risk feels appropriate.
 - [ ] Ops Desk advisory matches the operation flavor.
 - [ ] Gross is nonzero.
 - [ ] Estimated net is sensible for the selected aircraft.
 - [ ] Completed Flight Log entry matches the expected preset.
 
-Expected result: presets guide atmosphere and payout scale without enforcing gameplay rules.
+Expected result: Operation Types define purpose and payout scale without enforcing route rules or scripted gameplay.
 
 ## Heavy Aircraft Validation
 
-- [ ] C-17 on Heavy Cargo produces a positive net after operating costs.
+- [ ] C-17 on Cargo produces a positive net after operating costs.
 - [ ] C-17 on inappropriate light/scenic operations either remains low reward or clearly reflects high operating cost.
-- [ ] Heavy Cargo timer target is reasonable for distance and cruise speed.
+- [ ] Heavy aircraft timer target is reasonable for distance and cruise speed.
 - [ ] Heavy aircraft costs display correctly in Cost / Penalty.
 - [ ] Heavy aircraft Flight Log entries preserve gross/cost/net clearly.
 

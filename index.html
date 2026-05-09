@@ -1257,24 +1257,21 @@ body.night .aircraft-row-selected td{
     <div class="body">
       <p class="small"><strong>Start here.</strong> Build the Free Flight operation you already want to fly, then let OAS wrap it in dispatch structure.</p>
       <div class="row">
-        <div><label for="operationPreset">Operation Preset</label><select id="operationPreset">
+        <div><label for="operationPreset">Operation Type</label><select id="operationPreset">
           <option value="Airshow / Demo">Airshow / Demo</option>
           <option value="Bush / STOL">Bush / STOL</option>
+          <option value="Cargo">Cargo</option>
           <option value="Ferry / Positioning">Ferry / Positioning</option>
-          <option value="Heavy Cargo">Heavy Cargo</option>
-          <option value="Humanitarian / Relief">Humanitarian / Relief</option>
-          <option value="Island Hopper">Island Hopper</option>
-          <option value="Light Cargo">Light Cargo</option>
-          <option value="Medium Cargo">Medium Cargo</option>
-          <option value="Night Ops">Night Ops</option>
-          <option value="Pilot's Choice / Freeform" selected>Pilot's Choice / Freeform</option>
-          <option value="Scenic / Sightseeing">Scenic / Sightseeing</option>
-          <option value="Search & Rescue">Search & Rescue</option>
-          <option value="Test / Maintenance">Test / Maintenance</option>
+          <option value="Firefighting">Firefighting</option>
+          <option value="Medevac">Medevac</option>
+          <option value="Oddball / Custom Ops" selected>Oddball / Custom Ops</option>
+          <option value="Scenic / Tourism">Scenic / Tourism</option>
+          <option value="Search and Rescue">Search and Rescue</option>
+          <option value="Skydiving">Skydiving</option>
           <option value="Training / Checkride">Training / Checkride</option>
-          <option value="VIP / Charter">VIP / Charter</option>
+          <option value="VIP Charter">VIP Charter</option>
         </select></div>
-        <div class="preset-flavor-field"><label>Preset Flavor</label><div class="mission-box" id="operationPresetHint">Pilot's Choice mode. Choose any route, aircraft, operation type, and risk level.</div></div>
+        <div class="preset-flavor-field"><label>Dispatch Intent</label><div class="mission-box" id="operationPresetHint">Unusual client, unusual route. Keep the paperwork clean.</div></div>
       </div>
       <div class="row">
         <div><label for="customFrom">From ICAO</label><input id="customFrom" placeholder="KLMT" maxlength="4" style="text-transform:uppercase;"></div>
@@ -1284,14 +1281,6 @@ body.night .aircraft-row-selected td{
       <p class="small hint" id="customFlightHint"><strong>Tip:</strong> Some smaller airports use local identifiers like S03 or 3S8. If a code is unknown, verify it on the Flight Simulator World Map while setting your Departure and Arrival. That screen also provides accurate mileage for Distance (NM).</p>
       <div class="row">
         <div><label for="customAircraft">Aircraft</label><select id="customAircraft"></select></div>
-        <div><label for="customFlightType">Operation Type</label><select id="customFlightType">
-          <option value="Scenic Flight">Scenic Flight</option>
-          <option value="Ferry Flight">Ferry Flight</option>
-          <option value="Training Flight">Training Flight</option>
-          <option value="Light Cargo">Light Cargo</option>
-          <option value="Heavy Cargo">Heavy Cargo</option>
-          <option value="Passenger Hop">Passenger Hop</option>
-        </select></div>
         <div><label for="customRisk">Risk</label><select id="customRisk">
           <option>Low</option>
           <option>Medium</option>
@@ -1337,7 +1326,7 @@ body.night .aircraft-row-selected td{
   <p class="small">Tip: Quick Contract and Browse Jobs are secondary “surprise me” modes when you want OAS to pick the work for you.</p>
 </div></section>
 
-  <section class="card" id="jobBoardPanel"><h2>🗂️ 5-Job Board</h2><div class="body"><p class="compact-help">Tip: Some small airports use local codes like S03 or 3S8. Search by code in the sim map or zoom in.</p></div><div class="body" id="jobBoardDisplay"><p class="small">Generate a 5-job board when you want multiple choices.</p></div></section>
+  <section class="card" id="jobBoardPanel"><h2>🗂️ 5-Job Board</h2><div class="body"><p class="compact-help">Tip: Some small airports use local codes like S03 or 3S8. Search by code in the sim map or zoom in.</p></div><div class="body" id="jobBoardDisplay"><p class="small">Generate a quick-start board when you want multiple choices.</p></div></section>
 
   <section class="card" id="aircraftPanel"><h2>✈️ Available Aircraft</h2><div class="body" id="aircraftDisplay"><p class="small">Aircraft options appear after you create or select a dispatch.</p></div></section>
 
@@ -1464,12 +1453,12 @@ body.night .aircraft-row-selected td{
   <p class="small">
   <strong>Recent Experimental Changes:</strong><br>
   &bull; v0.6.7 beta polish: aviation cream Day Ops canvas, readable form controls, briefing auto-expansion, and Flight Log archive styling<br>
+  &bull; v1.0 Beta Operation Types now define dispatch intent and flavor, not scripted rules<br>
   • v0.6.7 Paper EFB pass: light dispatch-data cards in Day and Night Ops with clearer action buttons<br>
   • Consolidated timer Pause / Resume into one dynamic control and moved EFB controls to Start / Pause-Resume / Reset / Cancel<br>
   • Promoted Pilot’s Choice / Create Your Own Operation as the primary app flow<br>
   • Reframed Quick Contract and 5-Job Board as secondary quick-start modes<br>
-  • Added modular aircraft and airport data pages for easier user editing<br>
-  • Expanded manual aircraft assignment for sandbox operations<br>
+  &bull; Added grouped MSFS aircraft selection and session-only Manual Entry for custom/mod aircraft<br>
   • Added Flight Memo notes to the Flight Log<br>
   • Added Print / Save Log and Copy Log Text tools<br>
   • Added an optional pilot-controlled Operation Timer for live dispatch timing<br>
@@ -1480,7 +1469,7 @@ body.night .aircraft-row-selected td{
   • Added completion protection for running timers and early accidental completion<br>
   • Added no-penalty Cancel Dispatch for planning/test operations that never began<br>
   • Adjusted Pilot’s Choice heavy-aircraft payout scaling for C-17 / heavy cargo operations<br>
-  • Normalized Pilot’s Choice preset payout floors so Scenic, Ferry, VIP, and Heavy presets all respect selected aircraft operating scale<br>
+  &bull; Normalized Pilot's Choice payout floors so intent-based operations respect selected aircraft operating scale<br>
   • Replaced aircraft data placeholder notes with pilot-facing operational flavor<br>
   • Added final Phase 2 identity refinements: atmospheric dispatch lines and Notable Flights<br>
   • Clarified PNW/Oregon regional DNA while preserving worldwide Pilot’s Choice freedom<br>
@@ -1686,7 +1675,7 @@ function ensureAircraftProfile(name,category,type){
 function customAircraftChoice(){
  const s=el("customAircraft");
  const value=s?.value||"";
- const type=el("customFlightType")?.value||"Scenic Flight";
+ const type=selectedOperationPreset().economyType||"Scenic Flight";
  if(value===manualAircraftValue){
    const name=(el("manualAircraftName")?.value||"").trim();
    return ensureAircraftProfile(name,rosterCategoryForAircraft(name),type);
@@ -1874,16 +1863,17 @@ function operationAtmosphereLine(m){
  if(preset.includes("airshow")||preset.includes("demo")) return "Demo profile. Keep the route tidy, visible, and professional.";
  if(preset.includes("night")||type.includes("night")) return "Night operation. Slow down, brief the approach, and trust the instruments.";
  if(preset.includes("bush")||preset.includes("stol")||type.includes("bush")||cargo.includes("rough")) return "Rough-strip profile. Watch terrain, weather, runway length, and alternates.";
- if(preset.includes("humanitarian")||preset.includes("relief")||type.includes("medical")) return "Relief priority. Fly direct, stay smooth, and keep the operation clean.";
- if(preset.includes("island")||m.region==="Island / Coastal") return "Island hopping today. Mind the water crossings and keep the arrivals tidy.";
+ if(preset.includes("firefighting")) return "Fire response profile. Respect terrain, visibility, tanker limits, and clean exit planning.";
+ if(preset.includes("medevac")||type.includes("medical")) return "Medical priority. Fly direct, stay smooth, and keep the operation clean.";
+ if(preset.includes("oddball")||preset.includes("custom")) return "Special handling profile. Keep the route believable and the paperwork clean.";
+ if(preset.includes("skydiving")) return "Jump profile. Stabilize the platform, mind winds aloft, and keep the drop zone disciplined.";
  if(preset.includes("vip")||type.includes("vip")) return "VIP movement. Smooth handling and a clean arrival are the whole job.";
- if(preset.includes("heavy")||type.includes("heavy")) return "Heavy cargo profile. Respect weight, runway length, and disciplined dispatch timing.";
+ if(preset.includes("cargo")||type.includes("cargo")) return "Cargo run. Practical routing beats heroics; deliver it intact.";
  if(preset.includes("search")||preset.includes("rescue")) return "Search profile. Fly deliberate patterns, preserve reserves, and plan the exit.";
- if(preset.includes("test")||preset.includes("maintenance")) return "Test profile. Keep it controlled, observable, and easy to debrief.";
  if(preset.includes("training")||type.includes("training")) return "Training profile. Fly the plan, evaluate honestly, and log what you learned.";
  if(type.includes("scenic")) return "Scenic profile. Timer is optional; enjoy the route and bring back a good log entry.";
  if(type.includes("ferry")) return "Repositioning flight. Clean handoff beats rushing the schedule.";
- if(type.includes("cargo")||cargo.includes("cargo")) return "Cargo run. Practical routing beats heroics; deliver it intact.";
+ if(cargo.includes("cargo")) return "Cargo run. Practical routing beats heroics; deliver it intact.";
  return "Self-directed operation. You choose the flight; OAS keeps the dispatch thread together.";
 }
 function isFreeformPreset(name){
@@ -2134,27 +2124,30 @@ function customFlightTags(type, acName){
  return [...new Set([...(a.tags||[]), ...tags])];
 }
 const operationPresets={
- "Airshow / Demo":{type:"Scenic Flight",risk:"Low",hint:"Public-facing demo profile. Keep the route tidy, smooth, and pilot-controlled."},
- "Bush / STOL":{type:"Light Cargo",risk:"Medium-High",hint:"Short-field utility profile. Rough strips, careful speeds, and practical aircraft choice matter."},
- "Ferry / Positioning":{type:"Ferry Flight",risk:"Low",hint:"Move the aircraft cleanly. Simple routing, disciplined fuel, and no unnecessary drama."},
- "Heavy Cargo":{type:"Heavy Cargo",risk:"Medium-High",hint:"Big aircraft energy: heavier payloads, longer legs, higher costs, and serious dispatch discipline."},
- "Humanitarian / Relief":{type:"Light Cargo",risk:"Medium-High",hint:"Urgent support profile. Prioritize clean routing, practical payloads, and careful arrival planning."},
- "Island Hopper":{type:"Passenger Hop",risk:"Medium",hint:"Short-hop profile for water crossings, regional passengers, cargo bags, and tidy arrivals."},
- "Light Cargo":{type:"Light Cargo",risk:"Medium",hint:"Small freight profile. Practical routing beats heroics; deliver it intact."},
- "Medium Cargo":{type:"Light Cargo",risk:"Medium",hint:"Utility freight profile. Match aircraft capability to payload, distance, and runway length."},
- "Night Ops":{type:"Ferry Flight",risk:"Medium",hint:"Low-light flying, stricter cockpit discipline, and a stronger dispatch-terminal mood."},
- "Pilot's Choice / Freeform":{type:"Scenic Flight",risk:"Low",hint:"Pilot's Choice mode. Choose any route, aircraft, operation type, and risk level."},
- "Scenic / Sightseeing":{type:"Scenic Flight",risk:"Low",hint:"Relaxed visual flying. Timer is optional; enjoy the route and bring back a good log entry."},
- "Search & Rescue":{type:"Passenger Hop",risk:"Medium-High",hint:"Search and recovery profile. Fly deliberate patterns, keep reserves, and plan the exit."},
- "Test / Maintenance":{type:"Training Flight",risk:"Low",hint:"Post-maintenance or systems-check profile. Keep it controlled, observable, and closeout clean."},
- "Training / Checkride":{type:"Training Flight",risk:"Low",hint:"Skills and discipline profile. Fly the plan, evaluate honestly, and log what you learned."},
- "VIP / Charter":{type:"Passenger Hop",risk:"Low",hint:"Premium passenger profile. Smooth flying, clean arrivals, and professional handling."}
+ "Airshow / Demo":{economyType:"Scenic Flight",risk:"Low",cargo:"public exhibition flight profile",hint:"Public exhibition, flyover, and demonstration operations."},
+ "Bush / STOL":{economyType:"Light Cargo",risk:"Medium-High",cargo:"remote field utility work",hint:"Remote fields, rugged strips, and short-runway work."},
+ "Cargo":{economyType:"Light Cargo",risk:"Medium",cargo:"freight, logistics, and supplies",hint:"Freight, logistics, and supply movement."},
+ "Ferry / Positioning":{economyType:"Ferry Flight",risk:"Low",cargo:"aircraft relocation and positioning",hint:"Aircraft relocation and repositioning flights."},
+ "Firefighting":{economyType:"Light Cargo",risk:"Medium-High",cargo:"aerial suppression and fire support",hint:"Aerial suppression, tanker support, and fire response operations."},
+ "Medevac":{economyType:"Passenger Hop",risk:"Medium-High",cargo:"medical transport and emergency response",hint:"Medical transport, urgent response, and patient movement."},
+ "Oddball / Custom Ops":{economyType:"Ferry Flight",risk:"Medium",cargo:"special handling dispatch",hint:"Unusual client, unusual route. Keep the paperwork clean."},
+ "Scenic / Tourism":{economyType:"Scenic Flight",risk:"Low",cargo:"sightseeing passengers / scenic charter",hint:"Passenger sightseeing, scenic touring, and local charter flights."},
+ "Search and Rescue":{economyType:"Passenger Hop",risk:"Medium-High",cargo:"search and recovery support",hint:"Search patterns, emergency location, and recovery support."},
+ "Skydiving":{economyType:"Passenger Hop",risk:"Medium",cargo:"jump team and parachute operations",hint:"Parachute drop, jump platform, and aerial sport operations."},
+ "Training / Checkride":{economyType:"Training Flight",risk:"Low",cargo:"instruction and proficiency sortie",hint:"Instruction, proficiency, and certification flights."},
+ "VIP Charter":{economyType:"Passenger Hop",risk:"Low",cargo:"priority passenger and executive transport",hint:"Priority passenger, executive, and private-client transport."}
 };
-operationPresets.Freeform=operationPresets["Pilot's Choice / Freeform"];
+operationPresets.Freeform=operationPresets["Oddball / Custom Ops"];
+operationPresets["Pilot's Choice / Freeform"]=operationPresets["Oddball / Custom Ops"];
+function selectedOperationPresetName(){
+ return el("operationPreset")?.value || "Oddball / Custom Ops";
+}
+function selectedOperationPreset(){
+ const name=selectedOperationPresetName();
+ return operationPresets[name] || operationPresets["Oddball / Custom Ops"];
+}
 function applyOperationPreset(){
- const name=el("operationPreset")?.value || "Pilot's Choice / Freeform";
- const preset=operationPresets[name] || operationPresets["Pilot's Choice / Freeform"];
- if(el("customFlightType")) el("customFlightType").value=preset.type;
+ const preset=selectedOperationPreset();
  if(el("customRisk")) el("customRisk").value=preset.risk;
  if(el("operationPresetHint")) el("operationPresetHint").textContent=preset.hint;
 }
@@ -2166,10 +2159,12 @@ function createCustomFlight(){
  const from=(el("customFrom")?.value||"").trim().toUpperCase();
  const to=(el("customTo")?.value||"").trim().toUpperCase();
  const ac=customAircraftChoice();
- const type=el("customFlightType")?.value || "Scenic Flight";
+ const preset=selectedOperationPresetName();
+ const presetData=selectedOperationPreset();
+ const type=preset;
+ let economyType=presetData.economyType || "Scenic Flight";
  const risk=el("customRisk")?.value || "Low";
- const preset=el("operationPreset")?.value || "Pilot's Choice / Freeform";
- const presetHint=operationPresets[preset]?.hint || "";
+ const presetHint=presetData.hint || "";
  let typedDist=parseInt(el("customDistance")?.value||"",10);
  const estimated=estimateDistanceNM(from,to);
  const dist=Math.max(1, Math.min(6000, typedDist || estimated || 30));
@@ -2179,14 +2174,16 @@ function createCustomFlight(){
    alert("Enter valid 3- or 4-character airport identifiers.");
    return;
  }
- if(from===to && type!=="Scenic Flight" && type!=="Training Flight"){
-   alert("From and To cannot be the same unless this is a Scenic Flight or Training Flight.");
+ if(from===to && economyType!=="Scenic Flight" && economyType!=="Training Flight"){
+   alert("From and To cannot be the same unless this is a Scenic / Tourism or Training / Checkride operation.");
    return;
  }
  if(!ac || !aircraft[ac]){
    alert("Choose an aircraft, or use Manual Entry and type the aircraft name.");
    return;
  }
+ const selectedTier=aircraft[ac]?.tier||1;
+ if(preset==="Cargo" && selectedTier>=5) economyType="Heavy Cargo";
 
  currentMission={
    type:type,
@@ -2194,15 +2191,11 @@ function createCustomFlight(){
    dep:from,
    dest:to,
    dist:dist,
-   base:customFlightBase(type, dist, ac),
-   cargo:type==="Scenic Flight"?"scenic passengers / sightseeing":
-         type==="Ferry Flight"?"aircraft repositioning":
-         type==="Training Flight"?"training sortie":
-         type==="Light Cargo"?"light custom cargo":
-         type==="Heavy Cargo"?"heavy custom cargo":
-         "local passengers",
+   economyType:economyType,
+   base:customFlightBase(economyType, dist, ac),
+   cargo:presetData.cargo || "pilot-defined operation",
    risk:risk,
-   tags:customFlightTags(type, ac),
+   tags:customFlightTags(economyType, ac),
    tierMin:1,
    tierMax:aircraft[ac]?.tier || 5,
    custom:true,
@@ -2275,15 +2268,15 @@ if(currentMission){
 
  if(type==="random") {
    if(!flyable.length){
-     alert("No flyable contracts match your current owned aircraft. Buy a matching aircraft or reset starter fleet.");
+     alert("No flyable quick-start dispatches match your current owned aircraft. Buy a matching aircraft or reset starter fleet.");
      return;
    }
    type=pick(flyable);
  }
 
- if(!available.includes(type)){alert("That contract is locked by company tier. Build reputation first.");return;}
+ if(!available.includes(type)){alert("That quick-start dispatch is locked by company tier. Build reputation first.");return;}
  if(!missionFlyableByOwned(type)){
-   alert("Your current fleet does not qualify for this contract type. Pick Random Available or buy a matching aircraft.");
+   alert("Your current fleet does not qualify for this quick-start dispatch type. Pick Random Available or buy a matching aircraft.");
    return;
  }
 
@@ -2339,7 +2332,7 @@ function generateJobBoard(){
 
  const available = flyableMissionTypes();
  if(!available.length){
-   alert("No flyable contracts match your current owned aircraft. Buy a matching aircraft or reset starter fleet.");
+   alert("No flyable quick-start dispatches match your current owned aircraft. Buy a matching aircraft or reset starter fleet.");
    return;
  }
 
@@ -2379,13 +2372,13 @@ function generateJobBoard(){
 
  currentMission=null;
  selectedAircraft=null;
- el("missionDisplay").innerHTML='<p class="small">Pick a job from the board, then choose an aircraft. The Dispatch Card will update.</p>';
+ el("missionDisplay").innerHTML='<p class="small">Pick a dispatch from the board, then choose an aircraft. The Dispatch Card will update.</p>';
  el("aircraftDisplay").innerHTML='<p class="small">Aircraft options appear after you create or select a dispatch.</p>';
- el("jobBoardDisplay").innerHTML=`<table><thead><tr><th>Contract</th><th>Route</th><th>Base</th><th></th></tr></thead><tbody>${jobs.map((j,i)=>`<tr data-job-row="${i}"><td><strong>${j.type}</strong><br><span class="small">${j.risk} · Tier ${j.tierMin}-${j.tierMax}</span></td><td>${j.dep} → ${j.dest}<br><span class="small">${j.region} · ${j.dist} NM</span></td><td><strong>${money(j.base)}</strong></td><td><button onclick="selectJobFromBoard(${i});highlightJobRow(this);">Pick</button></td></tr>`).join("")}</tbody></table>`;
+ el("jobBoardDisplay").innerHTML=`<table><thead><tr><th>Dispatch</th><th>Route</th><th>Base</th><th></th></tr></thead><tbody>${jobs.map((j,i)=>`<tr data-job-row="${i}"><td><strong>${j.type}</strong><br><span class="small">${j.risk} · Tier ${j.tierMin}-${j.tierMax}</span></td><td>${j.dep} → ${j.dest}<br><span class="small">${j.region} · ${j.dist} NM</span></td><td><strong>${money(j.base)}</strong></td><td><button onclick="selectJobFromBoard(${i});highlightJobRow(this);">Pick</button></td></tr>`).join("")}</tbody></table>`;
  window.currentJobBoard=jobs;
  updateUIState();
  toggleSection("jobBoardPanel", true);
- setStatus("5 unique jobs generated.");
+ setStatus("5 quick-start dispatches generated.");
  const board=el("jobBoardPanel");
  if(board) board.scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -2400,7 +2393,7 @@ function displayMission(){
  let m=currentMission;
  const presetBadge=m.custom&&!isFreeformPreset(m.preset)?`<span class="badge gold">${escapeHtml(m.preset)}</span>`:"";
  const flavor=m.custom&&m.flavor?`<br><strong>Operation flavor:</strong> ${escapeHtml(m.flavor)}`:"";
- el("missionDisplay").innerHTML=`<h3 class="mission-title">${m.type}</h3><div class="badges">${presetBadge}<span class="badge gold">${m.region}</span><span class="badge">${m.dep} → ${m.dest}</span><span class="badge red">Operational Risk: ${m.risk}</span><span class="badge green">${m.dist} NM</span><span class="badge blue">Tier ${m.tierMin}-${m.tierMax}</span>${(m.dep===career.homeBase||m.dest===career.homeBase)?'<span class="badge green">Home Base Bonus</span>':''}</div><div class="mission-box"><strong>Job:</strong> ${m.custom ? "Fly " + m.cargo : "Move " + m.cargo} from <strong>${m.dep}</strong> to <strong>${m.dest}</strong>.${flavor}<br><strong>Free Flight setup:</strong> Set route in MSFS Free Flight, pick an owned aircraft, fly it, apply bonuses/penalties, then log it.</div><p class="small">Dispatch value before aircraft choice, costs, and bonuses: <strong>${money(m.base)}</strong>. Remote/bush jobs may carry higher fuel cost. If your fleet is not already at the departure airport, a deadhead relocation cost applies.</p><div class="timerbox"><strong>Target Time / EFB Timer:</strong><br><span class="timerbig" id="efbTimerTarget">Pick an aircraft</span><br><span class="small" id="efbTimerNote">Target Time is based on route distance and selected aircraft cruise speed.</span></div>`;
+ el("missionDisplay").innerHTML=`<h3 class="mission-title">${m.type}</h3><div class="badges">${presetBadge}<span class="badge gold">${m.region}</span><span class="badge">${m.dep} → ${m.dest}</span><span class="badge red">Operational Risk: ${m.risk}</span><span class="badge green">${m.dist} NM</span><span class="badge blue">Tier ${m.tierMin}-${m.tierMax}</span>${(m.dep===career.homeBase||m.dest===career.homeBase)?'<span class="badge green">Home Base Bonus</span>':''}</div><div class="mission-box"><strong>Operation:</strong> ${m.custom ? "Fly " + m.cargo : "Move " + m.cargo} from <strong>${m.dep}</strong> to <strong>${m.dest}</strong>.${flavor}<br><strong>Free Flight setup:</strong> Set route in MSFS Free Flight, pick an owned aircraft, fly it, apply bonuses/penalties, then log it.</div><p class="small">Dispatch value before aircraft choice, costs, and bonuses: <strong>${money(m.base)}</strong>. Remote/bush jobs may carry higher fuel cost. If your fleet is not already at the departure airport, a deadhead relocation cost applies.</p><div class="timerbox"><strong>Target Time / EFB Timer:</strong><br><span class="timerbig" id="efbTimerTarget">Pick an aircraft</span><br><span class="small" id="efbTimerNote">Target Time is based on route distance and selected aircraft cruise speed.</span></div>`;
 }
 function ownedAircraftForMission(){
  if(currentMission && currentMission.custom){
@@ -2417,8 +2410,10 @@ document.querySelectorAll('input[name="aircraftPick"]').forEach(e=>e.addEventLis
   selectedAircraft=this.dataset.aircraft;
   if(currentMission) currentMission.targetOverrideMins=null;
   if(currentMission&&currentMission.custom){
-    currentMission.base=customFlightBase(currentMission.type,currentMission.dist,selectedAircraft);
-    currentMission.tags=customFlightTags(currentMission.type,selectedAircraft);
+    const economyType=(currentMission.preset==="Cargo" && (aircraft[selectedAircraft]?.tier||1)>=5)?"Heavy Cargo":(currentMission.economyType||currentMission.type);
+    currentMission.economyType=economyType;
+    currentMission.base=customFlightBase(economyType,currentMission.dist,selectedAircraft);
+    currentMission.tags=customFlightTags(economyType,selectedAircraft);
     currentMission.tierMax=aircraft[selectedAircraft]?.tier||currentMission.tierMax;
   }
   operationalGuidance="DISPATCH READY: Review route, aircraft, payout, then start timer before departure if desired.";
@@ -2455,7 +2450,7 @@ function penaltyTotal(){
 function grossPayout(){if(!currentMission)return 0;let mod=selectedAircraft?aircraft[selectedAircraft].mod:1;let homeBonus=(currentMission.dep===career.homeBase||currentMission.dest===career.homeBase)?.06:0;
  let passengerBonus=currentMission.tags&&currentMission.tags.includes("passenger")?.05:0;
  let specialBonus=currentMission.type==="Special Transport"?.50:0;
- let customLimiter=currentMission.custom?customPayoutLimiter(currentMission.type,selectedAircraft):1;
+ let customLimiter=currentMission.custom?customPayoutLimiter(currentMission.economyType||currentMission.type,selectedAircraft):1;
  return currentMission.base*mod*customLimiter*(1+bonusTotal()+homeBonus+passengerBonus+specialBonus)*(1-penaltyTotal());}
 function opCost(){
  if(!selectedAircraft)return 0;
@@ -2706,7 +2701,7 @@ function payLoan(){
 
 function clearDispatch(){
  hideCompleteConfirm();
- if((currentMission || (window.currentJobBoard&&window.currentJobBoard.length)) && !confirm("Clear the current dispatch planning state?\n\nThis will remove the active dispatch/job board without logging a flight or changing finances."))return;
+ if((currentMission || (window.currentJobBoard&&window.currentJobBoard.length)) && !confirm("Clear the current dispatch planning state?\n\nThis will remove the active dispatch or quick-start board without logging a flight or changing finances."))return;
  currentMission=null;
  selectedAircraft=null;
  window.currentJobBoard=null;
@@ -2714,7 +2709,7 @@ function clearDispatch(){
  resetOperationTimer();
  el("missionDisplay").innerHTML='<p class="small">Create an operation to begin.</p>';
  el("aircraftDisplay").innerHTML='<p class="small">Aircraft options appear after you create or select a dispatch.</p>';
- el("jobBoardDisplay").innerHTML='<p class="small">Generate a 5-job board when you want multiple choices.</p>';
+ el("jobBoardDisplay").innerHTML='<p class="small">Generate a quick-start board when you want multiple choices.</p>';
  updateDispatchCard();
  updateUIState();
  setStatus("Dispatch cleared.");
@@ -2931,7 +2926,7 @@ function renderCareer(){
    el("logDisplay").innerHTML='<p class="small">No flights logged yet. Completed operations will appear here with route, aircraft, payout, timer, and memo details.</p>';
  } else {
    el("logDisplay").innerHTML=`${notableFlightsHtml()}<div class="log-journal">${career.log.map((l,index)=>{
-     const preset=!isFreeformPreset(l.preset)?`Preset: ${escapeHtml(l.preset)} · `:"";
+      const preset=!isFreeformPreset(l.preset)?`Operation Type: ${escapeHtml(l.preset)} · `:"";
      const time=l.actualTime?`Operation Time: ${escapeHtml(l.actualTime)} · `:"";
      const event=l.event?`<br>${escapeHtml(l.event)}`:"";
      const memo=l.memo?`<div class="log-memo"><strong>Memo:</strong> ${escapeHtml(l.memo)}</div>`:"";
@@ -2977,7 +2972,7 @@ function resetCareer(){
    resetOperationTimer();
    el("missionDisplay").innerHTML='<p class="small">Create an operation to begin.</p>';
    el("aircraftDisplay").innerHTML='<p class="small">Aircraft options appear after you create or select a dispatch.</p>';
-   el("jobBoardDisplay").innerHTML='<p class="small">Generate a 5-job board when you want multiple choices.</p>';
+    el("jobBoardDisplay").innerHTML='<p class="small">Generate a quick-start board when you want multiple choices.</p>';
    updateDispatchCard();
    updateUIState();
  }
@@ -3014,7 +3009,7 @@ function flightLogText(){
    "Penalty: "+l.penalty,
    "Net: "+money(l.net),
    l.event ? "Event: "+l.event : "",
-   !isFreeformPreset(l.preset) ? "Preset: "+l.preset : "",
+    !isFreeformPreset(l.preset) ? "Operation Type: "+l.preset : "",
    l.actualTime ? "Operation Time: "+l.actualTime : "",
    l.memo ? "Memo: "+l.memo : "",
    "Date: "+l.date

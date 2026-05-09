@@ -74,6 +74,10 @@ Pure honor system.
 
 Build the exact flight or operation you want to fly, then let OAS wrap it in lightweight dispatch structure, timing, payouts, and logging.
 
+**Operation Presets define the purpose of the flight, not the rules of the flight.**
+
+They provide dispatch intent and operational flavor while keeping the route, aircraft, timing, risk, and final decisions fully pilot-controlled.
+
 It's still 100% honor-based. You are Pilot in Command. Fly clean, earn it. Fly sloppy, own it.
 
 OAS also includes a lightweight built-in **Operation Timer** designed for tablet/EFB-style flying. Start the timer when your operation begins, pause it anytime, and complete the operation manually when finished. The target can be manually adjusted for multi-hop flights, fuel stops, or RON logistics. The timer is fully honor-system based and designed for immersion, not enforcement.
@@ -96,10 +100,12 @@ This does **not** limit OAS to the Pacific Northwest. **Pilot's Choice remains w
 
 - Choose any route
 - Pick your aircraft
-- Set operation type and vibe
+- Set operation intent and risk
 - Add optional notes / memo
 
 OAS turns it into a proper dispatch card with EFB timer target, estimated payout, and logging.
+
+Current Operation Types: Airshow / Demo, Bush / STOL, Cargo, Ferry / Positioning, Firefighting, Medevac, Oddball / Custom Ops, Scenic / Tourism, Search and Rescue, Skydiving, Training / Checkride, and VIP Charter.
 
 **Quick Contract** and **5-Job Board** are still available as "surprise me" options lower down.
 
@@ -151,7 +157,7 @@ The Aircraft Market is intentionally small and representative. Pick the closest 
 
 - **Pilot's Choice** promoted as the main flow
 - Expanded manual / sandbox operation creation
-- Global Operation Presets for lightweight role/vibe selection
+- Global Operation Presets for lightweight dispatch intent, not scripted rules
 - Grouped MSFS aircraft selector with session-only Manual Entry override
 - User-adjustable EFB target timing for multi-hop, fuel stop, and RON logistics
 - **Working pilot-controlled Operation Timer** with start, pause, resume, reset, completion, and Flight Log time capture
