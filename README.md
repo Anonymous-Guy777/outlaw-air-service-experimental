@@ -34,6 +34,14 @@ A **free**, lightweight, browser-based **Operations Sandbox** that gives your fr
   </a>
 </p>
 
+<p align="center">
+  <img src="images/efb_dispatch_card_portrait.png" alt="OAS EFB Dispatch Card portrait tablet view with Available Aircraft context" width="720" />
+</p>
+
+<p align="center">
+  <em>Portrait tablet view with the active dispatch card and available aircraft context in reach.</em>
+</p>
+
 ---
 
 ## Index
@@ -61,6 +69,8 @@ A **free**, lightweight, browser-based **Operations Sandbox** that gives your fr
 - PS5 & Xbox (via phone/tablet EFB)
 - Any modern browser
 
+Works well in both portrait and landscape on tablets/iPads depending on workflow preference.
+
 **No mods. No plugins. No AI. No tracking.**
 
 Pure honor system.
@@ -81,7 +91,7 @@ They provide dispatch intent and operational flavor while keeping the route, air
 
 It's still 100% honor-based. You are Pilot in Command. Fly clean, earn it. Fly sloppy, own it.
 
-OAS also includes a lightweight **Planned Operation Duration** editor for tablet/EFB-style dispatch planning. Set the planned duration in days, hours, and minutes when a dispatch needs multi-hop timing, fuel stops, RON logistics, or a longer operational window. This planned duration is separate from the **Live Elapsed Timer**, which remains optional, pilot-controlled, and honor-system based. Start, pause, resume, or reset the live timer when it helps immersion; OAS does not enforce timing or track the simulator.
+OAS also includes a lightweight **Planned Operation Duration** editor for tablet/EFB-style dispatch planning. Set the planned duration in days, hours, and minutes when a dispatch needs multi-hop timing or a longer planned flight window. This planned duration is separate from the **Live Elapsed Timer**. The built-in timer remains optional, honor-system based, and there when it helps immersion. Start, pause, resume, or reset it whenever your flight or real life needs room; OAS does not enforce timing or track the simulator.
 
 ---
 
@@ -174,8 +184,8 @@ The Aircraft Market is intentionally small and representative. Pick the closest 
 - Expanded manual / sandbox operation creation
 - Global Operation Presets for lightweight dispatch intent, not scripted rules
 - Grouped MSFS aircraft selector with session-only Manual Entry override
-- User-adjustable Planned Operation Duration in days, hours, and minutes for multi-hop, fuel stop, and RON logistics
-- **Optional Live Elapsed Timer** with start, pause, resume, reset, completion, and Flight Log time capture
+- User-adjustable Planned Operation Duration in days, hours, and minutes for multi-hop operations and longer planned flight windows
+- **Optional built-in Live Elapsed Timer** with start, pause, resume, reset, completion, and Flight Log time capture
 - Flight Memo notes, Notable Flights, and Print/Copy Log tools
 - Atmospheric dispatch flavor lines and pilot-facing aircraft notes
 - No external aircraft/airport data pages required

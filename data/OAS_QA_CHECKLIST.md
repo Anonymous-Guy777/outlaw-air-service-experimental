@@ -10,10 +10,10 @@ Use this checklist for regression passes after UI, economy, timer, preset, save,
 
 - [ ] Fresh load works in Night Ops and Day Mode with no script errors.
 - [ ] Pilot's Choice creates a dispatch using one of the 12 intent-based Operation Types.
-- [ ] Operation Types act as purpose/flavor only; route, aircraft, risk, timer target, and final closeout remain pilot-controlled.
+- [ ] Operation Types act as purpose/flavor only; route, aircraft, risk, planned operation duration, and final closeout remain pilot-controlled.
 - [ ] EFB Dispatch Card shows the selected Operation Type and dispatch intent clearly.
 - [ ] Aircraft selection supports grouped MSFS roster choices plus Manual Entry / Custom Mod.
-- [ ] Manual Target Timer adjustment works for multi-hop, fuel stop, and RON-style operations.
+- [ ] Planned Operation Duration adjustment works for multi-hop operations and longer planned flight windows.
 - [ ] Start, Pause/Resume, Reset Timer, and Cancel Dispatch work without changing payout/logging rules.
 - [ ] Complete Operation remains only in Company Ledger and writes Flight Memo to the Flight Log.
 - [ ] Abort / Fail and Cancel Dispatch still have clear, different meanings.
@@ -96,7 +96,7 @@ Expected result: a new user can understand where to start without reading extern
 - [ ] Confirm route, aircraft, operation type, risk, and distance remain editable before creation.
 - [ ] Confirm a created Pilot's Choice operation auto-selects the chosen aircraft.
 - [ ] Confirm aircraft can be changed after creation.
-- [ ] Confirm payout, timer target, and aircraft row highlight update after aircraft changes.
+- [ ] Confirm payout, planned operation duration, and aircraft row highlight update after aircraft changes.
 
 Expected result: Pilot's Choice feels flexible, user-controlled, and not restrictive.
 
@@ -126,7 +126,7 @@ Expected result: job board is optional quick-start content, not the main app ide
 
 - [ ] No active operation: Dispatch Card shows EFB Dispatch Hub / Awaiting Dispatch Orders.
 - [ ] Operation created with no aircraft: Dispatch Card says Pick aircraft.
-- [ ] Aircraft assigned: Dispatch Card shows route, aircraft, distance, risk/cargo, payout, timer target, summary.
+- [ ] Aircraft assigned: Dispatch Card shows route, aircraft, distance, risk/cargo, payout, planned operation duration, summary.
 - [ ] Pilot's Choice creation guidance says Operation Created and points to Dispatch Card review.
 - [ ] EFB Dispatch Card uses Paper EFB data cards instead of dark data panels.
 - [ ] EFB Dispatch Card does not contain a Complete Operation button.
@@ -146,8 +146,8 @@ Expected result: the card always answers "what happens next?"
 - [ ] 5-Job Board selected jobs only show compatible owned aircraft.
 - [ ] Aircraft note text is pilot-facing and never exposes implementation/source-file wording.
 - [ ] Aircraft row highlight follows the selected aircraft.
-- [ ] Timer target updates when aircraft changes.
-- [ ] Manual target timer adjustment updates the EFB target without changing operation outcome logic.
+- [ ] Planned operation duration updates when aircraft changes.
+- [ ] Manual planned-duration adjustment updates the EFB duration without changing operation outcome logic.
 - [ ] Payout updates when aircraft changes.
 - [ ] Operation Penalties expands automatically after aircraft selection.
 - [ ] Bonus Rules expands automatically after aircraft selection.
@@ -265,7 +265,7 @@ Expected result: Operation Types define purpose and payout scale without enforci
 
 - [ ] C-17 on Cargo produces a positive net after operating costs.
 - [ ] C-17 on inappropriate light/scenic operations either remains low reward or clearly reflects high operating cost.
-- [ ] Heavy aircraft timer target is reasonable for distance and cruise speed.
+- [ ] Heavy aircraft planned operation duration is reasonable for distance and cruise speed.
 - [ ] Heavy aircraft costs display correctly in Cost / Penalty.
 - [ ] Heavy aircraft Flight Log entries preserve gross/cost/net clearly.
 
