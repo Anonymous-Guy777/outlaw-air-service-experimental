@@ -759,19 +759,28 @@ body.night .start-card .mission-box{
   display:block;
 }
 .timer-target-edit{
-  display:flex;
-  align-items:center;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(74px,1fr));
   gap:8px;
   margin-top:8px;
 }
+.timer-target-edit label{
+  margin:0;
+  font-size:.76rem;
+  color:var(--efb-muted);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
 .timer-target-edit input{
-  max-width:130px;
+  margin-top:4px;
   font-weight:900;
   color:var(--blue);
 }
-.timer-target-edit span{
+.timer-target-preview{
+  display:block;
+  margin-top:7px;
   font-weight:bold;
-  color:var(--efb-muted);
+  color:var(--blue);
 }
 .preset-flavor-field{
   grid-column:span 2;
@@ -1299,7 +1308,7 @@ body.night .aircraft-row-selected td{
         <p class="small hint">Session-only override for add-ons, mods, or aircraft not listed above.</p>
       </div>
       <button id="createCustomFlightBtn" type="button">Create Operation</button>
-      <p class="small hint">Manual Target adjustment is permitted for Multi-Hop Missions, Fuel Stops, and RON (Remain Over Night) logistics.</p>
+      <p class="small hint">Manual planned-duration adjustment is permitted for Multi-Hop Operations, Fuel Stops, and RON (Remain Over Night) logistics. Note: This defines the total planned flight time, not the live elapsed time.</p>
     </div>
   </details>
 
@@ -1341,12 +1350,12 @@ body.night .aircraft-row-selected td{
   <div class="office-grid">
     <div>
       <section class="card is-hidden" id="scorePanel"><h2>⚠️ Operation Penalties</h2><div class="body checklist">
-  <label><input type="checkbox" id="penaltyLate"> Late arrival / missed EFB timer target <strong style="margin-left:auto;">-10%</strong></label>
+  <label><input type="checkbox" id="penaltyLate"> Late arrival / missed planned duration <strong style="margin-left:auto;">-10%</strong></label>
   <label><input type="checkbox" id="penaltyHardLanding"> Hard landing / rough touchdown <strong style="margin-left:auto;">-15%</strong></label>
   <label><input type="checkbox" id="penaltyDamage"> Aircraft damage or serious mistake <strong style="margin-left:auto;">-25%</strong></label>
   <label><input type="checkbox" id="penaltyWrongAirport"> Wrong runway, wrong ramp, or bad delivery location <strong style="margin-left:auto;">-20%</strong></label>
   <label><input type="checkbox" id="penaltyFuel"> Fuel planning mistake / emergency fuel situation <strong style="margin-left:auto;">-10%</strong></label>
-  <div class="notice">Use the target time and optional OAS Operation Timer as pilot tools. Apply penalties honestly. Late penalty starts after a 5-minute grace period. Abort/Fail is for true failures.</div>
+  <div class="notice">Use the planned operation duration and optional OAS Operation Timer as pilot tools. Apply penalties honestly. Late penalty starts after a 5-minute grace period. Abort/Fail is for true failures.</div>
 </div></section>
       <details class="card secondary-panel" id="bonusPanel"><summary><h2>🏆 Bonus Rules</h2></summary><div class="body">
   <label><input type="checkbox" id="bonusNight"> Night operation bonus <strong style="float:right;">+10%</strong></label>
@@ -1914,15 +1923,15 @@ function operationTargetMs(){
 }
 function operationTimerPace(){
  if(!currentMission) return "No active operation.";
- if(!selectedAircraft) return "Pick aircraft to compare against the target.";
+ if(!selectedAircraft) return "Pick aircraft to compare against the planned duration.";
  if(!operationTimer.running && operationTimerElapsedMs()===0) return "Ready when you are.";
  const elapsed=operationTimerElapsedMs();
  const target=operationTargetMs();
  if(!target) return "Timer running on pilot discretion.";
  const diff=elapsed-target;
- if(diff <= -10*60000) return "Ahead of target.";
+ if(diff <= -10*60000) return "Ahead of planned duration.";
  if(diff <= 5*60000) return "On pace.";
- return "Over target.";
+ return "Over planned duration.";
 }
 function renderOperationTimerDisplay(){
  const live=el("operationTimerLive");
@@ -1998,20 +2007,52 @@ function toggleOperationTimer(){
    resumeOperationTimer();
  }
 }
-function setTimerTargetOverride(value){
+function durationPartsFromMinutes(mins){
+ const total=Math.max(0,parseInt(mins,10)||0);
+ return {days:Math.floor(total/1440),hours:Math.floor((total%1440)/60),minutes:total%60};
+}
+function durationMinutesFromInputs(){
+ const days=Math.max(0,parseInt(el("timerTargetDays")?.value,10)||0);
+ const hours=Math.min(23,Math.max(0,parseInt(el("timerTargetHours")?.value,10)||0));
+ const minutes=Math.min(59,Math.max(0,parseInt(el("timerTargetMinutes")?.value,10)||0));
+ return Math.max(1,Math.min(43200,(days*1440)+(hours*60)+minutes));
+}
+function durationEditorHtml(totalMinutes){
+ const p=durationPartsFromMinutes(totalMinutes);
+ return `<div class="timer-target-edit" aria-label="Estimated operation duration editor">
+       <label for="timerTargetDays">Days<input id="timerTargetDays" type="number" min="0" max="30" value="${p.days}" inputmode="numeric" oninput="setTimerTargetDurationOverride()" onchange="setTimerTargetDurationOverride()"></label>
+       <label for="timerTargetHours">Hours<input id="timerTargetHours" type="number" min="0" max="23" value="${p.hours}" inputmode="numeric" oninput="setTimerTargetDurationOverride()" onchange="setTimerTargetDurationOverride()"></label>
+       <label for="timerTargetMinutes">Minutes<input id="timerTargetMinutes" type="number" min="0" max="59" value="${p.minutes}" inputmode="numeric" oninput="setTimerTargetDurationOverride()" onchange="setTimerTargetDurationOverride()"></label>
+     </div><span class="small timer-target-preview" id="timerTargetDurationPreview">${formatDurationPreview(totalMinutes)}</span>`;
+}
+function formatDurationPreview(mins){
+ if(!mins) return "Pick aircraft";
+ const p=durationPartsFromMinutes(mins);
+ const parts=[];
+ if(p.days) parts.push(`${p.days} ${p.days===1?"day":"days"}`);
+ if(p.hours) parts.push(`${p.hours} ${p.hours===1?"hour":"hours"}`);
+ if(p.minutes) parts.push(`${p.minutes} ${p.minutes===1?"minute":"minutes"}`);
+ return `${parts.length?parts.join(", "):"0 minutes"} total planned flight time (${mins} total minutes)`;
+}
+function setTimerTargetDurationOverride(){
  if(!currentMission || !selectedAircraft) return;
- const mins=Math.max(1,Math.min(1440,parseInt(value,10)||0));
- if(!mins) return;
+ const mins=durationMinutesFromInputs();
  currentMission.targetOverrideMins=mins;
- updateDispatchCard();
- setStatus("Manual target timer set to "+formatMinutes(mins)+".");
+ currentMission.total_minutes=mins;
+ const preview=el("timerTargetDurationPreview");
+ if(preview) preview.textContent=formatDurationPreview(mins);
+ const dispatchTimer=el("dispatchTimerTarget");
+ if(dispatchTimer) dispatchTimer.textContent=formatMinutes(mins);
+ updateTimerTarget();
+ renderOperationTimerDisplay();
+ setStatus("Planned operation duration set to "+formatMinutes(mins)+".");
 }
 function operationTimerHtml(timer,timerMins){
  const elapsed=formatClock(operationTimerElapsedMs());
  return `<div class="operation-timer-panel">
      <div class="dispatch-title">LIVE OPERATION TIMER</div>
      <div class="operation-timer-readout">
-       <div><strong>Estimated Target</strong>${selectedAircraft?`<div class="timer-target-edit"><input id="timerTargetOverrideInput" type="number" min="1" max="1440" value="${timerMins}" onchange="setTimerTargetOverride(this.value)" onblur="setTimerTargetOverride(this.value)"><span>min</span></div><span class="small">${timer}</span>`:`<span class="operation-time">${timer}</span>`}</div>
+       <div><strong>Estimated Operation Duration</strong>${selectedAircraft?durationEditorHtml(timerMins):`<span class="operation-time">${timer}</span>`}</div>
        <div><strong>Live Timer</strong><span class="operation-time" id="operationTimerLive">${elapsed}</span></div>
      </div>
      <p class="small" id="operationTimerPace">${operationTimerPace()}</p>
@@ -2022,7 +2063,7 @@ function operationTimerHtml(timer,timerMins){
        <button class="timer-control timer-cancel" id="operationTimerCancel" type="button" onclick="cancelDispatch()">Cancel Dispatch</button>
      </div>
      <p class="small">Optional and pilot-controlled. Pause anytime for sim pauses, crashes, breaks, or relaxed operations.</p>
-     <p class="small">Manual Target adjustment is permitted for Multi-Hop Missions, Fuel Stops, and RON (Remain Over Night) logistics.</p>
+     <p class="small">Manual planned-duration adjustment is permitted for Multi-Hop Operations, Fuel Stops, and RON (Remain Over Night) logistics. Note: This defines the total planned flight time, not the live elapsed time.</p>
    </div>`;
 }
 function escapeHtml(s){
@@ -2400,7 +2441,7 @@ function displayMission(){
  let m=currentMission;
  const presetBadge=m.custom&&!isFreeformPreset(m.preset)?`<span class="badge gold">${escapeHtml(m.preset)}</span>`:"";
  const flavor=m.custom&&m.flavor?`<br><strong>Operation flavor:</strong> ${escapeHtml(m.flavor)}`:"";
- el("missionDisplay").innerHTML=`<h3 class="mission-title">${m.type}</h3><div class="badges">${presetBadge}<span class="badge gold">${m.region}</span><span class="badge">${m.dep} → ${m.dest}</span><span class="badge red">Operational Risk: ${m.risk}</span><span class="badge green">${m.dist} NM</span><span class="badge blue">Tier ${m.tierMin}-${m.tierMax}</span>${(m.dep===career.homeBase||m.dest===career.homeBase)?'<span class="badge green">Home Base Bonus</span>':''}</div><div class="mission-box"><strong>Operation:</strong> ${m.custom ? "Fly " + m.cargo : "Move " + m.cargo} from <strong>${m.dep}</strong> to <strong>${m.dest}</strong>.${flavor}<br><strong>Free Flight setup:</strong> Set route in MSFS Free Flight, pick an owned aircraft, fly it, apply bonuses/penalties, then log it.</div><p class="small">Dispatch value before aircraft choice, costs, and bonuses: <strong>${money(m.base)}</strong>. Remote/bush jobs may carry higher fuel cost. If your fleet is not already at the departure airport, a deadhead relocation cost applies.</p><div class="timerbox"><strong>Target Time / EFB Timer:</strong><br><span class="timerbig" id="efbTimerTarget">Pick an aircraft</span><br><span class="small" id="efbTimerNote">Target Time is based on route distance and selected aircraft cruise speed.</span></div>`;
+ el("missionDisplay").innerHTML=`<h3 class="mission-title">${m.type}</h3><div class="badges">${presetBadge}<span class="badge gold">${m.region}</span><span class="badge">${m.dep} → ${m.dest}</span><span class="badge red">Operational Risk: ${m.risk}</span><span class="badge green">${m.dist} NM</span><span class="badge blue">Tier ${m.tierMin}-${m.tierMax}</span>${(m.dep===career.homeBase||m.dest===career.homeBase)?'<span class="badge green">Home Base Bonus</span>':''}</div><div class="mission-box"><strong>Operation:</strong> ${m.custom ? "Fly " + m.cargo : "Move " + m.cargo} from <strong>${m.dep}</strong> to <strong>${m.dest}</strong>.${flavor}<br><strong>Free Flight setup:</strong> Set route in MSFS Free Flight, pick an owned aircraft, fly it, apply bonuses/penalties, then log it.</div><p class="small">Dispatch value before aircraft choice, costs, and bonuses: <strong>${money(m.base)}</strong>. Remote/bush jobs may carry higher fuel cost. If your fleet is not already at the departure airport, a deadhead relocation cost applies.</p><div class="timerbox"><strong>Estimated Operation Duration:</strong><br><span class="timerbig" id="efbTimerTarget">Pick an aircraft</span><br><span class="small" id="efbTimerNote">Planned operation time is based on route distance and selected aircraft cruise speed.</span></div>`;
 }
 function ownedAircraftForMission(){
  if(currentMission && currentMission.custom){
@@ -2415,7 +2456,7 @@ function displayAircraft(){
  el("aircraftDisplay").innerHTML=`<table><thead><tr><th>Pick</th><th>Aircraft</th><th>Notes</th><th>Cost</th></tr></thead><tbody>${choices.map(a=>`<tr data-aircraft-row="${a}"><td><input type="radio" name="aircraftPick" data-aircraft="${a}"></td><td><strong>${a}</strong><br><span class="small">Tier ${aircraft[a].tier} · ${aircraft[a].cls}</span></td><td>${aircraft[a].note}<br><span class="small">Cruise: ${aircraft[a].cruise} kt</span></td><td><strong>${Math.round(aircraft[a].mod*100)}%</strong><br><span class="small">Op ${money(aircraft[a].op)}<br>EFB ${formatMinutes(calcTimerMinutesForAircraft(a))}</span></td></tr>`).join("")}</tbody></table><div class="mission-box">Estimated gross: <span class="money" id="payout">${money(currentMission.base)}</span></div>`;
 document.querySelectorAll('input[name="aircraftPick"]').forEach(e=>e.addEventListener("change",function(){
   selectedAircraft=this.dataset.aircraft;
-  if(currentMission) currentMission.targetOverrideMins=null;
+  if(currentMission){currentMission.targetOverrideMins=null; currentMission.total_minutes=null;}
   if(currentMission&&currentMission.custom){
     const economyType=(currentMission.preset==="Cargo" && (aircraft[selectedAircraft]?.tier||1)>=5)?"Heavy Cargo":(currentMission.economyType||currentMission.type);
     currentMission.economyType=economyType;
@@ -2433,9 +2474,9 @@ document.querySelectorAll('input[name="aircraftPick"]').forEach(e=>e.addEventLis
  }));
 }
 function calcTimerMinutesForAircraft(n){if(!currentMission||!n)return 0;let a=aircraft[n];let fm=currentMission.dist/a.cruise*60;let b=currentMission.risk.includes("Very")?10:15;if(currentMission.tierMin>=4)b=25;if(currentMission.tierMin>=5)b=45;return Math.ceil((fm+b)/5)*5;}
-function timerTargetMinutes(n){return currentMission?.targetOverrideMins || calcTimerMinutesForAircraft(n);}
+function timerTargetMinutes(n){return currentMission?.total_minutes || currentMission?.targetOverrideMins || calcTimerMinutesForAircraft(n);}
 function formatMinutes(mins){if(!mins)return"Pick aircraft";let h=Math.floor(mins/60),m=mins%60;return h?`${h}:${String(m).padStart(2,"0")}`:`${m} min`;}
-function updateTimerTarget(){let t=el("efbTimerTarget"),n=el("efbTimerNote");if(!t||!n)return;if(!selectedAircraft){t.textContent="Pick an aircraft";n.textContent="Target Time is based on route distance and selected aircraft cruise speed.";return;}let mins=timerTargetMinutes(selectedAircraft);t.textContent=formatMinutes(mins);n.textContent="Manual Target adjustment is permitted for Multi-Hop Missions, Fuel Stops, and RON logistics. 5-minute grace period applies when you choose to score timing.";}
+function updateTimerTarget(){let t=el("efbTimerTarget"),n=el("efbTimerNote");if(!t||!n)return;if(!selectedAircraft){t.textContent="Pick an aircraft";n.textContent="Planned operation time is based on route distance and selected aircraft cruise speed.";return;}let mins=timerTargetMinutes(selectedAircraft);t.textContent=formatMinutes(mins);n.textContent="Manual planned-duration adjustment is permitted for Multi-Hop Operations, Fuel Stops, and RON logistics. Note: This defines the total planned flight time, not the live elapsed time. 5-minute grace period applies when you choose to score timing.";}
 function bonusTotal(){
  let b=0;
  if(el("bonusNight").checked)b+=.10;
@@ -2538,9 +2579,9 @@ function updateDispatchCard(){
  let dh=selectedAircraft?money(deadheadCost()):"$0";
  let netClass=selectedAircraft && netPayout()<=0 ? "net-negative" : "";
  d.innerHTML=`<div class="dispatch-card">
-   <div class="dispatch-title">EFB TIMER TARGET</div>
-   <div class="dispatch-timer">${timer}</div>
-   <div class="small">Use this as the target for your sim/EFB timing. The built-in OAS timer below is optional and honor-system based.</div>
+   <div class="dispatch-title">ESTIMATED OPERATION DURATION</div>
+   <div class="dispatch-timer" id="dispatchTimerTarget">${timer}</div>
+   <div class="small">Use this as the total planned flight time for dispatch scoring. The built-in OAS live elapsed timer below is optional and honor-system based.</div>
    ${operationGuidanceHtml(operationGuidanceMessage())}
    ${opsFlowHtml()}
    ${operationAtmosphereHtml(currentMission)}
@@ -3130,7 +3171,7 @@ window.addEventListener("error",function(e){try{setStatus("Script error: "+e.mes
     Pick from your fleet (highlighted row = active aircraft)<br><br>
 
     <strong>4. Start Timing</strong><br>
-    Use the target shown in the Dispatch Card. Start the optional OAS Operation Timer before takeoff, pause/resume anytime, or fly relaxed with no timer<br><br>
+    Use the planned operation duration shown in the Dispatch Card. Start the optional OAS Operation Timer before takeoff, pause/resume anytime, or fly relaxed with no timer<br><br>
 
     <strong>5. Fly the Operation</strong><br>
     Use Free Flight — follow the route and complete the objective<br><br>
