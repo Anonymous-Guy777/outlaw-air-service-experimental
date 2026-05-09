@@ -1293,7 +1293,6 @@ body.night .aircraft-row-selected td{
         <div><label for="customTo">To ICAO</label><input id="customTo" placeholder="2S7" maxlength="4" style="text-transform:uppercase;"></div>
         <div><label for="customDistance">Distance (NM)</label><input id="customDistance" type="number" min="1" max="6000" value="30"><button id="estimateCustomDistanceBtn" class="secondary" type="button" style="margin-top:6px">Estimate (if known)</button></div>
       </div>
-      <p class="small hint" id="customFlightHint"><strong>Tip:</strong> Some smaller airports use local identifiers like S03 or 3S8. If a code is unknown, verify it on the Flight Simulator World Map while setting your Departure and Arrival. That screen also provides accurate mileage for Distance (NM).</p>
       <div class="row">
         <div><label for="customAircraft">Aircraft</label><select id="customAircraft"></select></div>
         <div><label for="customRisk">Risk</label><select id="customRisk">
@@ -1569,13 +1568,9 @@ function estimateDistanceNM(from,to){
 function updateCustomDistanceEstimate(){
  const from=(el("customFrom")?.value||"").trim().toUpperCase();
  const to=(el("customTo")?.value||"").trim().toUpperCase();
- const hint=el("customFlightHint");
  const dist=estimateDistanceNM(from,to);
  if(dist){
    if(el("customDistance")) el("customDistance").value=dist;
-   if(hint) hint.textContent="Estimated distance: "+dist+" NM. You can override manually if the sim route differs.";
- }else{
-   if(hint) hint.textContent="Tip: Some smaller airports use local identifiers like S03 or 3S8. Verify unknown codes on the Flight Simulator World Map, then use its mileage for Distance (NM).";
  }
 }
 
