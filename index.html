@@ -2029,6 +2029,15 @@ function formatDurationPreview(mins){
  if(p.minutes) parts.push(`${p.minutes} ${p.minutes===1?"minute":"minutes"}`);
  return `${parts.length?parts.join(", "):"0 minutes"} total planned flight time (${mins} total minutes)`;
 }
+function formatPlannedDurationDisplay(mins){
+ if(!mins) return "Pick aircraft";
+ const p=durationPartsFromMinutes(mins);
+ const parts=[];
+ if(p.days) parts.push(`${p.days} ${p.days===1?"day":"days"}`);
+ if(p.hours) parts.push(`${p.hours} hr`);
+ if(p.minutes) parts.push(`${p.minutes} min`);
+ return parts.length ? parts.join(" ") : "0 min";
+}
 function setTimerTargetDurationOverride(){
  if(!currentMission || !selectedAircraft) return;
  const mins=durationMinutesFromInputs();
@@ -2037,10 +2046,10 @@ function setTimerTargetDurationOverride(){
  const preview=el("timerTargetDurationPreview");
  if(preview) preview.textContent=formatDurationPreview(mins);
  const dispatchTimer=el("dispatchTimerTarget");
- if(dispatchTimer) dispatchTimer.textContent=formatMinutes(mins);
+ if(dispatchTimer) dispatchTimer.textContent=formatPlannedDurationDisplay(mins);
  updateTimerTarget();
  renderOperationTimerDisplay();
- setStatus("Planned operation duration set to "+formatMinutes(mins)+".");
+ setStatus("Planned operation duration set to "+formatPlannedDurationDisplay(mins)+".");
 }
 function operationTimerHtml(timer,timerMins){
  const elapsed=formatClock(operationTimerElapsedMs());
@@ -2471,7 +2480,7 @@ document.querySelectorAll('input[name="aircraftPick"]').forEach(e=>e.addEventLis
 function calcTimerMinutesForAircraft(n){if(!currentMission||!n)return 0;let a=aircraft[n];let fm=currentMission.dist/a.cruise*60;let b=currentMission.risk.includes("Very")?10:15;if(currentMission.tierMin>=4)b=25;if(currentMission.tierMin>=5)b=45;return Math.ceil((fm+b)/5)*5;}
 function timerTargetMinutes(n){return currentMission?.total_minutes || currentMission?.targetOverrideMins || calcTimerMinutesForAircraft(n);}
 function formatMinutes(mins){if(!mins)return"Pick aircraft";let h=Math.floor(mins/60),m=mins%60;return h?`${h}:${String(m).padStart(2,"0")}`:`${m} min`;}
-function updateTimerTarget(){let t=el("efbTimerTarget"),n=el("efbTimerNote");if(!t||!n)return;if(!selectedAircraft){t.textContent="Pick an aircraft";n.textContent="Planned operation time is based on route distance and selected aircraft cruise speed.";return;}let mins=timerTargetMinutes(selectedAircraft);t.textContent=formatMinutes(mins);n.textContent="Manual planned-duration adjustment is permitted for Multi-Hop Operations, Fuel Stops, and RON logistics. Note: This defines the total planned flight time, not the live elapsed time. 5-minute grace period applies when you choose to score timing.";}
+function updateTimerTarget(){let t=el("efbTimerTarget"),n=el("efbTimerNote");if(!t||!n)return;if(!selectedAircraft){t.textContent="Pick an aircraft";n.textContent="Planned operation time is based on route distance and selected aircraft cruise speed.";return;}let mins=timerTargetMinutes(selectedAircraft);t.textContent=formatPlannedDurationDisplay(mins);n.textContent="Manual planned-duration adjustment is permitted for Multi-Hop Operations, Fuel Stops, and RON logistics. Note: This defines the total planned flight time, not the live elapsed time. 5-minute grace period applies when you choose to score timing.";}
 function bonusTotal(){
  let b=0;
  if(el("bonusNight").checked)b+=.10;
@@ -2566,7 +2575,7 @@ function updateDispatchCard(){
    return;
  }
  let timerMins=selectedAircraft?timerTargetMinutes(selectedAircraft):0;
- let timer=selectedAircraft?formatMinutes(timerMins):"Pick aircraft";
+ let timer=selectedAircraft?formatPlannedDurationDisplay(timerMins):"Pick aircraft";
  let ac=selectedAircraft||"Pick aircraft";
  let net=selectedAircraft?money(netPayout()):"Pick aircraft";
  let gross=selectedAircraft?money(grossPayout()):money(currentMission.base);
