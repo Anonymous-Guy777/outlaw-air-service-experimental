@@ -97,12 +97,14 @@ Expected result: the card always answers "what happens next?"
 
 ## Aircraft Assignment Logic
 
-- [ ] Pilot's Choice manual mode allows the full aircraft list.
+- [ ] Pilot's Choice aircraft selector is grouped by Planes, Helicopters, and Drones / Other.
+- [ ] Manual Entry / Custom Mod allows a session-only aircraft name.
 - [ ] Quick Contract only shows compatible owned aircraft.
 - [ ] 5-Job Board selected jobs only show compatible owned aircraft.
-- [ ] Aircraft note text is pilot-facing and never says "Loaded from aircraft.html."
+- [ ] Aircraft note text is pilot-facing and never exposes implementation/source-file wording.
 - [ ] Aircraft row highlight follows the selected aircraft.
 - [ ] Timer target updates when aircraft changes.
+- [ ] Manual target timer adjustment updates the EFB target without changing operation outcome logic.
 - [ ] Payout updates when aircraft changes.
 - [ ] Operation Penalties expands automatically after aircraft selection.
 - [ ] Bonus Rules expands automatically after aircraft selection.

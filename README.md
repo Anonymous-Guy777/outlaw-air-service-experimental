@@ -76,7 +76,7 @@ Build the exact flight or operation you want to fly, then let OAS wrap it in lig
 
 It's still 100% honor-based. You are Pilot in Command. Fly clean, earn it. Fly sloppy, own it.
 
-OAS also includes a lightweight built-in **Operation Timer** designed for tablet/EFB-style flying. Start the timer when your operation begins, pause it anytime, and complete the operation manually when finished. The timer is fully honor-system based and designed for immersion, not enforcement.
+OAS also includes a lightweight built-in **Operation Timer** designed for tablet/EFB-style flying. Start the timer when your operation begins, pause it anytime, and complete the operation manually when finished. The target can be manually adjusted for multi-hop flights, fuel stops, or RON logistics. The timer is fully honor-system based and designed for immersion, not enforcement.
 
 ---
 
@@ -150,10 +150,12 @@ These systems are intentionally lightweight and honor-system based. Their purpos
 - **Pilot's Choice** promoted as the main flow
 - Expanded manual / sandbox operation creation
 - Global Operation Presets for lightweight role/vibe selection
+- Grouped MSFS aircraft selector with session-only Manual Entry override
+- User-adjustable EFB target timing for multi-hop, fuel stop, and RON logistics
 - **Working pilot-controlled Operation Timer** with start, pause, resume, reset, completion, and Flight Log time capture
 - Flight Memo notes, Notable Flights, and Print/Copy Log tools
 - Atmospheric dispatch flavor lines and pilot-facing aircraft notes
-- Modular `aircraft.html` + `airports.html` for easy community editing
+- No external aircraft/airport data pages required
 - PNW/Oregon regional DNA clarified while preserving worldwide Pilot's Choice freedom
 - Updated metallic gold/navy branding
 - Stronger Operations Sandbox direction
