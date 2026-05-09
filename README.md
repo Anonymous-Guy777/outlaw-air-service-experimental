@@ -43,6 +43,7 @@ A **free**, lightweight, browser-based **Operations Sandbox** that gives your fr
 - [Primary Flow: Pilot's Choice](#primary-flow-pilots-choice)
 - [Cockpit Navigation](#cockpit-navigation)
 - [How It Works](#how-it-works)
+- [Optional AI Dispatcher](#optional-ai-dispatcher)
 - [Company Setup](#company-setup)
 - [What's New in Experimental](#whats-new-in-experimental)
 - [Status](#status)
@@ -80,7 +81,7 @@ They provide dispatch intent and operational flavor while keeping the route, air
 
 It's still 100% honor-based. You are Pilot in Command. Fly clean, earn it. Fly sloppy, own it.
 
-OAS also includes a lightweight built-in **Operation Timer** designed for tablet/EFB-style flying. Start the timer when your operation begins, pause it anytime, and complete the operation manually when finished. The target can be manually adjusted for multi-hop flights, fuel stops, or RON logistics. The timer is fully honor-system based and designed for immersion, not enforcement.
+OAS also includes a lightweight **Planned Operation Duration** editor for tablet/EFB-style dispatch planning. Set the planned duration in days, hours, and minutes when a dispatch needs multi-hop timing, fuel stops, RON logistics, or a longer operational window. This planned duration is separate from the **Live Elapsed Timer**, which remains optional, pilot-controlled, and honor-system based. Start, pause, resume, or reset the live timer when it helps immersion; OAS does not enforce timing or track the simulator.
 
 ---
 
@@ -103,7 +104,7 @@ This does **not** limit OAS to the Pacific Northwest. **Pilot's Choice remains w
 - Set operation intent and risk
 - Add optional notes / memo
 
-OAS turns it into a proper dispatch card with EFB timer target, estimated payout, and logging.
+OAS turns it into a proper dispatch card with planned operation duration, estimated payout, and logging.
 
 Current Operation Types: Airshow / Demo, Bush / STOL, Cargo, Ferry / Positioning, Firefighting, Medevac, Oddball / Custom Ops, Scenic / Tourism, Search and Rescue, Skydiving, Training / Checkride, and VIP Charter.
 
@@ -128,10 +129,24 @@ The later buttons are dimmed until they apply. Aircraft unlocks after a dispatch
 
 1. **Create Operation** (Pilot's Choice)
 2. Review your EFB Dispatch Card
-3. Fly the operation in Free Flight (use the target time or optional OAS Operation Timer)
+3. Fly the operation in Free Flight (use the Planned Operation Duration and optional Live Elapsed Timer if desired)
 4. Complete honestly: apply bonuses/penalties
 5. Log the flight with optional memo
 6. Watch your outlaw career and journal grow
+
+---
+
+## Optional AI Dispatcher
+
+Outlaw Air Service is intentionally built as a lightweight, no-mods, no-SimConnect, no-AI-required dispatch companion. However, an LLM can make an excellent optional virtual dispatcher for pilots who want randomized operations, cargo scenarios, or multi-hop routing ideas.
+
+AI is not required for OAS. The app works fully as a browser-based, honor-system dispatch terminal. Use this only when you want an outside prompt to help invent the operation.
+
+**The OAS Dispatch Prompt**
+
+```text
+Act as an aviation dispatcher for a rugged, multi-hop cargo operation. I will be flying a [Insert Aircraft - e.g., C172, Huey, VL-3] starting at [Insert Starting ICAO]. Generate a realistic, challenging operation involving [Insert Number] legs. Provide the destination ICAOs, a brief description of the cargo or operational objective, and the estimated flight duration for each leg. Keep the tone professional but gritty.
+```
 
 ---
 
@@ -159,8 +174,8 @@ The Aircraft Market is intentionally small and representative. Pick the closest 
 - Expanded manual / sandbox operation creation
 - Global Operation Presets for lightweight dispatch intent, not scripted rules
 - Grouped MSFS aircraft selector with session-only Manual Entry override
-- User-adjustable EFB target timing for multi-hop, fuel stop, and RON logistics
-- **Working pilot-controlled Operation Timer** with start, pause, resume, reset, completion, and Flight Log time capture
+- User-adjustable Planned Operation Duration in days, hours, and minutes for multi-hop, fuel stop, and RON logistics
+- **Optional Live Elapsed Timer** with start, pause, resume, reset, completion, and Flight Log time capture
 - Flight Memo notes, Notable Flights, and Print/Copy Log tools
 - Atmospheric dispatch flavor lines and pilot-facing aircraft notes
 - No external aircraft/airport data pages required
