@@ -1433,6 +1433,7 @@ body.night .aircraft-row-selected td{
     </div>
     <div><label for="insurancePlan">Insurance</label><select id="insurancePlan"><option value="none">None — $0 / flight</option><option value="basic">Basic — ~18% of aircraft op cost / flight</option><option value="premium">Premium — ~35% of aircraft op cost / flight</option></select><p class="small" id="insuranceInfo">Reduces “Maintenance Hit” probability. Estimated payout includes insurance cost when selected.</p></div>
   </div>
+  <p class="small hint">Crew Passive Income is a small once-per-real-day support payment based on fleet size/value after upkeep. It is optional flavor income, not a management grind.</p>
   <div class="btnrow"><button id="crewBtn" class="secondary">Run Crew Passive Income</button><button id="clearDispatchBtn" class="secondary">Clear Dispatch</button></div>
   <button id="setFleetHomeBtn" class="secondary" style="margin-top:10px" type="button">Set Fleet Location to Home Base</button>
   <p class="small">Company setup auto-saves when changed. Home-base returns get a small bonus. Insurance costs money per flight but reduces “Maintenance Hit” probability. Crew income can be run once per real day.<br><strong>Current Home Base:</strong> <span id="currentHomeBaseLabel">KSEA</span></p>
@@ -2662,14 +2663,21 @@ function cancelDispatch(){
  updateUIState();
  setStatus("Dispatch canceled. No costs or Flight Log entry recorded.");
 }
+function ownedCount(name){
+ return (career.owned||[]).filter(x=>x===name).length;
+}
 function buyAircraft(name){
- let a=aircraft[name]; if(career.owned.includes(name)){alert("Already owned.");return;} if(getRank().tier<a.tier){alert("Tier locked. Build reputation first.");return;} if(career.cash<a.cost){alert("Not enough cash. Consider a loan, but debt adds pressure.");return;}
+ let a=aircraft[name]; if(getRank().tier<a.tier){alert("Tier locked. Build reputation first.");return;} if(career.cash<a.cost){alert("Not enough cash. Consider a loan, but debt adds pressure.");return;}
  career.cash-=a.cost; career.owned.push(name); saveCareer(); populateCustomAircraft(); setStatus("Purchased "+name+".");
 }
 function sellAircraft(name){
- if(["C152","C172"].includes(name)){alert("Starter aircraft cannot be sold.");return;} if(!career.owned.includes(name))return;
+ const count=ownedCount(name);
+ if(["C152","C172"].includes(name) && count<=1){alert("Starter aircraft cannot be sold.");return;} if(!count)return;
  if(!confirm("Sell "+name+" for 65% value?"))return;
- career.cash+=Math.round(aircraft[name].cost*.65); career.owned=career.owned.filter(x=>x!==name); saveCareer(); populateCustomAircraft();
+ career.cash+=Math.round(aircraft[name].cost*.65);
+ const i=career.owned.indexOf(name);
+ if(i>=0) career.owned.splice(i,1);
+ saveCareer(); populateCustomAircraft();
 }
 function takeLoan(){
  let amt = parseInt(el("loanAmountSelect").value);
@@ -2864,15 +2872,17 @@ function majorInspection(name){
  career.cash-=cost; let s=ensureFleetStats(name); s.sinceInspection=0; saveCareer(); setStatus(name+" major inspection completed.");
 }
 function renderFleet(){
- el("fleetDisplay").innerHTML=`<table><thead><tr><th>Owned</th><th>Stats</th><th></th></tr></thead><tbody>${career.owned.map(n=>{
+ const ownedNames=[...new Set(career.owned||[])];
+ el("fleetDisplay").innerHTML=`<table><thead><tr><th>Owned</th><th>Stats</th><th></th></tr></thead><tbody>${ownedNames.map(n=>{
+ let count=ownedCount(n);
  let s=ensureFleetStats(n); let insp=inspectionProgress(n); let pct=Math.round((insp/20)*100);
- return `<tr><td><strong>${n}</strong><br><span class="small">Tier ${aircraft[n].tier} · ${aircraft[n].cls}<br>Parked with fleet: ${career.lastLocation||career.homeBase||"KSEA"}</span></td>
+ return `<tr><td><strong>${n}${count>1?` <span class="badge gold">x${count}</span>`:""}</strong><br><span class="small">Tier ${aircraft[n].tier} · ${aircraft[n].cls}<br>Parked with fleet: ${career.lastLocation||career.homeBase||"KSEA"}</span></td>
  <td><span class="small">Flights: ${s.flights||0}<br>NM: ${Math.round(s.nm||0).toLocaleString()}<br>Hours: ${(s.hours||0).toFixed(1)}<br>Inspection: ${insp}/20</span><div class="progressbar"><span style="width:${pct}%"></span></div></td>
- <td>${insp>=20?`<button class="blue" onclick="majorInspection('${n}')">Inspect</button>`:(["C152","C172"].includes(n)?'<span class="badge green">Starter</span>':`<button class="danger" onclick="sellAircraft('${n}')">Sell</button>`)}</td></tr>`}).join("")}</tbody></table>`;
+ <td>${insp>=20?`<button class="blue" onclick="majorInspection('${n}')">Inspect</button>`:(["C152","C172"].includes(n)&&count<=1?'<span class="badge green">Starter</span>':`<button class="danger" onclick="sellAircraft('${n}')">Sell One</button>`)}</td></tr>`}).join("")}</tbody></table>`;
 }
 function renderMarket(){
  let rank=getRank(); let names=Object.keys(aircraft).sort((a,b)=>aircraft[a].tier-aircraft[b].tier||aircraft[a].cost-aircraft[b].cost);
- el("marketDisplay").innerHTML=`<table><thead><tr><th>Aircraft</th><th>Price</th><th></th></tr></thead><tbody>${names.map(n=>{let a=aircraft[n],owned=career.owned.includes(n),locked=rank.tier<a.tier;return `<tr class="${locked?'locked':''}"><td><strong>${n}</strong><br><span class="small">Tier ${a.tier} · ${a.cls}<br>${owned?"Owned":locked?"Locked by tier":a.note}</span></td><td><strong>${money(a.cost)}</strong><br><span class="small">Op ${money(a.op)} · Maint risk ${money(a.maint)}</span></td><td>${owned?'<span class="badge green">Owned</span>':`<button onclick="buyAircraft('${n}')">Buy</button>`}</td></tr>`}).join("")}</tbody></table>`;
+ el("marketDisplay").innerHTML=`<p class="small hint"><strong>Aircraft Market:</strong> This is a small representative market. Pick the closest suitable aircraft for your fleet, or use Manual Entry in Pilot's Choice for add-ons and custom/mod aircraft.</p><table><thead><tr><th>Aircraft</th><th>Price</th><th></th></tr></thead><tbody>${names.map(n=>{let a=aircraft[n],count=ownedCount(n),locked=rank.tier<a.tier;return `<tr class="${locked?'locked':''}"><td><strong>${n}</strong><br><span class="small">Tier ${a.tier} · ${a.cls}<br>${count?`Owned: ${count}`:locked?"Locked by tier":a.note}</span></td><td><strong>${money(a.cost)}</strong><br><span class="small">Op ${money(a.op)} · Maint risk ${money(a.maint)}</span></td><td>${locked?'<span class="badge">Locked</span>':`<button onclick="buyAircraft('${n}')">${count?"Buy Another":"Buy"}</button>`}</td></tr>`}).join("")}</tbody></table>`;
 }
 function clockToSeconds(clock){
  const parts=String(clock||"").split(":").map(n=>parseInt(n,10)||0);

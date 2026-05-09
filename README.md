@@ -138,10 +138,12 @@ You can customize:
 - **Company Name** - your operational identity
 - **Home Base** - default fleet location and return hub
 - **Insurance** - optional per-flight cost that lowers maintenance-hit risk
-- **Crew Passive Income** - small once-per-real-day support income
+- **Crew Passive Income** - small once-per-real-day support income based on fleet size/value after upkeep
 - **Set Fleet Location to Home Base** - quick operational reset for your fleet
 
 These systems are intentionally lightweight and honor-system based. Their purpose is to support atmosphere, organization, and operational continuity, not grind, spreadsheets, or deep management mechanics.
+
+The Aircraft Market is intentionally small and representative. Pick the closest suitable aircraft for your fleet, buy multiples when you want a larger operation, or use Pilot's Choice Manual Entry for add-ons, mods, and aircraft not listed.
 
 ---
 
