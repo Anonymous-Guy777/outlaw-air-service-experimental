@@ -1865,26 +1865,99 @@ function operationGuidanceHtml(message){
 function opsFlowHtml(){
  return `<details class="ops-flow"><summary>OPS FLOW / QUICK OPS</summary><div>Create &rarr; Assign Aircraft &rarr; Review Dispatch &rarr; Start Timer Optional &rarr; Fly &rarr; Complete &rarr; Log</div></details>`;
 }
+const opsDeskNotes={
+ "Airshow / Demo":[
+   "Crowd sees confidence. Dispatch sees margins.",
+   "Keep the display clean and leave yourself an exit.",
+   "Public flight. Private discipline."
+ ],
+ "Bush / STOL":[
+   "Rural strip. Expect limited ground support.",
+   "Short field work. Check your approach and your tires.",
+   "Terrain and runway length get the final vote."
+ ],
+ "Cargo":[
+   "Practical routing beats heroics; deliver it intact.",
+   "Cargo pays when it arrives in one piece.",
+   "Weight, weather, runway. Respect all three."
+ ],
+ "Ferry / Positioning":[
+   "Clean handoff preferred. Don't add hours to the aircraft for scenery.",
+   "Simple reposition. Keep the aircraft ready for the next job.",
+   "No drama required. Just move the machine."
+ ],
+ "Firefighting":[
+   "Visibility is degrading near the line. Don't get boxed in.",
+   "Fire work leaves small margins. Keep an exit open.",
+   "Terrain, smoke, wind. Brief them before you commit."
+ ],
+ "Medevac":[
+   "Fly the direct profile. Every minute matters on this one.",
+   "Smooth and direct. That is the whole brief.",
+   "Priority transport. Keep the ride clean."
+ ],
+ "Oddball / Custom Ops":[
+   "Dispatch would prefer this one stays quiet.",
+   "Unusual client, unusual route. Keep the paperwork clean.",
+   "Keep the route simple and the questions shorter."
+ ],
+ "Scenic / Tourism":[
+   "Keep it smooth. The view is the product.",
+   "Scenic run. Give them a reason to remember it.",
+   "Relaxed profile, professional handling."
+ ],
+ "Search and Rescue":[
+   "If visibility drops below minimums, scrub it.",
+   "Search work rewards patience more than speed.",
+   "Fly deliberate patterns and keep fuel in reserve."
+ ],
+ "Skydiving":[
+   "Hold the line steady and keep the drop predictable.",
+   "Jump profile. Winds aloft matter more than pride.",
+   "Stable platform, clean calls, no surprises."
+ ],
+ "Training / Checkride":[
+   "Fly the profile clean. Bad habits get expensive.",
+   "Training flight. Log the lesson, not the excuse.",
+   "Proficiency work counts when you fly it honestly."
+ ],
+ "VIP Charter":[
+   "Smooth ride is the priority. Client is paying for comfort, not speed.",
+   "Client requested no ramp delays.",
+   "Quiet cabin, clean arrival, no shortcuts."
+ ],
+ "Default":[
+   "Use the aircraft, the route, and your judgment.",
+   "Dispatch is light. The flying is yours.",
+   "Keep it believable and bring the aircraft home."
+ ]
+};
+function opsDeskCategory(m){
+ const preset=(m?.preset||"").toLowerCase();
+ const type=(m?.type||"").toLowerCase();
+ const cargo=(m?.cargo||"").toLowerCase();
+ if(preset.includes("airshow")||preset.includes("demo")||type.includes("demo")) return "Airshow / Demo";
+ if(preset.includes("bush")||preset.includes("stol")||type.includes("bush")||cargo.includes("rough")||cargo.includes("remote")) return "Bush / STOL";
+ if(preset.includes("firefighting")||type.includes("fire")) return "Firefighting";
+ if(preset.includes("medevac")||type.includes("medical")||cargo.includes("medical")) return "Medevac";
+ if(preset.includes("oddball")||preset.includes("custom")||type.includes("special")||type.includes("no questions")) return "Oddball / Custom Ops";
+ if(preset.includes("scenic")||type.includes("scenic")) return "Scenic / Tourism";
+ if(preset.includes("search")||preset.includes("rescue")||type.includes("rescue")) return "Search and Rescue";
+ if(preset.includes("skydiving")||type.includes("jump")) return "Skydiving";
+ if(preset.includes("training")||type.includes("training")) return "Training / Checkride";
+ if(preset.includes("vip")||type.includes("vip")) return "VIP Charter";
+ if(preset.includes("ferry")||preset.includes("positioning")||type.includes("ferry")) return "Ferry / Positioning";
+ if(preset.includes("cargo")||type.includes("cargo")||cargo.includes("cargo")||cargo.includes("freight")||cargo.includes("supply")) return "Cargo";
+ return "Default";
+}
+function selectOpsDeskNote(m){
+ const notes=opsDeskNotes[opsDeskCategory(m)]||opsDeskNotes.Default;
+ return pick(notes);
+}
 function operationAtmosphereLine(m){
  if(!m) return "";
- const preset=(m.preset||"").toLowerCase();
- const type=(m.type||"").toLowerCase();
- const cargo=(m.cargo||"").toLowerCase();
- if(preset.includes("airshow")||preset.includes("demo")) return "Demo profile. Keep the route tidy, visible, and professional.";
- if(preset.includes("night")||type.includes("night")) return "Night operation. Slow down, brief the approach, and trust the instruments.";
- if(preset.includes("bush")||preset.includes("stol")||type.includes("bush")||cargo.includes("rough")) return "Rough-strip profile. Watch terrain, weather, runway length, and alternates.";
- if(preset.includes("firefighting")) return "Fire response profile. Respect terrain, visibility, tanker limits, and clean exit planning.";
- if(preset.includes("medevac")||type.includes("medical")) return "Medical priority. Fly direct, stay smooth, and keep the operation clean.";
- if(preset.includes("oddball")||preset.includes("custom")) return "Special handling profile. Keep the route believable and the paperwork clean.";
- if(preset.includes("skydiving")) return "Jump profile. Stabilize the platform, mind winds aloft, and keep the drop zone disciplined.";
- if(preset.includes("vip")||type.includes("vip")) return "VIP movement. Smooth handling and a clean arrival are the whole job.";
- if(preset.includes("cargo")||type.includes("cargo")) return "Cargo run. Practical routing beats heroics; deliver it intact.";
- if(preset.includes("search")||preset.includes("rescue")) return "Search profile. Fly deliberate patterns, preserve reserves, and plan the exit.";
- if(preset.includes("training")||type.includes("training")) return "Training profile. Fly the plan, evaluate honestly, and log what you learned.";
- if(type.includes("scenic")) return "Scenic profile. Timer is optional; enjoy the route and bring back a good log entry.";
- if(type.includes("ferry")) return "Repositioning flight. Clean handoff beats rushing the schedule.";
- if(cargo.includes("cargo")) return "Cargo run. Practical routing beats heroics; deliver it intact.";
- return "Self-directed operation. You choose the flight; OAS keeps the dispatch thread together.";
+ if(!m.opsDeskNote) m.opsDeskNote=selectOpsDeskNote(m);
+ return m.opsDeskNote;
 }
 function isFreeformPreset(name){
  return !name || name==="Freeform" || name==="Pilot's Choice / Freeform";
@@ -2253,6 +2326,7 @@ function createCustomFlight(){
    custom:true,
    preset:preset,
    flavor:presetHint,
+   opsDeskNote:selectOpsDeskNote({preset,type,cargo:presetData.cargo,economyType}),
    createdAt:Date.now()
  };
  selectedAircraft=ac;
@@ -2338,7 +2412,7 @@ if(currentMission){
  let distRange=data.tierMin>=5?5200:data.tierMin>=4?850:data.tierMin>=3?260:180;
  let dist=Math.floor(distBase+Math.random()*distRange);
  if(data.tierMin>=5 && dist<500) dist=500+Math.floor(Math.random()*3500);
- currentMission={type,region,dep,dest,dist,base:Math.round((data.base+dist*(data.tierMin>=5?58:data.tierMin>=4?85:34))*difficultyMod()),cargo:data.cargo,risk:data.risk,tags:data.tags,tierMin:data.tierMin,tierMax:data.tierMax,createdAt:Date.now()};
+ currentMission={type,region,dep,dest,dist,base:Math.round((data.base+dist*(data.tierMin>=5?58:data.tierMin>=4?85:34))*difficultyMod()),cargo:data.cargo,risk:data.risk,tags:data.tags,tierMin:data.tierMin,tierMax:data.tierMax,opsDeskNote:selectOpsDeskNote({type,cargo:data.cargo}),createdAt:Date.now()};
  selectedAircraft=null; resetChecks(); operationalGuidance="Assign an aircraft for this dispatch."; displayMission(); displayAircraft(); updatePayout(); updateUIState(); setStatus("Dispatch generated. Assign an aircraft next."); scrollToDispatch();
 }
 function generateRandomMissionData(){
@@ -2372,7 +2446,8 @@ function generateRandomMissionData(){
    risk: data.risk,
    tags: data.tags,
    tierMin: data.tierMin,
-   tierMax: data.tierMax
+   tierMax: data.tierMax,
+   opsDeskNote: selectOpsDeskNote({type,cargo:data.cargo})
  };
 }
 
@@ -2418,7 +2493,8 @@ function generateJobBoard(){
      risk: data.risk,
      tags: data.tags,
      tierMin: data.tierMin,
-     tierMax: data.tierMax
+     tierMax: data.tierMax,
+     opsDeskNote: selectOpsDeskNote({type,cargo:data.cargo})
    });
  });
 
@@ -2434,7 +2510,7 @@ function generateJobBoard(){
  const board=el("jobBoardPanel");
  if(board) board.scrollIntoView({behavior:"smooth",block:"start"});
 }
-function selectJobFromBoard(i){currentMission={...window.currentJobBoard[i],createdAt:Date.now()}; selectedAircraft=null; resetChecks(); operationalGuidance="Assign an aircraft for this dispatch."; displayMission(); displayAircraft(); updatePayout(); updateUIState(); scrollToDispatch();}
+function selectJobFromBoard(i){currentMission={...window.currentJobBoard[i],createdAt:Date.now()}; if(!currentMission.opsDeskNote)currentMission.opsDeskNote=selectOpsDeskNote(currentMission); selectedAircraft=null; resetChecks(); operationalGuidance="Assign an aircraft for this dispatch."; displayMission(); displayAircraft(); updatePayout(); updateUIState(); scrollToDispatch();}
 function highlightJobRow(btn){
  document.querySelectorAll("[data-job-row]").forEach(r=>r.classList.remove("selected-job-row"));
  const row=btn.closest("tr");
