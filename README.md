@@ -42,6 +42,10 @@ A **free**, lightweight, browser-based **Operations Sandbox** that gives your fr
   <em>Portrait tablet view with the active dispatch card and available aircraft context in reach.</em>
 </p>
 
+<p align="center">
+  <em><a href="images/">Additional operational captures and experimental tablet views are available in the /images folder.</a></em>
+</p>
+
 ---
 
 ## Index
