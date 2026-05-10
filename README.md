@@ -35,7 +35,7 @@ A **free**, lightweight, browser-based **Operations Sandbox** that gives your fr
 </p>
 
 <p align="center">
-  <img src="images/efb_dispatch_card_portrait.png" alt="OAS EFB Dispatch Card portrait tablet view with Available Aircraft context" width="720" />
+  <img src="images/efb_dispatch_card_portrait.png?v=2" alt="OAS EFB Dispatch Card portrait tablet view with Available Aircraft context" width="720" />
 </p>
 
 <p align="center">
